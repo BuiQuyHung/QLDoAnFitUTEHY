@@ -38,7 +38,7 @@ builder.Services.AddScoped<IDeTaiRepository, DeTaiRepository>();
 builder.Services.AddScoped<IPhanCongRepository, PhanCongRepository>();
 builder.Services.AddScoped<IHoiDongRepository, HoiDongRepository>();
 builder.Services.AddScoped<IThanhVienHoiDongRepository, ThanhVienHoiDongRepository>();
-//builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 
 builder.Services.AddCors(options =>
 {

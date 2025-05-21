@@ -21,7 +21,7 @@ namespace QLDoAnFITUTEHY.Data
         public DbSet<PhanCong> PhanCongs { get; set; }
         public DbSet<HoiDong> HoiDongs { get; set; }
         public DbSet<ThanhVienHoiDong> ThanhVienHoiDongs { get; set; }
-        //public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        public DbSet<TaiKhoan> TaiKhoans { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,6 +31,11 @@ namespace QLDoAnFITUTEHY.Data
 
             modelBuilder.Entity<ThanhVienHoiDong>()
                 .HasKey(tvhd => new { tvhd.MaHoiDong, tvhd.MaGV });
+            // Cấu hình ràng buộc CHECK cho TaiKhoan
+            modelBuilder.Entity<TaiKhoan>()
+                .HasCheckConstraint("CK_TaiKhoanDangNhap_MaGV_MaSV", "(MaGV IS NOT NULL AND MaSV IS NULL) OR (MaGV IS NULL AND MaSV IS NOT NULL)");
+
+            // Các cấu hình khác nếu cần
 
         }
 
