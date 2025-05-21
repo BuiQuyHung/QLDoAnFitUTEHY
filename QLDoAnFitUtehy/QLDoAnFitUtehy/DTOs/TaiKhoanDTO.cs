@@ -52,4 +52,13 @@ namespace QLDoAnFITUTEHY.DTOs.TaiKhoan
         [StringLength(100, ErrorMessage = "Mật khẩu không được vượt quá 100 ký tự.")]
         public string MatKhau { get; set; }
     }
+
+    public class LoginResponseDto
+    {
+        public string Token { get; set; } // Đây là JWT Token sẽ được gửi về client
+        public string TenDangNhap { get; set; }
+        public string VaiTro { get; set; }
+        public string? MaGV { get; set; }
+        public string? MaSV { get; set; }
+    }
 }

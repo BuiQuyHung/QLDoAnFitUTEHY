@@ -79,3 +79,4 @@ D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\QLDoAnFitUtehy.pdb
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\QLDoAnFitUtehy.genruntimeconfig.cache
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\ref\QLDoAnFitUtehy.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll

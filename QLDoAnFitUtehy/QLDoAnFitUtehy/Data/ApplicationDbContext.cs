@@ -22,6 +22,7 @@ namespace QLDoAnFITUTEHY.Data
         public DbSet<HoiDong> HoiDongs { get; set; }
         public DbSet<ThanhVienHoiDong> ThanhVienHoiDongs { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
+        public DbSet<Log> Logs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -31,11 +32,41 @@ namespace QLDoAnFITUTEHY.Data
 
             modelBuilder.Entity<ThanhVienHoiDong>()
                 .HasKey(tvhd => new { tvhd.MaHoiDong, tvhd.MaGV });
-            // Cấu hình ràng buộc CHECK cho TaiKhoan
+           
             modelBuilder.Entity<TaiKhoan>()
                 .HasCheckConstraint("CK_TaiKhoanDangNhap_MaGV_MaSV", "(MaGV IS NOT NULL AND MaSV IS NULL) OR (MaGV IS NULL AND MaSV IS NOT NULL)");
 
-            // Các cấu hình khác nếu cần
+            // --- Cấu hình cho bảng Log ---
+            modelBuilder.Entity<Log>()
+                .HasKey(l => l.MaLog); // Định nghĩa khóa chính
+
+            modelBuilder.Entity<Log>()
+                .Property(l => l.ThoiGian)
+                .HasDefaultValueSql("GETDATE()"); // Đặt giá trị mặc định cho cột thời gian trong DB
+
+            modelBuilder.Entity<Log>()
+                .Property(l => l.HanhDong)
+                .IsRequired() // HanhDong là NOT NULL
+                .HasMaxLength(200);
+
+            modelBuilder.Entity<Log>()
+                .Property(l => l.BangBiThayDoi)
+                .IsRequired() // BangBiThayDoi là NOT NULL
+                .HasMaxLength(100);
+
+            modelBuilder.Entity<Log>()
+                .Property(l => l.MoTaChiTiet)
+                .HasMaxLength(500);
+
+            // Cấu hình mối quan hệ với TaiKhoan (nếu cần)
+            modelBuilder.Entity<Log>()
+                .HasOne(l => l.TaiKhoan)
+                .WithMany() // Nếu TaiKhoan không có navigation collection của Logs
+                .HasForeignKey(l => l.TenDangNhap)
+                .IsRequired(false) // TenDangNhap trong Log có thể NULL
+                .OnDelete(DeleteBehavior.Restrict); // Hoặc .SetNull nếu bạn muốn TenDangNhap thành NULL khi TaiKhoan bị xóa
+
+            // ... (Các cấu hình khác của bạn) ...
 
         }
 

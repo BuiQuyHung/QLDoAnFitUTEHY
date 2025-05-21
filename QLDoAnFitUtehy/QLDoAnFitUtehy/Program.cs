@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Security.Claims;
+using QLDoAnFITUTEHY.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,7 +17,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
     options.JsonSerializerOptions.WriteIndented = true;
 });
-
 
 builder.Services.AddControllers();
 
@@ -39,6 +40,40 @@ builder.Services.AddScoped<IPhanCongRepository, PhanCongRepository>();
 builder.Services.AddScoped<IHoiDongRepository, HoiDongRepository>();
 builder.Services.AddScoped<IThanhVienHoiDongRepository, ThanhVienHoiDongRepository>();
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
+builder.Services.AddScoped<ILogRepository, LogRepository>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true, 
+        ValidateAudience = true, 
+        ValidateLifetime = true, 
+        ValidateIssuerSigningKey = true, 
+
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+    };
+});
+
+builder.Services.AddAuthorization(options =>
+{
+    
+    options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("Admin"));
+
+    options.AddPolicy("RequireGiangVienRole", policy => policy.RequireRole("GiangVien", "Admin"));
+
+    options.AddPolicy("RequireSinhVienRole", policy => policy.RequireRole("SinhVien", "Admin"));
+
+    options.AddPolicy("RequireAuthenticatedUser", policy => policy.RequireAuthenticatedUser());
+});
+
+
 
 builder.Services.AddCors(options =>
 {
@@ -52,7 +87,6 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

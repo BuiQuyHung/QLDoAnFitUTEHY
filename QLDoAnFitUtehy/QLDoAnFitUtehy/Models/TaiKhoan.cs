@@ -20,7 +20,8 @@ namespace QLDoAnFITUTEHY.Models
         [Required]
         [Column("VaiTro")]
         [StringLength(20)]
-        public string VaiTro { get; set; }
+        //public string VaiTro { get; set; }
+        public string VaiTro { get; set; } = string.Empty;
 
         [Column("MaGV")]
         [StringLength(10)]

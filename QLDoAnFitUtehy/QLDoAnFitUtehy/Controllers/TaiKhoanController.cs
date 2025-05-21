@@ -1,7 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QLDoAnFITUTEHY.DTOs.TaiKhoan;
-using QLDoAnFITUTEHY.Interfaces;
+using Microsoft.IdentityModel.Tokens;
+using QLDoAnFITUTEHY.DTOs.TaiKhoan; 
+using QLDoAnFITUTEHY.Interfaces;  
 using QLDoAnFITUTEHY.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authorization;
+using QLDoAnFITUTEHY.Repository; 
 
 namespace QLDoAnFITUTEHY.API.Controllers
 {
@@ -10,20 +17,24 @@ namespace QLDoAnFITUTEHY.API.Controllers
     public class TaiKhoanController : ControllerBase
     {
         private readonly ITaiKhoanRepository _taiKhoanRepository;
+        private readonly ILogRepository _logRepository;         
+        private readonly IConfiguration _configuration;          
 
-        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository)
+        public TaiKhoanController(ITaiKhoanRepository taiKhoanRepository, ILogRepository logRepository, IConfiguration configuration)
         {
             _taiKhoanRepository = taiKhoanRepository;
+            _logRepository = logRepository;            
+            _configuration = configuration;            
         }
 
         // GET: api/TaiKhoan
         [HttpGet]
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<IEnumerable<TaiKhoanDto>>> GetTaiKhoans()
         {
             var taiKhoans = await _taiKhoanRepository.GetAllAsync();
             var taiKhoanDtos = new List<TaiKhoanDto>();
 
-            // Ánh xạ thủ công từ Model sang DTO
             foreach (var tk in taiKhoans)
             {
                 taiKhoanDtos.Add(new TaiKhoanDto
@@ -37,10 +48,15 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return Ok(taiKhoanDtos);
         }
 
-        // GET: api/TaiKhoan/{username}
         [HttpGet("{username}")]
+        [Authorize] 
         public async Task<ActionResult<TaiKhoanDto>> GetTaiKhoan(string username)
         {
+            if (User.Identity?.Name != username && !User.IsInRole("Admin"))
+            {
+                return Forbid(); 
+            }
+
             var taiKhoan = await _taiKhoanRepository.GetTaiKhoanByUsernameAsync(username);
 
             if (taiKhoan == null)
@@ -48,7 +64,6 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return NotFound($"Không tìm thấy tài khoản với tên đăng nhập: {username}");
             }
 
-            // Ánh xạ thủ công từ Model sang DTO
             var taiKhoanDto = new TaiKhoanDto
             {
                 TenDangNhap = taiKhoan.TenDangNhap,
@@ -59,8 +74,8 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return Ok(taiKhoanDto);
         }
 
-        // POST: api/TaiKhoan
         [HttpPost]
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<TaiKhoanDto>> CreateTaiKhoan([FromBody] TaiKhoanCreateDto taiKhoanCreateDto)
         {
             if (!ModelState.IsValid)
@@ -73,11 +88,10 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return Conflict($"Tên đăng nhập '{taiKhoanCreateDto.TenDangNhap}' đã tồn tại.");
             }
 
-            // Ánh xạ thủ công từ Create DTO sang Model
             var taiKhoan = new TaiKhoan
             {
                 TenDangNhap = taiKhoanCreateDto.TenDangNhap,
-                MatKhau = taiKhoanCreateDto.MatKhau, // **Lưu ý quan trọng: Trong thực tế, bạn PHẢI mã hóa mật khẩu ở đây.**
+                MatKhau = taiKhoanCreateDto.MatKhau,
                 VaiTro = taiKhoanCreateDto.VaiTro,
                 MaGV = taiKhoanCreateDto.MaGV,
                 MaSV = taiKhoanCreateDto.MaSV
@@ -89,7 +103,17 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return StatusCode(500, "Lỗi khi tạo tài khoản mới.");
             }
 
-            // Ánh xạ thủ công từ Model đã tạo sang DTO để trả về
+            var tenDangNhapHienTai = User.Identity?.Name ?? "Hệ thống/Ẩn danh"; 
+            var logEntry = new Log
+            {
+                TenDangNhap = tenDangNhapHienTai,
+                HanhDong = "Tạo tài khoản",
+                BangBiThayDoi = "TaiKhoan",
+                MoTaChiTiet = $"Đã tạo tài khoản mới: {taiKhoan.TenDangNhap} với vai trò: {taiKhoan.VaiTro}"
+            };
+            await _logRepository.AddAsync(logEntry);
+            await _logRepository.SaveChangesAsync();
+
             var taiKhoanDto = new TaiKhoanDto
             {
                 TenDangNhap = taiKhoan.TenDangNhap,
@@ -100,8 +124,8 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return CreatedAtAction(nameof(GetTaiKhoan), new { username = taiKhoanDto.TenDangNhap }, taiKhoanDto);
         }
 
-        // PUT: api/TaiKhoan/{username}
         [HttpPut("{username}")]
+        [Authorize] 
         public async Task<IActionResult> UpdateTaiKhoan(string username, [FromBody] TaiKhoanUpdateDto taiKhoanUpdateDto)
         {
             if (!ModelState.IsValid)
@@ -116,10 +140,16 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return NotFound($"Không tìm thấy tài khoản với tên đăng nhập: {username}");
             }
 
-            // Ánh xạ thủ công từ Update DTO vào Model hiện có
+            if (User.Identity?.Name != username && !User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
+
+            var oldVaiTro = taiKhoan.VaiTro; 
+
             if (!string.IsNullOrEmpty(taiKhoanUpdateDto.MatKhau))
             {
-                taiKhoan.MatKhau = taiKhoanUpdateDto.MatKhau; // **Lưu ý: Trong thực tế, bạn PHẢI mã hóa mật khẩu ở đây.**
+                taiKhoan.MatKhau = taiKhoanUpdateDto.MatKhau;
             }
             taiKhoan.VaiTro = taiKhoanUpdateDto.VaiTro;
             taiKhoan.MaGV = taiKhoanUpdateDto.MaGV;
@@ -131,11 +161,29 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return StatusCode(500, "Lỗi khi cập nhật tài khoản.");
             }
 
-            return NoContent(); // 204 No Content
+            var tenDangNhapHienTai = User.Identity?.Name ?? "Hệ thống/Ẩn danh";
+            var chiTietThayDoi = new List<string>();
+            if (oldVaiTro != taiKhoan.VaiTro)
+                chiTietThayDoi.Add($"Vai trò từ '{oldVaiTro}' thành '{taiKhoan.VaiTro}'");
+
+            if (chiTietThayDoi.Any())
+            {
+                var logEntry = new Log
+                {
+                    TenDangNhap = tenDangNhapHienTai,
+                    HanhDong = "Cập nhật tài khoản",
+                    BangBiThayDoi = "TaiKhoan",
+                    MoTaChiTiet = $"Đã cập nhật tài khoản '{username}': {string.Join(", ", chiTietThayDoi)}"
+                };
+                await _logRepository.AddAsync(logEntry);
+                await _logRepository.SaveChangesAsync();
+            }
+
+            return NoContent(); 
         }
 
-        // DELETE: api/TaiKhoan/{username}
         [HttpDelete("{username}")]
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteTaiKhoan(string username)
         {
             var taiKhoan = await _taiKhoanRepository.GetTaiKhoanByUsernameAsync(username);
@@ -150,12 +198,23 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return StatusCode(500, "Lỗi khi xóa tài khoản.");
             }
 
-            return NoContent(); // 204 No Content
+            var tenDangNhapHienTai = User.Identity?.Name ?? "Hệ thống/Ẩn danh";
+            var logEntry = new Log
+            {
+                TenDangNhap = tenDangNhapHienTai,
+                HanhDong = "Xóa tài khoản",
+                BangBiThayDoi = "TaiKhoan",
+                MoTaChiTiet = $"Đã xóa tài khoản: {username}"
+            };
+            await _logRepository.AddAsync(logEntry);
+            await _logRepository.SaveChangesAsync();
+
+            return NoContent(); 
         }
 
-        // --- Endpoint Đăng nhập ---
-        [HttpPost("login")] // Đường dẫn API sẽ là /api/TaiKhoan/login
-        public async Task<ActionResult<TaiKhoanDto>> Login([FromBody] LoginDto loginDto)
+        [AllowAnonymous] 
+        [HttpPost("login")]
+        public async Task<ActionResult<LoginResponseDto>> Login([FromBody] LoginDto loginDto)
         {
             if (!ModelState.IsValid)
             {
@@ -166,23 +225,57 @@ namespace QLDoAnFITUTEHY.API.Controllers
 
             if (taiKhoan == null)
             {
-                return Unauthorized("Tên đăng nhập hoặc mật khẩu không chính xác."); // 401 Unauthorized
+                return Unauthorized("Tên đăng nhập hoặc mật khẩu không chính xác.");
             }
 
-            // Đăng nhập thành công, trả về thông tin tài khoản (trừ mật khẩu)
-            // và quan trọng là trả về VaiTro để client biết quyền hạn
-            var taiKhoanDto = new TaiKhoanDto
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, taiKhoan.TenDangNhap),
+                new Claim(ClaimTypes.Role, taiKhoan.VaiTro),
+            };
+
+            if (!string.IsNullOrEmpty(taiKhoan.MaGV))
+            {
+                claims.Add(new Claim("MaGV", taiKhoan.MaGV)); 
+            }
+            if (!string.IsNullOrEmpty(taiKhoan.MaSV))
+            {
+                claims.Add(new Claim("MaSV", taiKhoan.MaSV)); 
+            }
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],         
+                audience: _configuration["Jwt:Audience"],     
+                claims: claims,                              
+                expires: DateTime.Now.AddMinutes(double.Parse(_configuration["Jwt:DurationInMinutes"])), 
+                signingCredentials: credentials);            
+
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+
+            var logEntry = new Log
             {
                 TenDangNhap = taiKhoan.TenDangNhap,
-                VaiTro = taiKhoan.VaiTro, // Lấy vai trò để phân quyền
+                HanhDong = "Đăng nhập",
+                BangBiThayDoi = "TaiKhoan",
+                MoTaChiTiet = $"Người dùng '{taiKhoan.TenDangNhap}' đã đăng nhập thành công với vai trò '{taiKhoan.VaiTro}'."
+            };
+            await _logRepository.AddAsync(logEntry);
+            await _logRepository.SaveChangesAsync();
+
+            var loginResponse = new LoginResponseDto
+            {
+                Token = tokenString,
+                TenDangNhap = taiKhoan.TenDangNhap,
+                VaiTro = taiKhoan.VaiTro,
                 MaGV = taiKhoan.MaGV,
                 MaSV = taiKhoan.MaSV
             };
 
-            // Trong ứng dụng thực tế, tại đây bạn sẽ tạo và trả về một JWT
-            // Ví dụ: return Ok(new { Token = "your_jwt_token", User = taiKhoanDto });
-
-            return Ok(taiKhoanDto); // Trả về DTO thông tin tài khoản bao gồm vai trò
+            return Ok(loginResponse);
         }
+
     }
 }
