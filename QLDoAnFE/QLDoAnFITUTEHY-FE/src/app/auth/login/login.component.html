@@ -1,0 +1,26 @@
+<div class="login-container">
+    <h2>Đăng nhập Hệ thống Quản lý Đồ án</h2>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="username">Tên đăng nhập:</label>
+            <input type="text" id="username" formControlName="username" />
+            <div *ngIf="loginForm.get('username')?.invalid && loginForm.get('username')?.touched" class="error-message">
+                Tên đăng nhập không được để trống.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật khẩu:</label>
+            <input type="password" id="password" formControlName="password" />
+            <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error-message">
+                Mật khẩu không được để trống.
+            </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="error-message login-error">
+            {{ errorMessage }}
+        </div>
+
+        <button type="submit" [disabled]="!loginForm.valid">Đăng nhập</button>
+    </form>
+</div>

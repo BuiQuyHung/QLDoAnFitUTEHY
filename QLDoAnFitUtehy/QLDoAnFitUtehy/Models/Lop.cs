@@ -22,6 +22,8 @@ namespace QLDoAnFITUTEHY.Models
         public string MaChuyenNganh { get; set; }
         public ChuyenNganh ChuyenNganh { get; set; }
         public ICollection<SinhVien> SinhViens { get; set; }
-        public ICollection<DotDoAn> DotDoAns { get; set; }
+        //public ICollection<DotDoAn> DotDoAns { get; set; }
+        public ICollection<DotDoAn_Lop> DotDoAn_Lops { get; set; } = new List<DotDoAn_Lop>();
+
     }
 }

@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Chuyên Ngành</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedChuyenNganh ? 'Cập nhật Chuyên Ngành' : 'Thêm mới Chuyên Ngành' }}</h2>
+        <form [formGroup]="chuyenNganhForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maChuyenNganh">Mã Chuyên Ngành:</label>
+                    <input type="text" id="maChuyenNganh" formControlName="maChuyenNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': chuyenNganhForm.get('maChuyenNganh')?.invalid && chuyenNganhForm.get('maChuyenNganh')?.touched }">
+                    <div *ngIf="chuyenNganhForm.get('maChuyenNganh')?.invalid && chuyenNganhForm.get('maChuyenNganh')?.touched"
+                        class="invalid-feedback">
+                        Mã Chuyên Ngành là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenChuyenNganh">Tên Chuyên Ngành:</label>
+                    <input type="text" id="tenChuyenNganh" formControlName="tenChuyenNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': chuyenNganhForm.get('tenChuyenNganh')?.invalid && chuyenNganhForm.get('tenChuyenNganh')?.touched }">
+                    <div *ngIf="chuyenNganhForm.get('tenChuyenNganh')?.invalid && chuyenNganhForm.get('tenChuyenNganh')?.touched"
+                        class="invalid-feedback">
+                        Tên Chuyên Ngành là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maNganh">Ngành:</label>
+                    <select id="maNganh" formControlName="maNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': chuyenNganhForm.get('maNganh')?.invalid && chuyenNganhForm.get('maNganh')?.touched }">
+                        <option value="" disabled selected>-- Chọn Ngành --</option>
+                        <option *ngFor="let nganh of nganhList" [value]="nganh.maNganh">{{ nganh.tenNganh }}</option>
+                    </select>
+                    <div *ngIf="chuyenNganhForm.get('maNganh')?.invalid && chuyenNganhForm.get('maNganh')?.touched"
+                        class="invalid-feedback">
+                        Ngành là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedChuyenNganh ? 'Cập nhật' : 'Thêm mới'
+                    }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Chuyên Ngành</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên chuyên ngành..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onNganhFilterChange($event)">
+                <option value="">-- Lọc theo Ngành --</option>
+                <option *ngFor="let nganh of nganhList" [value]="nganh.maNganh">{{ nganh.tenNganh }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="chuyenNganhList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Chuyên Ngành nào.
+        </div>
+
+        <table class="data-table" *ngIf="chuyenNganhList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Chuyên Ngành</th>
+                    <th>Tên Chuyên Ngành</th>
+                    <th>Tên Ngành</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let chuyenNganh of chuyenNganhList">
+                    <td>{{ chuyenNganh.maChuyenNganh }}</td>
+                    <td>{{ chuyenNganh.tenChuyenNganh }}</td>
+                    <td>{{ getNganhTen(chuyenNganh.maNganh) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectChuyenNganh(chuyenNganh)">Sửa</button>
+                        <button class="btn btn-danger btn-sm"
+                            (click)="onDeleteChuyenNganh(chuyenNganh.maChuyenNganh)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

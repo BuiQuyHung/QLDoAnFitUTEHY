@@ -1,0 +1,95 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Lớp</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedLop ? 'Cập nhật Lớp' : 'Thêm mới Lớp' }}</h2>
+        <form [formGroup]="lopForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maLop">Mã Lớp:</label>
+                    <input type="text" id="maLop" formControlName="maLop" class="form-control"
+                        [ngClass]="{ 'is-invalid': lopForm.get('maLop')?.invalid && lopForm.get('maLop')?.touched }">
+                    <div *ngIf="lopForm.get('maLop')?.invalid && lopForm.get('maLop')?.touched"
+                        class="invalid-feedback">
+                        Mã Lớp là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenLop">Tên Lớp:</label>
+                    <input type="text" id="tenLop" formControlName="tenLop" class="form-control"
+                        [ngClass]="{ 'is-invalid': lopForm.get('tenLop')?.invalid && lopForm.get('tenLop')?.touched }">
+                    <div *ngIf="lopForm.get('tenLop')?.invalid && lopForm.get('tenLop')?.touched"
+                        class="invalid-feedback">
+                        Tên Lớp là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maChuyenNganh">Chuyên Ngành:</label>
+                    <select id="maChuyenNganh" formControlName="maChuyenNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': lopForm.get('maChuyenNganh')?.invalid && lopForm.get('maChuyenNganh')?.touched }">
+                        <option value="" disabled selected>-- Chọn Chuyên Ngành --</option>
+                        <option *ngFor="let chuyenNganh of chuyenNganhList" [value]="chuyenNganh.maChuyenNganh">{{
+                            chuyenNganh.tenChuyenNganh }}</option>
+                    </select>
+                    <div *ngIf="lopForm.get('maChuyenNganh')?.invalid && lopForm.get('maChuyenNganh')?.touched"
+                        class="invalid-feedback">
+                        Chuyên Ngành là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedLop ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Lớp</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên lớp..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onChuyenNganhFilterChange($event)">
+                <option value="">-- Lọc theo Chuyên Ngành --</option>
+                <option *ngFor="let chuyenNganh of chuyenNganhList" [value]="chuyenNganh.maChuyenNganh">{{
+                    chuyenNganh.tenChuyenNganh }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="lopList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Lớp nào.
+        </div>
+
+        <table class="data-table" *ngIf="lopList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Lớp</th>
+                    <th>Tên Lớp</th>
+                    <th>Tên Chuyên Ngành</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let lop of lopList">
+                    <td>{{ lop.maLop }}</td>
+                    <td>{{ lop.tenLop }}</td>
+                    <td>{{ getChuyenNganhTen(lop.maChuyenNganh) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectLop(lop)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteLop(lop.maLop)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

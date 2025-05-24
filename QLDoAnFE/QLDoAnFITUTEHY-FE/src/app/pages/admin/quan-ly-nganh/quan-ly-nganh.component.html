@@ -1,0 +1,92 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Ngành</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedNganh ? 'Cập nhật Ngành' : 'Thêm mới Ngành' }}</h2>
+        <form [formGroup]="nganhForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maNganh">Mã Ngành:</label>
+                    <input type="text" id="maNganh" formControlName="maNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': nganhForm.get('maNganh')?.invalid && nganhForm.get('maNganh')?.touched }">
+                    <div *ngIf="nganhForm.get('maNganh')?.invalid && nganhForm.get('maNganh')?.touched"
+                        class="invalid-feedback">
+                        Mã Ngành là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenNganh">Tên Ngành:</label>
+                    <input type="text" id="tenNganh" formControlName="tenNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': nganhForm.get('tenNganh')?.invalid && nganhForm.get('tenNganh')?.touched }">
+                    <div *ngIf="nganhForm.get('tenNganh')?.invalid && nganhForm.get('tenNganh')?.touched"
+                        class="invalid-feedback">
+                        Tên Ngành là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maBoMon">Bộ Môn:</label>
+                    <select id="maBoMon" formControlName="maBoMon" class="form-control"
+                        [ngClass]="{ 'is-invalid': nganhForm.get('maBoMon')?.invalid && nganhForm.get('maBoMon')?.touched }">
+                        <option value="" disabled selected>-- Chọn Bộ Môn --</option>
+                        <option *ngFor="let boMon of boMonList" [value]="boMon.maBoMon">{{ boMon.tenBoMon }}</option>
+                    </select>
+                    <div *ngIf="nganhForm.get('maBoMon')?.invalid && nganhForm.get('maBoMon')?.touched"
+                        class="invalid-feedback">
+                        Bộ Môn là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedNganh ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div class="list-section">
+        <h2>Danh sách Ngành</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên ngành..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onBoMonFilterChange($event)">
+                <option value="">-- Lọc theo Bộ Môn --</option>
+                <option *ngFor="let boMon of boMonList" [value]="boMon.maBoMon">{{ boMon.tenBoMon }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="nganhList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Ngành nào.
+        </div>
+
+        <table class="data-table" *ngIf="nganhList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Ngành</th>
+                    <th>Tên Ngành</th>
+                    <th>Tên Bộ Môn</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let nganh of nganhList">
+                    <td>{{ nganh.maNganh }}</td>
+                    <td>{{ nganh.tenNganh }}</td>
+                    <td>{{ getBoMonTen(nganh.maBoMon) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectNganh(nganh)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteNganh(nganh.maNganh)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

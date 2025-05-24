@@ -1,0 +1,50 @@
+/* src/app/app.component.css */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6;
+}
+
+.main-nav {
+  background-color: #333;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.main-nav a {
+  color: white;
+  text-decoration: none;
+  padding: 8px 15px;
+  margin-right: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.main-nav a:hover {
+  background-color: #555;
+}
+
+.main-nav button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-left: 20px;
+}
+
+.main-nav button:hover {
+  background-color: #c82333;
+}
+
+.content-area {
+  flex-grow: 1;
+  padding: 20px;
+}

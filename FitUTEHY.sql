@@ -75,6 +75,24 @@ CREATE TABLE DotDoAn (
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
 
+-- Bảng liên kết Đợt đồ án - Lớp
+CREATE TABLE DotDoAn_Lop (
+    MaDotDoAn VARCHAR(10),
+    MaLop VARCHAR(10),
+    PRIMARY KEY (MaDotDoAn, MaLop),
+    FOREIGN KEY (MaDotDoAn) REFERENCES DotDoAn(MaDotDoAn),
+    FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
+);
+
+-- Bảng liên kết Đợt đồ án - Giảng viên
+CREATE TABLE DotDoAn_GiangVien (
+    MaDotDoAn VARCHAR(10),
+    MaGV VARCHAR(10),
+    PRIMARY KEY (MaDotDoAn, MaGV),
+    FOREIGN KEY (MaDotDoAn) REFERENCES DotDoAn(MaDotDoAn),
+    FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
+);
+
 -- Bảng DeTai
 CREATE TABLE DeTai (
     MaDeTai VARCHAR(10) PRIMARY KEY,
@@ -355,3 +373,14 @@ VALUES
 ('em.nguyen', N'Xem', N'PhanCong', N'Xem danh sách phân công'),
 ('pham.vu', N'Cập nhật', N'DeTai', N'Cập nhật trạng thái đề tài DT005 thành Đã duyệt'),
 ('g.dang', N'Đăng xuất', N'TaiKhoan', NULL);
+----------------------------------------------------------------------------
+INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK1');
+INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK2');
+INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK3');
+INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK4');
+----------------------------------------------------------------------------
+INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV001');
+INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV002');
+INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV003');
+INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV004');
+INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV005');

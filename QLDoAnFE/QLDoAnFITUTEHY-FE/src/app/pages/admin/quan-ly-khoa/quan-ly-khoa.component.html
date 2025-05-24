@@ -1,0 +1,69 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Quản lý Khoa</h1>
+  </div>
+
+  <div class="form-section card">
+    <h2>{{ selectedKhoa ? 'Cập nhật Khoa' : 'Thêm mới Khoa' }}</h2>
+    <form [formGroup]="khoaForm" (ngSubmit)="onSubmit()">
+      <div class="form-row">
+        <div class="form-group flex-item">
+          <label for="maKhoa">Mã Khoa:</label>
+          <input type="text" id="maKhoa" formControlName="maKhoa" class="form-control"
+                 [ngClass]="{ 'is-invalid': khoaForm.get('maKhoa')?.invalid && khoaForm.get('maKhoa')?.touched }">
+          <div *ngIf="khoaForm.get('maKhoa')?.invalid && khoaForm.get('maKhoa')?.touched" class="invalid-feedback">
+            Mã Khoa là bắt buộc.
+          </div>
+        </div>
+
+        <div class="form-group flex-item">
+          <label for="tenKhoa">Tên Khoa:</label>
+          <input type="text" id="tenKhoa" formControlName="tenKhoa" class="form-control"
+                 [ngClass]="{ 'is-invalid': khoaForm.get('tenKhoa')?.invalid && khoaForm.get('tenKhoa')?.touched }">
+          <div *ngIf="khoaForm.get('tenKhoa')?.invalid && khoaForm.get('tenKhoa')?.touched" class="invalid-feedback">
+            Tên Khoa là bắt buộc.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">{{ selectedKhoa ? 'Cập nhật' : 'Thêm mới' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div class="list-section">
+    <h2>Danh sách Khoa</h2>
+    <div class="search-box">
+      <input type="text" placeholder="Tìm kiếm theo mã hoặc tên khoa..." class="form-control" (input)="onSearch($event)">
+    </div>
+
+    <div *ngIf="khoaList.length === 0 && !errorMessage" class="alert alert-info">
+      Không tìm thấy Khoa nào.
+    </div>
+
+    <table class="data-table" *ngIf="khoaList.length > 0">
+      <thead>
+        <tr>
+          <th>Mã Khoa</th>
+          <th>Tên Khoa</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let khoa of khoaList">
+          <td>{{ khoa.maKhoa }}</td>
+          <td>{{ khoa.tenKhoa }}</td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="onSelectKhoa(khoa)">Sửa</button>
+            <button class="btn btn-danger btn-sm" (click)="onDeleteKhoa(khoa.maKhoa)">Xóa</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

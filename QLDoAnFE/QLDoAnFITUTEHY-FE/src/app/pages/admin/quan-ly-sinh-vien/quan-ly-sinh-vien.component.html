@@ -1,0 +1,122 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Sinh Viên</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedSinhVien ? 'Cập nhật Sinh Viên' : 'Thêm mới Sinh Viên' }}</h2>
+        <form [formGroup]="sinhVienForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maSV">Mã Sinh Viên:</label>
+                    <input type="text" id="maSV" formControlName="maSV" class="form-control"
+                        [ngClass]="{ 'is-invalid': sinhVienForm.get('maSV')?.invalid && sinhVienForm.get('maSV')?.touched }">
+                    <div *ngIf="sinhVienForm.get('maSV')?.invalid && sinhVienForm.get('maSV')?.touched"
+                        class="invalid-feedback">
+                        Mã Sinh Viên là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="hoTen">Họ Tên:</label>
+                    <input type="text" id="hoTen" formControlName="hoTen" class="form-control"
+                        [ngClass]="{ 'is-invalid': sinhVienForm.get('hoTen')?.invalid && sinhVienForm.get('hoTen')?.touched }">
+                    <div *ngIf="sinhVienForm.get('hoTen')?.invalid && sinhVienForm.get('hoTen')?.touched"
+                        class="invalid-feedback">
+                        Họ Tên là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" formControlName="email" class="form-control"
+                        [ngClass]="{ 'is-invalid': sinhVienForm.get('email')?.invalid && sinhVienForm.get('email')?.touched }">
+                    <div *ngIf="sinhVienForm.get('email')?.invalid && sinhVienForm.get('email')?.touched"
+                        class="invalid-feedback">
+                        <span *ngIf="sinhVienForm.get('email')?.errors?.['required']">Email là bắt buộc.</span>
+                        <span *ngIf="sinhVienForm.get('email')?.errors?.['email']">Email không hợp lệ.</span>
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="soDienThoai">Số Điện Thoại:</label>
+                    <input type="text" id="soDienThoai" formControlName="soDienThoai" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="ngaySinh">Ngày Sinh:</label>
+                    <input type="date" id="ngaySinh" formControlName="ngaySinh" class="form-control">
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="maLop">Lớp:</label>
+                    <select id="maLop" formControlName="maLop" class="form-control"
+                        [ngClass]="{ 'is-invalid': sinhVienForm.get('maLop')?.invalid && sinhVienForm.get('maLop')?.touched }">
+                        <option value="" disabled selected>-- Chọn Lớp --</option>
+                        <option *ngFor="let lop of lopList" [value]="lop.maLop">{{ lop.tenLop }}</option>
+                    </select>
+                    <div *ngIf="sinhVienForm.get('maLop')?.invalid && sinhVienForm.get('maLop')?.touched"
+                        class="invalid-feedback">
+                        Lớp là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedSinhVien ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Sinh Viên</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã, tên, email..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onLopFilterChange($event)">
+                <option value="">-- Lọc theo Lớp --</option>
+                <option *ngFor="let lop of lopList" [value]="lop.maLop">{{ lop.tenLop }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="sinhVienList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Sinh Viên nào.
+        </div>
+
+        <table class="data-table" *ngIf="sinhVienList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã SV</th>
+                    <th>Họ Tên</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Ngày Sinh</th>
+                    <th>Lớp</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let sinhVien of sinhVienList">
+                    <td>{{ sinhVien.maSV }}</td>
+                    <td>{{ sinhVien.hoTen }}</td>
+                    <td>{{ sinhVien.email }}</td>
+                    <td>{{ sinhVien.soDienThoai || 'N/A' }}</td>
+                    <td>{{ sinhVien.ngaySinh ? (sinhVien.ngaySinh | date: 'dd/MM/yyyy') : 'N/A' }}</td>
+                    <td>{{ getLopTen(sinhVien.maLop) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectSinhVien(sinhVien)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteSinhVien(sinhVien.maSV)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

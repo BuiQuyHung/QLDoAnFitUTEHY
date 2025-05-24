@@ -1,0 +1,100 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Bộ Môn</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedBoMon ? 'Cập nhật Bộ Môn' : 'Thêm mới Bộ Môn' }}</h2>
+        <form [formGroup]="boMonForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maBoMon">Mã Bộ Môn:</label>
+                    <input type="text" id="maBoMon" formControlName="maBoMon" class="form-control"
+                        [ngClass]="{ 'is-invalid': boMonForm.get('maBoMon')?.invalid && boMonForm.get('maBoMon')?.touched }">
+                    <div *ngIf="boMonForm.get('maBoMon')?.invalid && boMonForm.get('maBoMon')?.touched"
+                        class="invalid-feedback">
+                        Mã Bộ Môn là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenBoMon">Tên Bộ Môn:</label>
+                    <input type="text" id="tenBoMon" formControlName="tenBoMon" class="form-control"
+                        [ngClass]="{ 'is-invalid': boMonForm.get('tenBoMon')?.invalid && boMonForm.get('tenBoMon')?.touched }">
+                    <div *ngIf="boMonForm.get('tenBoMon')?.invalid && boMonForm.get('tenBoMon')?.touched"
+                        class="invalid-feedback">
+                        Tên Bộ Môn là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="moTa">Mô tả:</label>
+                    <textarea id="moTa" formControlName="moTa" class="form-control"></textarea>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="maKhoa">Khoa:</label>
+                    <select id="maKhoa" formControlName="maKhoa" class="form-control"
+                        [ngClass]="{ 'is-invalid': boMonForm.get('maKhoa')?.invalid && boMonForm.get('maKhoa')?.touched }">
+                        <option value="" disabled selected>-- Chọn Khoa --</option>
+                        <option *ngFor="let khoa of khoaList" [value]="khoa.maKhoa">{{ khoa.tenKhoa }}</option>
+                    </select>
+                    <div *ngIf="boMonForm.get('maKhoa')?.invalid && boMonForm.get('maKhoa')?.touched"
+                        class="invalid-feedback">
+                        Khoa là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedBoMon ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Bộ Môn</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên bộ môn..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onKhoaFilterChange($event)">
+                <option value="">-- Lọc theo Khoa --</option>
+                <option *ngFor="let khoa of khoaList" [value]="khoa.maKhoa">{{ khoa.tenKhoa }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="boMonList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Bộ Môn nào.
+        </div>
+
+        <table class="data-table" *ngIf="boMonList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Bộ Môn</th>
+                    <th>Tên Bộ Môn</th>
+                    <th>Mô tả</th>
+                    <th>Tên Khoa</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let boMon of boMonList">
+                    <td>{{ boMon.maBoMon }}</td>
+                    <td>{{ boMon.tenBoMon }}</td>
+                    <td>{{ boMon.moTa }}</td>
+                    <td>{{ getKhoaTen(boMon.maKhoa) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectBoMon(boMon)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteBoMon(boMon.maBoMon)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

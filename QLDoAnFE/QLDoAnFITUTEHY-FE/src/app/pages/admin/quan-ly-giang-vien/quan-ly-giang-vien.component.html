@@ -1,0 +1,127 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Giảng Viên</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedGiangVien ? 'Cập nhật Giảng Viên' : 'Thêm mới Giảng Viên' }}</h2>
+        <form [formGroup]="giangVienForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maGV">Mã Giảng Viên:</label>
+                    <input type="text" id="maGV" formControlName="maGV" class="form-control"
+                        [ngClass]="{ 'is-invalid': giangVienForm.get('maGV')?.invalid && giangVienForm.get('maGV')?.touched }">
+                    <div *ngIf="giangVienForm.get('maGV')?.invalid && giangVienForm.get('maGV')?.touched"
+                        class="invalid-feedback">
+                        Mã Giảng Viên là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="hoTen">Họ Tên:</label>
+                    <input type="text" id="hoTen" formControlName="hoTen" class="form-control"
+                        [ngClass]="{ 'is-invalid': giangVienForm.get('hoTen')?.invalid && giangVienForm.get('hoTen')?.touched }">
+                    <div *ngIf="giangVienForm.get('hoTen')?.invalid && giangVienForm.get('hoTen')?.touched"
+                        class="invalid-feedback">
+                        Họ Tên là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="chuyenNganh">Chuyên Ngành:</label>
+                    <select id="chuyenNganh" formControlName="chuyenNganh" class="form-control"
+                        [ngClass]="{ 'is-invalid': giangVienForm.get('chuyenNganh')?.invalid && giangVienForm.get('chuyenNganh')?.touched }">
+                        <option value="" disabled selected>-- Chọn Chuyên Ngành --</option>
+                        <option *ngFor="let cn of chuyenNganhList" [value]="cn.tenChuyenNganh">{{ cn.tenChuyenNganh }}
+                        </option>
+                    </select>
+                    <div *ngIf="giangVienForm.get('chuyenNganh')?.invalid && giangVienForm.get('chuyenNganh')?.touched"
+                        class="invalid-feedback">
+                        Chuyên Ngành là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="hocVi">Học Vị:</label>
+                    <input type="text" id="hocVi" formControlName="hocVi" class="form-control"
+                        [ngClass]="{ 'is-invalid': giangVienForm.get('hocVi')?.invalid && giangVienForm.get('hocVi')?.touched }">
+                    <div *ngIf="giangVienForm.get('hocVi')?.invalid && giangVienForm.get('hocVi')?.touched"
+                        class="invalid-feedback">
+                        Học Vị là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" formControlName="email" class="form-control"
+                        [ngClass]="{ 'is-invalid': giangVienForm.get('email')?.invalid && giangVienForm.get('email')?.touched }">
+                    <div *ngIf="giangVienForm.get('email')?.invalid && giangVienForm.get('email')?.touched"
+                        class="invalid-feedback">
+                        Email là bắt buộc và phải đúng định dạng.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="soDienThoai">Số Điện Thoại:</label>
+                    <input type="text" id="soDienThoai" formControlName="soDienThoai" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedGiangVien ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Giảng Viên</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã, tên, email..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onChuyenNganhFilterChange($event)">
+                <option value="">-- Lọc theo Chuyên Ngành --</option>
+                <option *ngFor="let cn of chuyenNganhList" [value]="cn.tenChuyenNganh">{{ cn.tenChuyenNganh }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="giangVienList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Giảng Viên nào.
+        </div>
+
+        <table class="data-table" *ngIf="giangVienList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã GV</th>
+                    <th>Họ Tên</th>
+                    <th>Chuyên Ngành</th>
+                    <th>Học Vị</th>
+                    <th>Email</th>
+                    <th>SĐT</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let giangVien of giangVienList">
+                    <td>{{ giangVien.maGV }}</td>
+                    <td>{{ giangVien.hoTen }}</td>
+                    <td>{{ giangVien.chuyenNganh }}</td>
+                    <td>{{ giangVien.hocVi }}</td>
+                    <td>{{ giangVien.email }}</td>
+                    <td>{{ giangVien.soDienThoai }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectGiangVien(giangVien)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteGiangVien(giangVien.maGV)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

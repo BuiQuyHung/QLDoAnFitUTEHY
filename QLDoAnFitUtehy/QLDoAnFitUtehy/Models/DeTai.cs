@@ -41,6 +41,6 @@ namespace QLDoAnFITUTEHY.Models
         public DotDoAn DotDoAn { get; set; }
         public SinhVien SinhVien { get; set; }
         public ICollection<PhanCong> PhanCongs { get; set; }
-        //public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
+        public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
     }
 }

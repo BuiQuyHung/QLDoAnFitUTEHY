@@ -1,0 +1,17 @@
+<div class="app-container">
+  <ng-container *ngIf="authService.isLoggedIn()">
+    <nav class="main-nav">
+      <a routerLink="/admin/dashboard" *ngIf="authService.hasRole('QTV')">Admin Dashboard</a>
+      <a routerLink="/student/dashboard" *ngIf="authService.hasRole('SV')">Student Dashboard</a>
+      <a routerLink="/lecturer/dashboard" *ngIf="authService.hasRole('GV')">Lecturer Dashboard</a>
+      <button (click)="authService.logout()">Đăng xuất</button>
+    </nav>
+    <main class="content-area">
+      <router-outlet></router-outlet>
+    </main>
+  </ng-container>
+
+  <ng-container *ngIf="!authService.isLoggedIn()">
+    <router-outlet></router-outlet>
+  </ng-container>
+</div>

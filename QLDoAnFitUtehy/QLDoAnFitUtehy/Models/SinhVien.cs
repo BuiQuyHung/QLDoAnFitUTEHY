@@ -35,7 +35,7 @@ namespace QLDoAnFITUTEHY.Models
         public string MaLop { get; set; }
         public Lop Lop { get; set; }
         public ICollection<PhanCong> PhanCongs { get; set; }
-        //public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
+        public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
         public DeTai DeTai { get; set; } 
         public TaiKhoan TaiKhoan { get; set; }
     }

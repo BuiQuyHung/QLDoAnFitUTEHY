@@ -1,0 +1,165 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Đợt Đồ Án</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedDotDoAn ? 'Cập nhật Đợt Đồ Án' : 'Thêm mới Đợt Đồ Án' }}</h2>
+        <form [formGroup]="dotDoAnForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maDotDoAn">Mã Đợt Đồ Án:</label>
+                    <input type="text" id="maDotDoAn" formControlName="maDotDoAn" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('maDotDoAn')?.invalid && dotDoAnForm.get('maDotDoAn')?.touched }">
+                    <div *ngIf="dotDoAnForm.get('maDotDoAn')?.invalid && dotDoAnForm.get('maDotDoAn')?.touched"
+                        class="invalid-feedback">
+                        Mã Đợt Đồ Án là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenDotDoAn">Tên Đợt Đồ Án:</label>
+                    <input type="text" id="tenDotDoAn" formControlName="tenDotDoAn" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('tenDotDoAn')?.invalid && dotDoAnForm.get('tenDotDoAn')?.touched }">
+                    <div *ngIf="dotDoAnForm.get('tenDotDoAn')?.invalid && dotDoAnForm.get('tenDotDoAn')?.touched"
+                        class="invalid-feedback">
+                        Tên Đợt Đồ Án là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="khoaHoc">Khóa Học:</label>
+                    <input type="text" id="khoaHoc" formControlName="khoaHoc" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('khoaHoc')?.invalid && dotDoAnForm.get('khoaHoc')?.touched }">
+                    <div *ngIf="dotDoAnForm.get('khoaHoc')?.invalid && dotDoAnForm.get('khoaHoc')?.touched"
+                        class="invalid-feedback">
+                        Khóa Học là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="ngayBatDau">Ngày Bắt Đầu:</label>
+                    <input type="date" id="ngayBatDau" formControlName="ngayBatDau" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('ngayBatDau')?.invalid && dotDoAnForm.get('ngayBatDau')?.touched }">
+                    <div *ngIf="dotDoAnForm.get('ngayBatDau')?.invalid && dotDoAnForm.get('ngayBatDau')?.touched"
+                        class="invalid-feedback">
+                        Ngày Bắt Đầu là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="soTuanThucHien">Số Tuần Thực Hiện:</label>
+                    <input type="number" id="soTuanThucHien" formControlName="soTuanThucHien" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('soTuanThucHien')?.invalid && dotDoAnForm.get('soTuanThucHien')?.touched }">
+                    <div *ngIf="dotDoAnForm.get('soTuanThucHien')?.invalid && dotDoAnForm.get('soTuanThucHien')?.touched"
+                        class="invalid-feedback">
+                        Số Tuần Thực Hiện là bắt buộc và phải lớn hơn 0.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="ngayKetThuc">Ngày Kết Thúc (Tự động):</label>
+                    <input type="date" id="ngayKetThuc" formControlName="ngayKetThuc" class="form-control"
+                        [ngClass]="{ 'is-invalid': dotDoAnForm.get('ngayKetThuc')?.invalid && dotDoAnForm.get('ngayKetThuc')?.touched }">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="lopIds">Lớp Tham Gia:</label>
+                    <select multiple id="lopIds" class="form-control" (change)="onLopSelectionChange($event)"
+                        [ngClass]="{ 'is-invalid': lopIdsFormArray.invalid && dotDoAnForm.get('lopIds')?.touched }"
+                        style="min-height: 150px;">
+                        <option *ngFor="let lop of lopList" [value]="lop.maLop" [selected]="isLopSelected(lop.maLop)">
+                            {{ lop.tenLop }}
+                        </option>
+                    </select>
+                    <small class="form-text text-muted">Giữ Ctrl (hoặc Cmd) để chọn nhiều lớp.</small>
+                    <div *ngIf="lopIdsFormArray.invalid && dotDoAnForm.get('lopIds')?.touched" class="invalid-feedback">
+                        Vui lòng chọn ít nhất một lớp.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="giangVienIds">Giảng Viên Phụ Trách:</label>
+                    <select multiple id="giangVienIds" class="form-control"
+                        (change)="onGiangVienSelectionChange($event)"
+                        [ngClass]="{ 'is-invalid': giangVienIdsFormArray.invalid && dotDoAnForm.get('giangVienIds')?.touched }"
+                        style="min-height: 150px;">
+                        <option *ngFor="let gv of giangVienList" [value]="gv.maGV"
+                            [selected]="isGiangVienSelected(gv.maGV)">
+                            {{ gv.hoTen }}
+                        </option>
+                    </select>
+                    <small class="form-text text-muted">Giữ Ctrl (hoặc Cmd) để chọn nhiều giảng viên.</small>
+                    <div *ngIf="giangVienIdsFormArray.invalid && dotDoAnForm.get('giangVienIds')?.touched"
+                        class="invalid-feedback">
+                        Vui lòng chọn ít nhất một giảng viên.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedDotDoAn ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+    <div *ngIf="isLoading" class="alert alert-info">Đang tải dữ liệu...</div>
+
+    <div class="list-section">
+        <h2>Danh sách Đợt Đồ Án</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên đợt đồ án..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+        </div>
+
+        <div *ngIf="dotDoAnList.length === 0 && !errorMessage && !isLoading" class="alert alert-info">
+            Không tìm thấy Đợt Đồ Án nào.
+        </div>
+
+        <table class="data-table" *ngIf="dotDoAnList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Đợt</th>
+                    <th>Tên Đợt</th>
+                    <th>Khóa Học</th>
+                    <th>Ngày Bắt Đầu</th>
+                    <th>Ngày Kết Thúc</th>
+                    <th>Số Tuần</th>
+                    <th>Lớp Tham Gia</th>
+                    <th>Giảng Viên Phụ Trách</th>
+                    <th>Trạng Thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let dda of dotDoAnList">
+                    <td>{{ dda.maDotDoAn }}</td>
+                    <td>{{ dda.tenDotDoAn }}</td>
+                    <td>{{ dda.khoaHoc }}</td>
+                    <td>{{ dda.ngayBatDau | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ dda.ngayKetThuc ? (dda.ngayKetThuc | date:'dd/MM/yyyy') : 'N/A' }}</td>
+                    <td>{{ dda.soTuanThucHien }}</td>
+                    <td>
+                        {{ getLopNames(dda.dsLop) }}
+                    </td>
+                    <td>
+                        {{ getGiangVienNames(dda.dsGiangVien) }}
+                    </td>
+                    <td>{{ dda.trangThai || 'N/A' }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectDotDoAn(dda)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteDotDoAn(dda.maDotDoAn)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
