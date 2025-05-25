@@ -22,9 +22,6 @@ namespace QLDoAnFITUTEHY.Repository
 
         public async Task<TaiKhoan?> GetByIdAsync(string id)
         {
-            // FindAsync chỉ hoạt động với khóa chính đơn giản.
-            // Nếu khóa chính là composite hoặc bạn cần include các navigation property,
-            // bạn có thể cần dùng FirstOrDefaultAsync.
             return await _context.TaiKhoans.FindAsync(id);
         }
 
@@ -63,11 +60,8 @@ namespace QLDoAnFITUTEHY.Repository
             return await _context.TaiKhoans.AnyAsync(tk => tk.TenDangNhap == username);
         }
 
-        // --- Triển khai phương thức LoginAsync ---
         public async Task<TaiKhoan?> LoginAsync(string tenDangNhap, string matKhau)
         {
-            // Trong môi trường thực tế, bạn sẽ so sánh mật khẩu đã được hash
-            // Ví dụ: return await _context.TaiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == tenDangNhap && BCrypt.Net.BCrypt.Verify(matKhau, tk.MatKhau));
             return await _context.TaiKhoans.FirstOrDefaultAsync(tk => tk.TenDangNhap == tenDangNhap && tk.MatKhau == matKhau);
         }
     }

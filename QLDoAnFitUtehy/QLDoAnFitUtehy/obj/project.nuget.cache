@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "ijqi28+2eV9b+CkRW8c12gq4EAg35r0pmMtxTIedGeH0hUPC5+8Hzn5n2LZnp1PAXwDwHTH10nKw08IfQjYOaw==",
+  "dgSpecHash": "SuW/CAXeLkYOs0KTKW4bG5VMjeob0B8W3YBu/UT+ittJU8yhSgwtmRCHEueqqZlJRe5Z4i78mExbyw04Njl6hA==",
   "success": true,
   "projectFilePath": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\QLDoAnFitUtehy.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\ASUS\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\ASUS\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\ASUS\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",

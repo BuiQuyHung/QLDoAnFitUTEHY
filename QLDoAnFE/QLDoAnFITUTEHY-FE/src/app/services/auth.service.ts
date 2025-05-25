@@ -103,4 +103,7 @@ export class AuthService {
         this.router.navigate(['/']);
     }
   }
+  get currentUserValue(): UserInfo {
+    return this.currentUserSubject.value;
+  }
 }

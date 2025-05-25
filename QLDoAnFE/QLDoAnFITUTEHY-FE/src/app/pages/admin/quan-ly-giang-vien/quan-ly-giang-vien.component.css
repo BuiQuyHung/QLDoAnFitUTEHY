@@ -187,6 +187,7 @@ color: white;
 .data-table th {
   background-color: #e9ecef;
   font-weight: bold;
+  text-align: center; 
 }
 
 .data-table tbody tr:nth-child(odd) {

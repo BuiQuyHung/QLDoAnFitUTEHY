@@ -1,0 +1,141 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Tài Khoản</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedTaiKhoan ? 'Cập nhật Tài Khoản' : 'Thêm mới Tài Khoản' }}</h2>
+        <form [formGroup]="taiKhoanForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="tenDangNhap">Tên Đăng Nhập:</label>
+                    <input type="text" id="tenDangNhap" formControlName="tenDangNhap" class="form-control"
+                        [ngClass]="{ 'is-invalid': taiKhoanForm.get('tenDangNhap')?.invalid && taiKhoanForm.get('tenDangNhap')?.touched }">
+                    <div *ngIf="taiKhoanForm.get('tenDangNhap')?.invalid && taiKhoanForm.get('tenDangNhap')?.touched"
+                        class="invalid-feedback">
+                        Tên Đăng Nhập là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="matKhau">Mật Khẩu:</label>
+                    <input type="password" id="matKhau" formControlName="matKhau" class="form-control"
+                        [ngClass]="{ 'is-invalid': taiKhoanForm.get('matKhau')?.invalid && taiKhoanForm.get('matKhau')?.touched }">
+                    <div *ngIf="taiKhoanForm.get('matKhau')?.invalid && taiKhoanForm.get('matKhau')?.touched"
+                        class="invalid-feedback">
+                        Mật Khẩu là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="vaiTro">Vai trò:</label>
+                    <select id="vaiTro" formControlName="vaiTro" class="form-control"
+                        [ngClass]="{ 'is-invalid': taiKhoanForm.get('vaiTro')?.invalid && taiKhoanForm.get('vaiTro')?.touched }">
+                        <option value="" disabled selected>-- Chọn Vai trò --</option>
+                        <option *ngFor="let vaiTro of vaiTroOptions" [value]="vaiTro">{{ vaiTro }}</option>
+                    </select>
+                    <div *ngIf="taiKhoanForm.get('vaiTro')?.invalid && taiKhoanForm.get('vaiTro')?.touched"
+                        class="invalid-feedback">
+                        Vai trò là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item" *ngIf="taiKhoanForm.get('vaiTro')?.value === 'GiangVien'">
+                    <label for="maGV">Giảng viên:</label>
+                    <select id="maGV" formControlName="maGV" class="form-control"
+                        [ngClass]="{ 'is-invalid': taiKhoanForm.get('maGV')?.invalid && taiKhoanForm.get('maGV')?.touched }">
+                        <option [value]="null" disabled selected>-- Chọn Giảng viên --</option>
+                        <option *ngFor="let gv of giangVienList" [value]="gv.maGV">{{ gv.hoTen }} ({{ gv.maGV }})
+                        </option>
+                    </select>
+                    <div *ngIf="taiKhoanForm.get('maGV')?.invalid && taiKhoanForm.get('maGV')?.touched"
+                        class="invalid-feedback">
+                        Giảng viên là bắt buộc cho vai trò Giảng viên.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item" *ngIf="taiKhoanForm.get('vaiTro')?.value === 'SinhVien'">
+                    <label for="maSV">Sinh viên:</label>
+                    <select id="maSV" formControlName="maSV" class="form-control"
+                        [ngClass]="{ 'is-invalid': taiKhoanForm.get('maSV')?.invalid && taiKhoanForm.get('maSV')?.touched }">
+                        <option [value]="null" disabled selected>-- Chọn Sinh viên --</option>
+                        <option *ngFor="let sv of sinhVienList" [value]="sv.maSV">{{ sv.hoTen }} ({{ sv.maSV }})
+                        </option>
+                    </select>
+                    <div *ngIf="taiKhoanForm.get('maSV')?.invalid && taiKhoanForm.get('maSV')?.touched"
+                        class="invalid-feedback">
+                        Sinh viên là bắt buộc cho vai trò Sinh viên.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item"
+                    *ngIf="taiKhoanForm.get('vaiTro')?.value !== 'GiangVien' && taiKhoanForm.get('vaiTro')?.value !== 'SinhVien'">
+                </div>
+            </div>
+
+            <div *ngIf="taiKhoanForm.errors?.['maGVRequired']" class="alert alert-danger">
+                Vai trò Giảng viên yêu cầu chọn Giảng viên.
+            </div>
+            <div *ngIf="taiKhoanForm.errors?.['maSVRequired']" class="alert alert-danger">
+                Vai trò Sinh viên yêu cầu chọn Sinh viên.
+            </div>
+            <div *ngIf="taiKhoanForm.errors?.['adminHasAssociation']" class="alert alert-danger">
+                Vai trò Admin không được liên kết với Giảng viên hoặc Sinh viên.
+            </div>
+            <div *ngIf="taiKhoanForm.errors?.['invalidAssociation']" class="alert alert-danger">
+                Vai trò này không được liên kết với Giảng viên hoặc Sinh viên.
+            </div>
+
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedTaiKhoan ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Tài Khoản</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo tên đăng nhập, vai trò..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onVaiTroFilterChange($event)">
+                <option value="">-- Lọc theo Vai trò --</option>
+                <option *ngFor="let vaiTro of vaiTroOptions" [value]="vaiTro">{{ vaiTro }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="taiKhoanList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Tài Khoản nào.
+        </div>
+
+        <table class="data-table" *ngIf="taiKhoanList.length > 0">
+            <thead>
+                <tr>
+                    <th>Tên Đăng Nhập</th>
+                    <th>Vai trò</th>
+                    <th>Giảng viên liên kết</th>
+                    <th>Sinh viên liên kết</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tk of taiKhoanList">
+                    <td>{{ tk.tenDangNhap }}</td>
+                    <td>{{ tk.vaiTro }}</td>
+                    <td>{{ tk.maGV ? getGiangVienTen(tk.maGV) : 'N/A' }}</td>
+                    <td>{{ tk.maSV ? getSinhVienTen(tk.maSV) : 'N/A' }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectTaiKhoan(tk)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteTaiKhoan(tk.tenDangNhap)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

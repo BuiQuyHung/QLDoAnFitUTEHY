@@ -1,0 +1,100 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Hội Đồng</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedHoiDong ? 'Cập nhật Hội Đồng' : 'Thêm mới Hội Đồng' }}</h2>
+        <form [formGroup]="hoiDongForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maHoiDong">Mã Hội Đồng:</label>
+                    <input type="text" id="maHoiDong" formControlName="maHoiDong" class="form-control"
+                        [ngClass]="{ 'is-invalid': hoiDongForm.get('maHoiDong')?.invalid && hoiDongForm.get('maHoiDong')?.touched }">
+                    <div *ngIf="hoiDongForm.get('maHoiDong')?.invalid && hoiDongForm.get('maHoiDong')?.touched"
+                        class="invalid-feedback">
+                        Mã Hội Đồng là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenHoiDong">Tên Hội Đồng:</label>
+                    <input type="text" id="tenHoiDong" formControlName="tenHoiDong" class="form-control"
+                        [ngClass]="{ 'is-invalid': hoiDongForm.get('tenHoiDong')?.invalid && hoiDongForm.get('tenHoiDong')?.touched }">
+                    <div *ngIf="hoiDongForm.get('tenHoiDong')?.invalid && hoiDongForm.get('tenHoiDong')?.touched"
+                        class="invalid-feedback">
+                        Tên Hội Đồng là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maDotDoAn">Đợt Đồ án:</label>
+                    <select id="maDotDoAn" formControlName="maDotDoAn" class="form-control"
+                        [ngClass]="{ 'is-invalid': hoiDongForm.get('maDotDoAn')?.invalid && hoiDongForm.get('maDotDoAn')?.touched }">
+                        <option value="" disabled selected>-- Chọn Đợt Đồ án --</option>
+                        <option *ngFor="let dda of dotDoAnList" [value]="dda.maDotDoAn">{{ dda.tenDotDoAn }}</option>
+                    </select>
+                    <div *ngIf="hoiDongForm.get('maDotDoAn')?.invalid && hoiDongForm.get('maDotDoAn')?.touched"
+                        class="invalid-feedback">
+                        Đợt Đồ án là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="ngayBaoVe">Ngày Bảo Vệ:</label>
+                    <input type="date" id="ngayBaoVe" formControlName="ngayBaoVe" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedHoiDong ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Hội Đồng</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã hoặc tên hội đồng..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onDotDoAnFilterChange($event)">
+                <option value="">-- Lọc theo Đợt Đồ án --</option>
+                <option *ngFor="let dda of dotDoAnList" [value]="dda.maDotDoAn">{{ dda.tenDotDoAn }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="hoiDongList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Hội Đồng nào.
+        </div>
+
+        <table class="data-table" *ngIf="hoiDongList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Hội Đồng</th>
+                    <th>Tên Hội Đồng</th>
+                    <th>Ngày Bảo Vệ</th>
+                    <th>Đợt Đồ án</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let hoiDong of hoiDongList">
+                    <td>{{ hoiDong.maHoiDong }}</td>
+                    <td>{{ hoiDong.tenHoiDong }}</td>
+                    <td>{{ hoiDong.ngayBaoVe | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ getDotDoAnTen(hoiDong.maDotDoAn) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectHoiDong(hoiDong)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteHoiDong(hoiDong.maHoiDong)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

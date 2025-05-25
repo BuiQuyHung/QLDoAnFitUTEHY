@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { Khoa } from '../../../models/Khoa';
 import { KhoaService }  from '../../../services/khoa.service';
 import { catchError, debounceTime, distinctUntilChanged, switchMap, startWith } from 'rxjs/operators';
-import { of, Subject, combineLatest, throwError } from 'rxjs'; // Thêm combineLatest và throwError
+import { of, Subject, combineLatest, throwError } from 'rxjs'; 
 
 @Component({
   selector: 'app-quan-ly-khoa',
@@ -17,12 +17,12 @@ export class QuanLyKhoaComponent implements OnInit {
   khoaForm!: FormGroup;
   khoaList: Khoa[] = [];
   selectedKhoa: Khoa | null = null;
-  errorMessage: string = ''; // Thay đổi từ null thành chuỗi rỗng
-  successMessage: string = ''; // Thay đổi từ null thành chuỗi rỗng
+  errorMessage: string = ''; 
+  successMessage: string = ''; 
 
   private searchTerms = new Subject<string>();
-  private refreshTriggerSubject = new Subject<void>(); // Subject để kích hoạt làm mới
-  searchTerm: string = ''; // Biến lưu từ khóa tìm kiếm (để hiển thị trong input)
+  private refreshTriggerSubject = new Subject<void>(); 
+  searchTerm: string = ''; 
 
   constructor(
     private fb: FormBuilder,
@@ -32,39 +32,34 @@ export class QuanLyKhoaComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
-    // Kết hợp searchTerms và refreshTriggerSubject
     combineLatest([
       this.searchTerms.pipe(
-        startWith(this.searchTerm), // Giá trị ban đầu cho tìm kiếm
+        startWith(this.searchTerm), 
         debounceTime(300),
         distinctUntilChanged()
       ),
-      this.refreshTriggerSubject.pipe(startWith(undefined as void)) // Kích hoạt lần tải đầu tiên
+      this.refreshTriggerSubject.pipe(startWith(undefined as void))
     ]).pipe(
       switchMap(([term, refreshTrigger]) => {
-        this.searchTerm = term; // Cập nhật biến hiển thị
-        this.clearMessages(); // Xóa các thông báo cũ trước khi tải lại
+        this.searchTerm = term; 
+        this.clearMessages(); 
 
-        // Gọi API tìm kiếm khoa
         return this.khoaService.searchKhoa(term).pipe(
           catchError(error => {
             console.error('Lỗi tải danh sách khoa:', error);
-            // Ném ra lỗi cụ thể để component có thể bắt và hiển thị
             return throwError(() => new Error('Không thể tải danh sách khoa. Vui lòng kiểm tra kết nối và API Back-End.'));
           })
         );
       })
     ).subscribe({
       next: (data: Khoa[]) => {
-        this.khoaList = data; // Cập nhật danh sách khoa
+        this.khoaList = data;
       },
-      error: (err: Error) => { // Bắt lỗi đã được throwError từ switchMap
+      error: (err: Error) => { 
         this.errorMessage = err.message;
       }
     });
 
-    // Kích hoạt lần tải danh sách đầu tiên (có thể dùng refreshTriggerSubject.next() hoặc searchTermSubject.next('') )
-    // Hiện tại startWith đã xử lý điều này.
   }
 
   initForm(): void {
@@ -74,7 +69,6 @@ export class QuanLyKhoaComponent implements OnInit {
     });
   }
 
-  // Hàm này không còn trực tiếp gọi API nữa, mà chỉ kích hoạt Subject
   refreshKhoaList(): void {
     this.refreshTriggerSubject.next();
   }
@@ -86,35 +80,33 @@ export class QuanLyKhoaComponent implements OnInit {
       return;
     }
 
-    const formData: Khoa = this.khoaForm.getRawValue(); // Dùng getRawValue để lấy cả mã khoa khi disable
+    const formData: Khoa = this.khoaForm.getRawValue(); 
 
     if (this.selectedKhoa) {
-      // Chế độ sửa
-       const maKhoaToUpdate = this.selectedKhoa.maKhoa; // Lấy mã khoa từ đối tượng đã chọn
-      console.log('--- ĐANG THỰC HIỆN CẬP NHẬT KHOA ---'); // Thêm log này
-      console.log('Mã Khoa sẽ gửi đi để cập nhật:', maKhoaToUpdate); // DÒNG QUAN TRỌNG CẦN KIỂM TRA
+       const maKhoaToUpdate = this.selectedKhoa.maKhoa; 
+      console.log('--- ĐANG THỰC HIỆN CẬP NHẬT KHOA ---'); 
+      console.log('Mã Khoa sẽ gửi đi để cập nhật:', maKhoaToUpdate); 
       console.log('Dữ liệu form gửi đi:', formData); 
       
       this.khoaService.updateKhoa(this.selectedKhoa.maKhoa, formData).subscribe({
         next: (response) => {
           this.successMessage = 'Cập nhật khoa thành công!';
-          this.refreshKhoaList(); // Kích hoạt làm mới danh sách
+          this.refreshKhoaList(); 
           this.resetForm();
         },
-        error: (err: Error) => { // Bắt lỗi chi tiết từ ApiService
+        error: (err: Error) => { 
           this.errorMessage = 'Cập nhật khoa thất bại: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi cập nhật khoa:', err);
         }
       });
     } else {
-      // Chế độ thêm mới
       this.khoaService.addKhoa(formData).subscribe({
         next: (response) => {
           this.successMessage = 'Thêm mới khoa thành công!';
-          this.refreshKhoaList(); // Kích hoạt làm mới danh sách
+          this.refreshKhoaList();
           this.resetForm();
         },
-        error: (err: Error) => { // Bắt lỗi chi tiết từ ApiService
+        error: (err: Error) => { 
           this.errorMessage = 'Thêm mới khoa thất bại: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi thêm mới khoa:', err);
         }
@@ -134,10 +126,10 @@ export class QuanLyKhoaComponent implements OnInit {
       this.khoaService.deleteKhoa(maKhoa).subscribe({
         next: (response) => {
           this.successMessage = 'Xóa khoa thành công!';
-          this.refreshKhoaList(); // Kích hoạt làm mới danh sách
+          this.refreshKhoaList(); 
           this.resetForm();
         },
-        error: (err: Error) => { // Bắt lỗi chi tiết từ ApiService
+        error: (err: Error) => { 
           this.errorMessage = 'Xóa khoa thất bại: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi xóa khoa:', err);
         }
@@ -148,7 +140,7 @@ export class QuanLyKhoaComponent implements OnInit {
   resetForm(): void {
     this.khoaForm.reset();
     this.selectedKhoa = null;
-    this.khoaForm.get('maKhoa')?.enable(); // Kích hoạt lại trường Mã Khoa
+    this.khoaForm.get('maKhoa')?.enable(); 
     this.clearMessages();
   }
 
@@ -162,8 +154,8 @@ export class QuanLyKhoaComponent implements OnInit {
   }
 
   clearMessages(): void {
-    this.errorMessage = ''; // Đặt lại chuỗi rỗng thay vì null
-    this.successMessage = ''; // Đặt lại chuỗi rỗng thay vì null
+    this.errorMessage = ''; 
+    this.successMessage = ''; 
   }
 
   onSearch(event: Event): void {

@@ -1,0 +1,119 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Phân Công Đồ Án</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedPhanCong ? 'Cập nhật Phân Công' : 'Thêm mới Phân Công' }}</h2>
+        <form [formGroup]="phanCongForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maDeTai">Đề tài:</label>
+                    <select id="maDeTai" formControlName="maDeTai" class="form-control"
+                        [ngClass]="{ 'is-invalid': phanCongForm.get('maDeTai')?.invalid && phanCongForm.get('maDeTai')?.touched }">
+                        <option value="" disabled selected>-- Chọn Đề tài --</option>
+                        <option *ngFor="let deTai of deTaiList" [value]="deTai.maDeTai">{{ deTai.tenDeTai }}</option>
+                    </select>
+                    <div *ngIf="phanCongForm.get('maDeTai')?.invalid && phanCongForm.get('maDeTai')?.touched"
+                        class="invalid-feedback">
+                        Đề tài là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="maSV">Sinh viên:</label>
+                    <select id="maSV" formControlName="maSV" class="form-control"
+                        [ngClass]="{ 'is-invalid': phanCongForm.get('maSV')?.invalid && phanCongForm.get('maSV')?.touched }">
+                        <option value="" disabled selected>-- Chọn Sinh viên --</option>
+                        <option *ngFor="let sv of sinhVienList" [value]="sv.maSV">{{ sv.hoTen }}</option>
+                    </select>
+                    <div *ngIf="phanCongForm.get('maSV')?.invalid && phanCongForm.get('maSV')?.touched"
+                        class="invalid-feedback">
+                        Sinh viên là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maDotDoAn">Đợt Đồ án:</label>
+                    <select id="maDotDoAn" formControlName="maDotDoAn" class="form-control"
+                        [ngClass]="{ 'is-invalid': phanCongForm.get('maDotDoAn')?.invalid && phanCongForm.get('maDotDoAn')?.touched }">
+                        <option value="" disabled selected>-- Chọn Đợt Đồ án --</option>
+                        <option *ngFor="let dda of dotDoAnList" [value]="dda.maDotDoAn">{{ dda.tenDotDoAn }}</option>
+                    </select>
+                    <div *ngIf="phanCongForm.get('maDotDoAn')?.invalid && phanCongForm.get('maDotDoAn')?.touched"
+                        class="invalid-feedback">
+                        Đợt Đồ án là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="ngayPhanCong">Ngày Phân Công:</label>
+                    <input type="date" id="ngayPhanCong" formControlName="ngayPhanCong" class="form-control">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedPhanCong ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Phân Công</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo tên đề tài/sinh viên..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onDeTaiFilterChange($event)">
+                <option value="">-- Lọc theo Đề tài --</option>
+                <option *ngFor="let deTai of deTaiList" [value]="deTai.maDeTai">{{ deTai.tenDeTai }}</option>
+            </select>
+            <select class="form-control filter-select" (change)="onSvFilterChange($event)">
+                <option value="">-- Lọc theo Sinh viên --</option>
+                <option *ngFor="let sv of sinhVienList" [value]="sv.maSV">{{ sv.hoTen }}</option>
+            </select>
+            <select class="form-control filter-select" (change)="onDotDoAnFilterChange($event)">
+                <option value="">-- Lọc theo Đợt Đồ án --</option>
+                <option *ngFor="let dda of dotDoAnList" [value]="dda.maDotDoAn">{{ dda.tenDotDoAn }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="phanCongList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Phân Công nào.
+        </div>
+
+        <table class="data-table" *ngIf="phanCongList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Đề tài</th>
+                    <th>Tên Đề tài</th>
+                    <th>Mã Sinh viên</th>
+                    <th>Tên Sinh viên</th>
+                    <th>Ngày Phân Công</th>
+                    <th>Đợt Đồ án</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let pc of phanCongList">
+                    <td>{{ pc.maDeTai }}</td>
+                    <td>{{ getDeTaiTen(pc.maDeTai) }}</td>
+                    <td>{{ pc.maSV }}</td>
+                    <td>{{ getSinhVienTen(pc.maSV) }}</td>
+                    <td>{{ pc.ngayPhanCong | date:'dd/MM/yyyy' }}</td>
+                    <td>{{ getDotDoAnTen(pc.maDotDoAn) }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectPhanCong(pc)">Sửa</button>
+                        <button class="btn btn-danger btn-sm"
+                            (click)="onDeletePhanCong(pc.maDeTai, pc.maSV)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

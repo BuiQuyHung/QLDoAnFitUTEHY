@@ -101,7 +101,7 @@ CREATE TABLE DeTai (
     MaGV VARCHAR(10),
     MaDotDoAn VARCHAR(10),
     MaSV VARCHAR(10) NULL,
-    TrangThaiDangKy VARCHAR(50) DEFAULT N'Chờ duyệt',
+    TrangThaiDangKy NVARCHAR(50),
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV),
     FOREIGN KEY (MaDotDoAn) REFERENCES DotDoAn(MaDotDoAn),
     FOREIGN KEY (MaSV) REFERENCES SinhVien(MaSV)
@@ -152,12 +152,11 @@ CREATE TABLE HoiDong (
 CREATE TABLE ThanhVienHoiDong (
     MaHoiDong VARCHAR(10),
     MaGV VARCHAR(10),
-    VaiTro VARCHAR(50) NOT NULL,
+    VaiTro NVARCHAR(50) NOT NULL,
     PRIMARY KEY (MaHoiDong, MaGV),
     FOREIGN KEY (MaHoiDong) REFERENCES HoiDong(MaHoiDong),
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
-
 -- Bảng TaiKhoan
 CREATE TABLE TaiKhoan (
     TenDangNhap VARCHAR(50) PRIMARY KEY,

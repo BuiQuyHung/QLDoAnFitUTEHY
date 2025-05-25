@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace QLDoAnFITUTEHY.Models
@@ -35,8 +34,9 @@ namespace QLDoAnFITUTEHY.Models
         public string MaLop { get; set; }
         public Lop Lop { get; set; }
         public ICollection<PhanCong> PhanCongs { get; set; }
-        public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
-        public DeTai DeTai { get; set; } 
+        //public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
+        public DeTai DeTai { get; set; }
         public TaiKhoan TaiKhoan { get; set; }
     }
 }
+

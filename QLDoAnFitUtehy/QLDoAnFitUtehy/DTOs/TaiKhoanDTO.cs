@@ -55,7 +55,7 @@ namespace QLDoAnFITUTEHY.DTOs.TaiKhoan
 
     public class LoginResponseDto
     {
-        public string Token { get; set; } // Đây là JWT Token sẽ được gửi về client
+        public string Token { get; set; } 
         public string TenDangNhap { get; set; }
         public string VaiTro { get; set; }
         public string? MaGV { get; set; }

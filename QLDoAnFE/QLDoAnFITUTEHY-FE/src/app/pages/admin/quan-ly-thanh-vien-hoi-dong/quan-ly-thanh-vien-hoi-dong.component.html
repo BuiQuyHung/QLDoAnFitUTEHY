@@ -1,0 +1,111 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Thành Viên Hội Đồng</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedThanhVienHoiDong ? 'Cập nhật Thành Viên Hội Đồng' : 'Thêm mới Thành Viên Hội Đồng' }}</h2>
+        <form [formGroup]="thanhVienHoiDongForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maHoiDong">Hội Đồng:</label>
+                    <select id="maHoiDong" formControlName="maHoiDong" class="form-control"
+                        [ngClass]="{ 'is-invalid': thanhVienHoiDongForm.get('maHoiDong')?.invalid && thanhVienHoiDongForm.get('maHoiDong')?.touched }">
+                        <option value="" disabled selected>-- Chọn Hội Đồng --</option>
+                        <option *ngFor="let hd of hoiDongList" [value]="hd.maHoiDong">{{ hd.tenHoiDong }}</option>
+                    </select>
+                    <div *ngIf="thanhVienHoiDongForm.get('maHoiDong')?.invalid && thanhVienHoiDongForm.get('maHoiDong')?.touched"
+                        class="invalid-feedback">
+                        Hội Đồng là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="maGV">Giảng viên:</label>
+                    <select id="maGV" formControlName="maGV" class="form-control"
+                        [ngClass]="{ 'is-invalid': thanhVienHoiDongForm.get('maGV')?.invalid && thanhVienHoiDongForm.get('maGV')?.touched }">
+                        <option value="" disabled selected>-- Chọn Giảng viên --</option>
+                        <option *ngFor="let gv of giangVienList" [value]="gv.maGV">{{ gv.hoTen }}</option>
+                    </select>
+                    <div *ngIf="thanhVienHoiDongForm.get('maGV')?.invalid && thanhVienHoiDongForm.get('maGV')?.touched"
+                        class="invalid-feedback">
+                        Giảng viên là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="vaiTro">Vai trò:</label>
+                    <select id="vaiTro" formControlName="vaiTro" class="form-control"
+                        [ngClass]="{ 'is-invalid': thanhVienHoiDongForm.get('vaiTro')?.invalid && thanhVienHoiDongForm.get('vaiTro')?.touched }">
+                        <option value="" disabled selected>-- Chọn Vai trò --</option>
+                        <option *ngFor="let vaiTro of vaiTroOptions" [value]="vaiTro">{{ vaiTro }}</option>
+                    </select>
+                    <div *ngIf="thanhVienHoiDongForm.get('vaiTro')?.invalid && thanhVienHoiDongForm.get('vaiTro')?.touched"
+                        class="invalid-feedback">
+                        Vai trò là bắt buộc.
+                    </div>
+                </div>
+                <div class="form-group flex-item">
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedThanhVienHoiDong ? 'Cập nhật' : 'Thêm mới'
+                    }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Thành Viên Hội Đồng</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo hội đồng, giảng viên hoặc vai trò..."
+                class="form-control search-input" (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onHoiDongFilterChange($event)">
+                <option value="">-- Lọc theo Hội Đồng --</option>
+                <option *ngFor="let hd of hoiDongList" [value]="hd.maHoiDong">{{ hd.tenHoiDong }}</option>
+            </select>
+            <select class="form-control filter-select" (change)="onGvFilterChange($event)">
+                <option value="">-- Lọc theo Giảng viên --</option>
+                <option *ngFor="let gv of giangVienList" [value]="gv.maGV">{{ gv.hoTen }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="thanhVienHoiDongList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Thành Viên Hội Đồng nào.
+        </div>
+
+        <table class="data-table" *ngIf="thanhVienHoiDongList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Hội Đồng</th>
+                    <th>Tên Hội Đồng</th>
+                    <th>Mã Giảng viên</th>
+                    <th>Tên Giảng viên</th>
+                    <th>Vai trò</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let tv of thanhVienHoiDongList">
+                    <td>{{ tv.maHoiDong }}</td>
+                    <td>{{ getHoiDongTen(tv.maHoiDong) }}</td>
+                    <td>{{ tv.maGV }}</td>
+                    <td>{{ getGiangVienTen(tv.maGV) }}</td>
+                    <td>{{ tv.vaiTro }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectThanhVienHoiDong(tv)">Sửa</button>
+                        <button class="btn btn-danger btn-sm"
+                            (click)="onDeleteThanhVienHoiDong(tv.maHoiDong, tv.maGV)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -5,13 +5,17 @@ D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\QLDoAnFitUtehy.deps.j
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\QLDoAnFitUtehy.runtimeconfig.json
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\QLDoAnFitUtehy.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\QLDoAnFitUtehy.pdb
+D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\AutoMapper.dll
+D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Azure.Core.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Azure.Identity.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Humanizer.dll
+D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.OpenApi.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
@@ -78,5 +82,3 @@ D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\refint\QLDoAnFitUtehy
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\QLDoAnFitUtehy.pdb
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\QLDoAnFitUtehy.genruntimeconfig.cache
 D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\obj\Debug\net7.0\ref\QLDoAnFitUtehy.dll
-D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
-D:\FitUTEHY\QLDoAnFitUtehy\QLDoAnFitUtehy\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll

@@ -27,9 +27,10 @@ namespace QLDoAnFITUTEHY.API.Controllers
             _configuration = configuration;            
         }
 
+        [AllowAnonymous]
         // GET: api/TaiKhoan
         [HttpGet]
-        [Authorize(Roles = "Admin")] 
+        //[Authorize(Roles = "Admin")] 
         public async Task<ActionResult<IEnumerable<TaiKhoanDto>>> GetTaiKhoans()
         {
             var taiKhoans = await _taiKhoanRepository.GetAllAsync();
@@ -48,8 +49,9 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return Ok(taiKhoanDtos);
         }
 
+        [AllowAnonymous]
         [HttpGet("{username}")]
-        [Authorize] 
+        //[Authorize] 
         public async Task<ActionResult<TaiKhoanDto>> GetTaiKhoan(string username)
         {
             if (User.Identity?.Name != username && !User.IsInRole("Admin"))
@@ -74,8 +76,9 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return Ok(taiKhoanDto);
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        [Authorize(Roles = "Admin")] 
+        //[Authorize(Roles = "Admin")] 
         public async Task<ActionResult<TaiKhoanDto>> CreateTaiKhoan([FromBody] TaiKhoanCreateDto taiKhoanCreateDto)
         {
             if (!ModelState.IsValid)
@@ -124,8 +127,9 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return CreatedAtAction(nameof(GetTaiKhoan), new { username = taiKhoanDto.TenDangNhap }, taiKhoanDto);
         }
 
+        [AllowAnonymous]
         [HttpPut("{username}")]
-        [Authorize] 
+        //[Authorize] 
         public async Task<IActionResult> UpdateTaiKhoan(string username, [FromBody] TaiKhoanUpdateDto taiKhoanUpdateDto)
         {
             if (!ModelState.IsValid)
@@ -140,10 +144,10 @@ namespace QLDoAnFITUTEHY.API.Controllers
                 return NotFound($"Không tìm thấy tài khoản với tên đăng nhập: {username}");
             }
 
-            if (User.Identity?.Name != username && !User.IsInRole("Admin"))
-            {
-                return Forbid();
-            }
+            //if (User.Identity?.Name != username && !User.IsInRole("Admin"))
+            //{
+            //    return Forbid();
+            //}
 
             var oldVaiTro = taiKhoan.VaiTro; 
 
@@ -182,8 +186,9 @@ namespace QLDoAnFITUTEHY.API.Controllers
             return NoContent(); 
         }
 
+        [AllowAnonymous]
         [HttpDelete("{username}")]
-        [Authorize(Roles = "Admin")] 
+        //[Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteTaiKhoan(string username)
         {
             var taiKhoan = await _taiKhoanRepository.GetTaiKhoanByUsernameAsync(username);

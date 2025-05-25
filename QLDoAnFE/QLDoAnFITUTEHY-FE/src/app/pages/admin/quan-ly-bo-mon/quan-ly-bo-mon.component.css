@@ -208,8 +208,8 @@
 .data-table th {
   background-color: #e9ecef;
   font-weight: bold;
+  text-align: center; 
 }
-
 .data-table tbody tr:nth-child(odd) {
   background-color: #f2f2f2;
 }

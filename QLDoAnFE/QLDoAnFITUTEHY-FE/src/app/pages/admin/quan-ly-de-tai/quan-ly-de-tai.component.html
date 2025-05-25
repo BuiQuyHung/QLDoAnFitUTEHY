@@ -1,0 +1,148 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Đề tài</h1>
+    </div>
+
+    <div class="form-section card">
+        <h2>{{ selectedDeTai ? 'Cập nhật Đề tài' : 'Thêm mới Đề tài' }}</h2>
+        <form [formGroup]="deTaiForm" (ngSubmit)="onSubmit()">
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maDeTai">Mã Đề tài:</label>
+                    <input type="text" id="maDeTai" formControlName="maDeTai" class="form-control"
+                        [ngClass]="{ 'is-invalid': deTaiForm.get('maDeTai')?.invalid && deTaiForm.get('maDeTai')?.touched }">
+                    <div *ngIf="deTaiForm.get('maDeTai')?.invalid && deTaiForm.get('maDeTai')?.touched"
+                        class="invalid-feedback">
+                        Mã Đề tài là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="tenDeTai">Tên Đề tài:</label>
+                    <input type="text" id="tenDeTai" formControlName="tenDeTai" class="form-control"
+                        [ngClass]="{ 'is-invalid': deTaiForm.get('tenDeTai')?.invalid && deTaiForm.get('tenDeTai')?.touched }">
+                    <div *ngIf="deTaiForm.get('tenDeTai')?.invalid && deTaiForm.get('tenDeTai')?.touched"
+                        class="invalid-feedback">
+                        Tên Đề tài là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maGV">Giảng viên hướng dẫn:</label>
+                    <select id="maGV" formControlName="maGV" class="form-control"
+                        [ngClass]="{ 'is-invalid': deTaiForm.get('maGV')?.invalid && deTaiForm.get('maGV')?.touched }">
+                        <option value="" disabled selected>-- Chọn Giảng viên --</option>
+                        <option *ngFor="let gv of giangVienList" [value]="gv.maGV">{{ gv.hoTen }}</option>
+                    </select>
+                    <div *ngIf="deTaiForm.get('maGV')?.invalid && deTaiForm.get('maGV')?.touched"
+                        class="invalid-feedback">
+                        Giảng viên là bắt buộc.
+                    </div>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="maDotDoAn">Đợt Đồ án:</label>
+                    <select id="maDotDoAn" formControlName="maDotDoAn" class="form-control"
+                        [ngClass]="{ 'is-invalid': deTaiForm.get('maDotDoAn')?.invalid && deTaiForm.get('maDotDoAn')?.touched }">
+                        <option value="" disabled selected>-- Chọn Đợt Đồ án --</option>
+                        <option *ngFor="let dot of dotDoAnList" [value]="dot.maDotDoAn">{{ dot.tenDotDoAn }}</option>
+                    </select>
+                    <div *ngIf="deTaiForm.get('maDotDoAn')?.invalid && deTaiForm.get('maDotDoAn')?.touched"
+                        class="invalid-feedback">
+                        Đợt Đồ án là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item">
+                    <label for="maSV">Sinh viên thực hiện (tùy chọn):</label>
+                    <select id="maSV" formControlName="maSV" class="form-control">
+                        <option value="">-- Chưa phân công --</option>
+                        <option *ngFor="let sv of sinhVienList" [value]="sv.maSV">{{ sv.hoTen }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group flex-item">
+                    <label for="trangThaiDangKy">Trạng thái đăng ký:</label>
+                    <select id="trangThaiDangKy" formControlName="trangThaiDangKy" class="form-control"
+                        [ngClass]="{ 'is-invalid': deTaiForm.get('trangThaiDangKy')?.invalid && deTaiForm.get('trangThaiDangKy')?.touched }">
+                        <option *ngFor="let status of trangThaiOptions.slice(1)" [value]="status">{{ status }}</option>
+                    </select>
+                    <div *ngIf="deTaiForm.get('trangThaiDangKy')?.invalid && deTaiForm.get('trangThaiDangKy')?.touched"
+                        class="invalid-feedback">
+                        Trạng thái là bắt buộc.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-item-full">
+                    <label for="moTa">Mô tả Đề tài:</label>
+                    <textarea id="moTa" formControlName="moTa" class="form-control" rows="3"></textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">{{ selectedDeTai ? 'Cập nhật' : 'Thêm mới' }}</button>
+                <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+            </div>
+        </form>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Đề tài</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm theo mã, tên đề tài, GV..." class="form-control search-input"
+                (input)="onSearchTermChange($event)">
+            <select class="form-control filter-select" (change)="onGvFilterChange($event)">
+                <option value="">-- Lọc theo Giảng viên --</option>
+                <option *ngFor="let gv of giangVienList" [value]="gv.maGV">{{ gv.hoTen }}</option>
+            </select>
+            <select class="form-control filter-select" (change)="onDotDoAnFilterChange($event)">
+                <option value="">-- Lọc theo Đợt Đồ án --</option>
+                <option *ngFor="let dot of dotDoAnList" [value]="dot.maDotDoAn">{{ dot.tenDotDoAn }}</option>
+            </select>
+            <select class="form-control filter-select" (change)="onStatusFilterChange($event)">
+                <option *ngFor="let status of trangThaiOptions" [value]="status">{{ status }}</option>
+            </select>
+        </div>
+
+        <div *ngIf="deTaiList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Đề tài nào.
+        </div>
+
+        <table class="data-table" *ngIf="deTaiList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Đề tài</th>
+                    <th>Tên Đề tài</th>
+                    <th>GV Hướng dẫn</th>
+                    <th>Đợt Đồ án</th>
+                    <th>SV Thực hiện</th>
+                    <th>Trạng thái</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let deTai of deTaiList">
+                    <td>{{ deTai.maDeTai }}</td>
+                    <td>{{ deTai.tenDeTai }}</td>
+                    <td>{{ getGiangVienTen(deTai.maGV) }}</td>
+                    <td>{{ getDotDoAnTen(deTai.maDotDoAn) }}</td>
+                    <td>{{ getSinhVienTen(deTai.maSV) }}</td>
+                    <td>{{ deTai.trangThaiDangKy }}</td>
+                    <td class="actions">
+                        <button class="btn btn-info btn-sm" (click)="onSelectDeTai(deTai)">Sửa</button>
+                        <button class="btn btn-danger btn-sm" (click)="onDeleteDeTai(deTai.maDeTai)">Xóa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

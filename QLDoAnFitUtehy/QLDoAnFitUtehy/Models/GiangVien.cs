@@ -35,7 +35,7 @@ namespace QLDoAnFITUTEHY.Models
 
         //public ICollection<DotDoAn> DotDoAns { get; set; }
         public ICollection<DeTai> DeTais { get; set; }
-        public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
+        //public ICollection<BaoCaoTienDo> BaoCaoTienDos { get; set; }
         public ICollection<ThanhVienHoiDong> ThanhVienHoiDongs { get; set; }
         public ICollection<DotDoAn_GiangVien> DotDoAn_GiangViens { get; set; } = new List<DotDoAn_GiangVien>();
         public TaiKhoan TaiKhoan { get; set; }
