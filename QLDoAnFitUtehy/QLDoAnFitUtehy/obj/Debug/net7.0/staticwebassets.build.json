@@ -1,11 +1,105 @@
 {
   "Version": 1,
-  "Hash": "VvsYUUUczaJM7pDfENFs/4/3kFLgOdHWEhs8rsXSvGM=",
+  "Hash": "fMHnYOtIJfZlSISmUdbxkb6hSeeHKX/Yo0T7r6LsGR4=",
   "Source": "QLDoAnFitUtehy",
   "BasePath": "_content/QLDoAnFitUtehy",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "QLDoAnFitUtehy\\wwwroot",
+      "Source": "QLDoAnFitUtehy",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_1d9e4095.txt",
+      "SourceId": "QLDoAnFitUtehy",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "RelativePath": "uploads/Cấu trúc API_1d9e4095.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Cấu trúc API_1d9e4095.txt"
+    },
+    {
+      "Identity": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_462c6bf3.txt",
+      "SourceId": "QLDoAnFitUtehy",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "RelativePath": "uploads/Cấu trúc API_462c6bf3.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Cấu trúc API_462c6bf3.txt"
+    },
+    {
+      "Identity": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_90ee0098.txt",
+      "SourceId": "QLDoAnFitUtehy",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "RelativePath": "uploads/Cấu trúc API_90ee0098.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Cấu trúc API_90ee0098.txt"
+    },
+    {
+      "Identity": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_d1f3e194.txt",
+      "SourceId": "QLDoAnFitUtehy",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "RelativePath": "uploads/Cấu trúc API_d1f3e194.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Cấu trúc API_d1f3e194.txt"
+    },
+    {
+      "Identity": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_d7c5bf36.txt",
+      "SourceId": "QLDoAnFitUtehy",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\",
+      "BasePath": "_content/QLDoAnFitUtehy",
+      "RelativePath": "uploads/Cấu trúc API_d7c5bf36.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\Cấu trúc API_d7c5bf36.txt"
+    }
+  ]
 }

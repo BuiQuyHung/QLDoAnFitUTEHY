@@ -1,19 +1,20 @@
-import { DeTai } from './DeTai'; 
-import { GiangVien } from './GiangVien'; 
-import { SinhVien } from './SinhVien'; 
+// src/app/models/BaoCaoTienDo.ts
+import { DeTai } from './DeTai';
+import { GiangVien } from './GiangVien';
+import { SinhVien } from './SinhVien';
 
 export interface BaoCaoTienDo {
-  maBaoCao: string;
-  maDeTai: string; 
-  deTai?: DeTai; 
-
+  maBaoCao?: number | null; // Có thể null nếu chưa được gán ID từ backend, hoặc là undefined
+  maDeTai: string;
+  maSV: string;
+  ngayNop?: Date | null; // Có thể null nếu không có giá trị
   tuanBaoCao: number;
-  ngayBaoCao: Date; 
-  noiDungBaoCao: string;
-  tepDinhKem?: string | null;
-
-  trangThai: string;
-  nhanXetCuaGV?: string; 
-  diemSo?: number; 
-  ngayDuyet?: Date; 
+  loaiBaoCao: string;
+  tepDinhKem?: string | null; // Có thể null
+  ghiChuCuaSV?: string | null; // Có thể null
+  maGV?: string | null; // Có thể null
+  ngayNhanXet?: Date | null; // Có thể null
+  nhanXetCuaGV?: string | null; // Có thể null
+  diemSo?: number | null; // Có thể null
+  trangThai?: string | null; // Có thể null
 }

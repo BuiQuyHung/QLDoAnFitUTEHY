@@ -20,7 +20,7 @@ namespace QLDoAnFITUTEHY.Data
         public DbSet<PhanCong> PhanCongs { get; set; }
         public DbSet<HoiDong> HoiDongs { get; set; }
         public DbSet<ThanhVienHoiDong> ThanhVienHoiDongs { get; set; }
-        //public DbSet<BaoCaoTienDo> BaoCaoTienDos { get; set; }
+        public DbSet<BaoCaoTienDo> BaoCaoTienDos { get; set; }
         public DbSet<TaiKhoan> TaiKhoans { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<DotDoAn_Lop> DotDoAn_Lop { get; set; }

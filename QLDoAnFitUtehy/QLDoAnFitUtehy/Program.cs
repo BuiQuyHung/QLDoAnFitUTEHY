@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Security.Claims;
-using QLDoAnFITUTEHY.API.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -66,7 +65,7 @@ builder.Services.AddScoped<IDeTaiRepository, DeTaiRepository>();
 builder.Services.AddScoped<IPhanCongRepository, PhanCongRepository>();
 builder.Services.AddScoped<IHoiDongRepository, HoiDongRepository>();
 builder.Services.AddScoped<IThanhVienHoiDongRepository, ThanhVienHoiDongRepository>();
-//builder.Services.AddScoped<IBaoCaoTienDoRepository, BaoCaoTienDoRepository>();
+builder.Services.AddScoped<IBaoCaoTienDoRepository, BaoCaoTienDoRepository>();
 builder.Services.AddScoped<ITaiKhoanRepository, TaiKhoanRepository>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
 
@@ -152,6 +151,8 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthentication();
 

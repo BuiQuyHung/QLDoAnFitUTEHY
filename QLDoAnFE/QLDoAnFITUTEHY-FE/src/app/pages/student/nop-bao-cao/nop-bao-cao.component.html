@@ -1,0 +1,153 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Nộp Báo Cáo Tiến Độ Đồ Án</h1>
+  </div>
+
+  <div class="form-section card">
+    <h2>{{ selectedBaoCao ? 'Cập nhật Báo cáo' : 'Nộp Báo cáo mới' }}</h2>
+    <form [formGroup]="baoCaoForm" (ngSubmit)="onSubmitBaoCao()">
+      <div class="form-row">
+        <div class="form-group flex-item">
+          <label for="maDeTai">Đề tài:</label>
+          <select id="maDeTai" formControlName="maDeTai" class="form-control"
+            [ngClass]="{ 'is-invalid': baoCaoForm.get('maDeTai')?.invalid && baoCaoForm.get('maDeTai')?.touched }"
+            (change)="onDeTaiChange()">
+            <option value="" disabled selected>-- Chọn Đề tài --</option>
+            <option *ngFor="let deTai of deTaiList" [value]="deTai.maDeTai">{{ deTai.tenDeTai }}</option>
+          </select>
+          <div *ngIf="baoCaoForm.get('maDeTai')?.invalid && baoCaoForm.get('maDeTai')?.touched"
+            class="invalid-feedback">
+            Đề tài là bắt buộc.
+          </div>
+        </div>
+
+        <div class="form-group flex-item">
+          <label for="tuanBaoCao">Tuần báo cáo:</label>
+          <input type="number" id="tuanBaoCao" formControlName="tuanBaoCao" class="form-control"
+            [ngClass]="{ 'is-invalid': baoCaoForm.get('tuanBaoCao')?.invalid && baoCaoForm.get('tuanBaoCao')?.touched }">
+          <div *ngIf="baoCaoForm.get('tuanBaoCao')?.invalid && baoCaoForm.get('tuanBaoCao')?.touched"
+            class="invalid-feedback">
+            Tuần báo cáo là bắt buộc và phải là số dương.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-item">
+          <label for="ngayNop">Ngày Nộp:</label>
+          <input type="date" id="ngayNop" formControlName="ngayNop" class="form-control"
+            [ngClass]="{ 'is-invalid': baoCaoForm.get('ngayNop')?.invalid && baoCaoForm.get('ngayNop')?.touched }">
+          <div *ngIf="baoCaoForm.get('ngayNop')?.invalid && baoCaoForm.get('ngayNop')?.touched"
+            class="invalid-feedback">
+            Ngày Nộp là bắt buộc.
+          </div>
+        </div>
+
+        <div class="form-group flex-item">
+          <label for="loaiBaoCao">Loại báo cáo:</label>
+          <select id="loaiBaoCao" formControlName="loaiBaoCao" class="form-control"
+            [ngClass]="{ 'is-invalid': baoCaoForm.get('loaiBaoCao')?.invalid && baoCaoForm.get('loaiBaoCao')?.touched }">
+            <option value="" disabled selected>-- Chọn loại báo cáo --</option>
+            <option value="Báo cáo tuần">Báo cáo tuần</option>
+            <option value="Báo cáo giữa kỳ">Báo cáo giữa kỳ</option>
+            <option value="Báo cáo cuối kỳ">Báo cáo cuối kỳ</option>
+            <option value="Báo cáo bổ sung">Báo cáo bổ sung</option>
+          </select>
+          <div *ngIf="baoCaoForm.get('loaiBaoCao')?.invalid && baoCaoForm.get('loaiBaoCao')?.touched"
+            class="invalid-feedback">
+            Loại báo cáo là bắt buộc.
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="ghiChuCuaSV">Ghi chú của sinh viên:</label>
+        <textarea id="ghiChuCuaSV" formControlName="ghiChuCuaSV" class="form-control" rows="3"
+          [ngClass]="{ 'is-invalid': baoCaoForm.get('ghiChuCuaSV')?.invalid && baoCaoForm.get('ghiChuCuaSV')?.touched }"></textarea>
+        <div *ngIf="baoCaoForm.get('ghiChuCuaSV')?.invalid && baoCaoForm.get('ghiChuCuaSV')?.touched"
+          class="invalid-feedback">
+          Ghi chú của sinh viên là bắt buộc.
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="tepDinhKem">Đường dẫn tệp đính kèm:</label>
+        <div class="input-group">
+          <input type="text" id="tepDinhKem" formControlName="tepDinhKem" class="form-control"
+            placeholder="Nhập đường dẫn tệp (URL)">
+          <button type="button" class="btn btn-outline-secondary" *ngIf="baoCaoForm.get('tepDinhKem')?.value"
+            (click)="removeAttachedFile()">
+            <i class="fas fa-times-circle"></i> Xóa Đường dẫn
+          </button>
+        </div>
+        <small class="form-text text-muted">
+          Nhập đường dẫn URL hoặc path của tệp đính kèm (ví dụ: `https://example.com/document.pdf`).
+        </small>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="baoCaoForm.invalid || baoCaoForm.disabled">{{
+          selectedBaoCao ? 'Cập nhật' : 'Nộp Báo cáo' }}</button>
+        <button type="button" class="btn btn-secondary" (click)="resetForm()">Hủy</button>
+      </div>
+    </form>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+  <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+  <div class="list-section">
+    <h2>Lịch sử Báo cáo Tiến độ</h2>
+    <div *ngIf="baoCaoList.length === 0 && !errorMessage" class="alert alert-info">
+      Chưa có báo cáo nào cho đề tài này.
+    </div>
+
+    <table class="data-table" *ngIf="baoCaoList.length > 0">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Đề tài</th>
+          <th>Tuần</th>
+          <th>Loại</th>
+          <th>Ngày nộp</th>
+          <th>Ghi chú SV</th>
+          <th>Tệp đính kèm</th>
+          <th>Trạng thái</th>
+          <th>Nhận xét GV</th>
+          <th>Điểm</th>
+          <th>GV Hướng dẫn</th>
+          <th>Ngày nhận xét</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let baoCao of baoCaoList">
+          <td>{{ baoCao.maBaoCao }}</td>
+          <td>{{ getDeTaiTen(baoCao.maDeTai) }}</td>
+          <td>{{ baoCao.tuanBaoCao }}</td>
+          <td>{{ baoCao.loaiBaoCao }}</td>
+          <td>{{ baoCao.ngayNop | date: 'dd/MM/yyyy' }}</td>
+          <td>{{ (baoCao.ghiChuCuaSV || '') | slice:0:50 }}{{ (baoCao.ghiChuCuaSV?.length || 0) > 50 ? '...' : '' }}
+          </td>
+          <td class="text-center">
+            <a *ngIf="baoCao.tepDinhKem" href="javascript:void(0)" (click)="onDownloadFile(baoCao.tepDinhKem)"
+              title="Mở tệp đính kèm trong tab mới">
+              <i class="fas fa-file-alt"></i> Mở tệp
+            </a>
+            <span *ngIf="!baoCao.tepDinhKem">Không có</span>
+          </td>
+          <td>{{ baoCao.trangThai }}</td>
+          <td>{{ (baoCao.nhanXetCuaGV || '') | slice:0:50 }}{{ (baoCao.nhanXetCuaGV?.length || 0) > 50 ? '...' : '' }}
+          </td>
+          <td>{{ baoCao.diemSo !== null && baoCao.diemSo !== undefined ? baoCao.diemSo : 'N/A' }}</td>
+          <td>{{ getTenGiangVien(baoCao.maGV ?? undefined) }}</td>
+          <td>{{ baoCao.ngayNhanXet | date: 'dd/MM/yyyy' }}</td>
+          <td class="actions">
+            <button class="btn btn-info btn-sm" (click)="onSelectBaoCao(baoCao)">Sửa</button>
+            <button class="btn btn-danger btn-sm" (click)="onDeleteBaoCao(baoCao.maBaoCao!)"
+              [disabled]="baoCao.trangThai === 'Đã đánh giá'">Xóa</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,15 +1,14 @@
 // src/app/pages/admin/quan-ly-tai-khoan/quan-ly-tai-khoan.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-// Import thêm AbstractControl, ValidatorFn, ValidationErrors
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
 import { TaiKhoanService } from '../../../services/tai-khoan.service';
-import { GiangVienService } from '../../../services/giang-vien.service'; // Cần để lấy danh sách Giảng viên
-import { SinhVienService } from '../../../services/sinh-vien.service'; // Cần để lấy danh sách Sinh viên
+import { GiangVienService } from '../../../services/giang-vien.service';
+import { SinhVienService } from '../../../services/sinh-vien.service';
 
 import { TaiKhoan } from '../../../models/TaiKhoan';
-import { GiangVien } from '../../../models/GiangVien'; // Import model GiangVien, đảm bảo casing đúng
-import { SinhVien } from '../../../models/SinhVien'; // Import model SinhVien, đảm bảo casing đúng
+import { GiangVien } from '../../../models/GiangVien';
+import { SinhVien } from '../../../models/SinhVien';
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of, throwError, Observable } from 'rxjs';
@@ -28,24 +27,22 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyTaiKhoanComponent implements OnInit {
   taiKhoanList: TaiKhoan[] = [];
   originalTaiKhoanList: TaiKhoan[] = [];
-  giangVienList: GiangVien[] = []; // Danh sách Giảng viên cho dropdown
-  sinhVienList: SinhVien[] = []; // Danh sách Sinh viên cho dropdown
+  giangVienList: GiangVien[] = [];
+  sinhVienList: SinhVien[] = [];
 
   taiKhoanForm: FormGroup;
-  selectedTaiKhoan: TaiKhoan | null = null; // Để lưu đối tượng đang chỉnh sửa
+  selectedTaiKhoan: TaiKhoan | null = null;
 
   errorMessage: string = '';
   successMessage: string = '';
 
-  private searchTermSubject = new Subject<string>(); // Cho tìm kiếm client-side
-  private vaiTroFilterSubject = new Subject<string>(); // Lọc theo Vai trò
+  private searchTermSubject = new Subject<string>();
+  private vaiTroFilterSubject = new Subject<string>();
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
   currentVaiTroFilter: string = '';
 
-  // Các vai trò có thể có
-  // ĐÃ SỬA: Thay đổi giá trị hiển thị của vai trò
   vaiTroOptions: string[] = ['QTV', 'GV', 'SV'];
 
   constructor(
@@ -62,23 +59,20 @@ export class QuanLyTaiKhoanComponent implements OnInit {
       maSV: [null]  // Mặc định là null
     });
 
-    // Thêm validator tùy chỉnh cho toàn bộ form
     this.taiKhoanForm.setValidators(this.validateMaGVMaSV());
 
-    // Theo dõi sự thay đổi của vaiTro để cập nhật Validators cho maGV/maSV
     this.taiKhoanForm.get('vaiTro')?.valueChanges.subscribe(vaiTro => {
       const maGVControl = this.taiKhoanForm.get('maGV');
       const maSVControl = this.taiKhoanForm.get('maSV');
 
-      // ĐÃ SỬA: Cập nhật điều kiện dựa trên giá trị mới của vai trò
-      if (vaiTro === 'GV') { // Nếu vai trò là GV
+      if (vaiTro === 'GV') {
         maGVControl?.setValidators(Validators.required);
         maSVControl?.clearValidators();
-        maSVControl?.setValue(null); // Reset giá trị
-      } else if (vaiTro === 'SV') { // Nếu vai trò là SV
+        maSVControl?.setValue(null);
+      } else if (vaiTro === 'SV') {
         maSVControl?.setValidators(Validators.required);
         maGVControl?.clearValidators();
-        maGVControl?.setValue(null); // Reset giá trị
+        maGVControl?.setValue(null);
       } else { // QTV hoặc các vai trò khác
         maGVControl?.clearValidators();
         maSVControl?.clearValidators();
@@ -91,7 +85,7 @@ export class QuanLyTaiKhoanComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDropdownData(); // Tải dữ liệu cho các dropdown
+    this.loadDropdownData();
 
     this.searchTermSubject.next('');
     this.vaiTroFilterSubject.next('');
@@ -106,7 +100,6 @@ export class QuanLyTaiKhoanComponent implements OnInit {
         this.currentVaiTroFilter = vaiTroFilter;
         this.clearMessages();
 
-        // Luôn lấy tất cả tài khoản và lọc client-side để đơn giản hóa logic
         return this.taiKhoanService.getAllTaiKhoan().pipe(
           catchError((error: HttpErrorResponse) => {
             console.error('Lỗi khi tải danh sách tài khoản:', error);
@@ -117,52 +110,63 @@ export class QuanLyTaiKhoanComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalTaiKhoanList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters();
     });
   }
 
-  // Validator tùy chỉnh cho ràng buộc maGV/maSV
   validateMaGVMaSV(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      const form = control as FormGroup; // Ép kiểu AbstractControl thành FormGroup
+      const form = control as FormGroup;
       const vaiTro = form.get('vaiTro')?.value;
       const maGV = form.get('maGV')?.value;
       const maSV = form.get('maSV')?.value;
 
-      // ĐÃ SỬA: Cập nhật điều kiện dựa trên giá trị mới của vai trò
-      if (vaiTro === 'GV' && (maGV === null || maGV === '')) {
+      // Chuyển đổi chuỗi rỗng thành null để kiểm tra
+      const maGVValidated = (maGV === '' ? null : maGV);
+      const maSVValidated = (maSV === '' ? null : maSV);
+
+
+      if (vaiTro === 'GV' && (maGVValidated === null)) {
         return { 'maGVRequired': true };
       }
-      if (vaiTro === 'SV' && (maSV === null || maSV === '')) {
+      if (vaiTro === 'SV' && (maSVValidated === null)) {
         return { 'maSVRequired': true };
       }
       // Kiểm tra nếu vai trò là QTV nhưng lại có liên kết
-      if (vaiTro === 'QTV' && (maGV !== null || maSV !== null)) {
+      if (vaiTro === 'QTV' && (maGVValidated !== null || maSVValidated !== null)) {
         return { 'adminHasAssociation': true };
       }
       // Kiểm tra nếu vai trò không phải GV/SV nhưng lại có liên kết
-      if (vaiTro !== 'GV' && vaiTro !== 'SV' && (maGV !== null || maSV !== null)) {
+      if (vaiTro !== 'GV' && vaiTro !== 'SV' && (maGVValidated !== null || maSVValidated !== null)) {
         return { 'invalidAssociation': true };
       }
+
+      // Đảm bảo chỉ một trong hai trường có giá trị khi vai trò là GV hoặc SV
+      // Ví dụ: nếu vai trò là GV mà maSV lại có giá trị
+      if (vaiTro === 'GV' && maSVValidated !== null) {
+          return {'invalidAssociationForRole': true};
+      }
+      // Ví dụ: nếu vai trò là SV mà maGV lại có giá trị
+      if (vaiTro === 'SV' && maGVValidated !== null) {
+          return {'invalidAssociationForRole': true};
+      }
+
 
       return null;
     };
   }
 
-
-  // Tải danh sách cho các dropdown
   loadDropdownData(): void {
-    this.giangVienService.searchGiangVien().subscribe({ // Giả định có searchGiangVien()
+    this.giangVienService.searchGiangVien().subscribe({
       next: (data) => this.giangVienList = data,
       error: (err: HttpErrorResponse) => console.error('Lỗi khi tải danh sách giảng viên:', err)
     });
-    this.sinhVienService.searchSinhVien().subscribe({ // Giả định có searchSinhVien()
+    this.sinhVienService.searchSinhVien().subscribe({
       next: (data) => this.sinhVienList = data,
       error: (err: HttpErrorResponse) => console.error('Lỗi khi tải danh sách sinh viên:', err)
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalTaiKhoanList];
 
@@ -184,42 +188,66 @@ export class QuanLyTaiKhoanComponent implements OnInit {
     this.selectedTaiKhoan = taiKhoan;
     this.taiKhoanForm.patchValue({
       tenDangNhap: taiKhoan.tenDangNhap,
-      matKhau: taiKhoan.matKhau, // Cân nhắc không hiển thị mật khẩu thực
+      matKhau: taiKhoan.matKhau, // Mật khẩu thường không nên hiển thị ra như này
       vaiTro: taiKhoan.vaiTro,
-      maGV: taiKhoan.maGV || null,
-      maSV: taiKhoan.maSV || null
+      maGV: taiKhoan.maGV || null, // Gán null nếu là undefined/rỗng
+      maSV: taiKhoan.maSV || null  // Gán null nếu là undefined/rỗng
     });
-    this.taiKhoanForm.get('tenDangNhap')?.disable(); // Tắt trường tên đăng nhập khi chỉnh sửa
+    this.taiKhoanForm.get('tenDangNhap')?.disable();
     this.clearMessages();
   }
 
   onSubmit(): void {
-    // Kích hoạt lại trường tenDangNhap để lấy giá trị từ form (nếu đang ở chế độ sửa)
+    // 1. Kích hoạt lại trường tenDangNhap để lấy giá trị từ form nếu nó đang bị disable
     this.taiKhoanForm.get('tenDangNhap')?.enable();
-    const formData = this.taiKhoanForm.getRawValue(); // Lấy giá trị bao gồm cả trường bị disable
-    // Tắt lại trường tenDangNhap sau khi lấy giá trị
-    this.taiKhoanForm.get('tenDangNhap')?.disable();
+    const formData = this.taiKhoanForm.getRawValue(); // Lấy tất cả giá trị, bao gồm cả trường bị disable
+    // 2. Tắt lại trường tenDangNhap sau khi lấy giá trị (chỉ áp dụng nếu selectedTaiKhoan tồn tại)
+    if (this.selectedTaiKhoan) {
+        this.taiKhoanForm.get('tenDangNhap')?.disable();
+    }
 
 
     if (this.taiKhoanForm.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ và đúng thông tin.';
       this.taiKhoanForm.markAllAsTouched();
       console.log('Form invalid:', this.taiKhoanForm.errors); // Debugging
+      console.log('Errors by control:', this.taiKhoanForm.controls['maGV'].errors, this.taiKhoanForm.controls['maSV'].errors, this.taiKhoanForm.controls['vaiTro'].errors);
       return;
     }
 
-    // Xử lý giá trị null cho maGV, maSV nếu không được chọn hoặc không phù hợp với vai trò
-    // ĐÃ SỬA: Cập nhật điều kiện dựa trên giá trị mới của vai trò
-    if (formData.vaiTro !== 'GV') {
-      formData.maGV = null;
-    }
-    if (formData.vaiTro !== 'SV') {
-      formData.maSV = null;
+    // --- LOGIC XỬ LÝ MA_GV/MA_SV THÀNH NULL HOẶC GIÁ TRỊ CỤ THỂ ---
+    // Tạo một đối tượng TaiKhoanToSend riêng để đảm bảo dữ liệu đúng định dạng
+    const taiKhoanToSend: TaiKhoan = {
+      tenDangNhap: formData.tenDangNhap,
+      matKhau: formData.matKhau,
+      vaiTro: formData.vaiTro,
+      maGV: null, // Mặc định là null
+      maSV: null  // Mặc định là null
+    };
+
+    // Áp dụng giá trị dựa trên vai trò
+    if (formData.vaiTro === 'GV') {
+      // Nếu là GV, lấy maGV từ form. Nếu nó là chuỗi rỗng, gán null.
+      taiKhoanToSend.maGV = formData.maGV ? formData.maGV : null;
+      // Đảm bảo maSV là null
+      taiKhoanToSend.maSV = null;
+    } else if (formData.vaiTro === 'SV') {
+      // Nếu là SV, lấy maSV từ form. Nếu nó là chuỗi rỗng, gán null.
+      taiKhoanToSend.maSV = formData.maSV ? formData.maSV : null;
+      // Đảm bảo maGV là null
+      taiKhoanToSend.maGV = null;
+    } else { // Vai trò là QTV (hoặc bất kỳ vai trò nào khác không liên quan đến GV/SV)
+      // Đảm bảo cả maGV và maSV đều là null
+      taiKhoanToSend.maGV = null;
+      taiKhoanToSend.maSV = null;
     }
 
+    this.clearMessages();
+
     if (this.selectedTaiKhoan) {
-      // Cập nhật
-      this.taiKhoanService.updateTaiKhoan(this.selectedTaiKhoan.tenDangNhap, formData).subscribe({
+      // Cập nhật tài khoản hiện có
+      // Dùng taiKhoanToSend đã được xử lý
+      this.taiKhoanService.updateTaiKhoan(this.selectedTaiKhoan.tenDangNhap, taiKhoanToSend).subscribe({
         next: (_) => {
           this.successMessage = 'Cập nhật tài khoản thành công!';
           this.resetForm();
@@ -231,8 +259,9 @@ export class QuanLyTaiKhoanComponent implements OnInit {
         }
       });
     } else {
-      // Thêm mới
-      this.taiKhoanService.addTaiKhoan(formData).subscribe({
+      // Thêm mới tài khoản
+      // Dùng taiKhoanToSend đã được xử lý
+      this.taiKhoanService.addTaiKhoan(taiKhoanToSend).subscribe({
         next: (_) => {
           this.successMessage = 'Thêm mới tài khoản thành công!';
           this.resetForm();
@@ -265,16 +294,13 @@ export class QuanLyTaiKhoanComponent implements OnInit {
   resetForm(): void {
     this.taiKhoanForm.reset();
     this.selectedTaiKhoan = null;
-    this.taiKhoanForm.get('tenDangNhap')?.enable(); // Kích hoạt lại trường tên đăng nhập
+    this.taiKhoanForm.get('tenDangNhap')?.enable();
     this.clearMessages();
-    // Đảm bảo các dropdown được reset về giá trị mặc định
     this.taiKhoanForm.get('vaiTro')?.setValue('');
     this.taiKhoanForm.get('maGV')?.setValue(null);
     this.taiKhoanForm.get('maSV')?.setValue(null);
-    // Cập nhật lại validation sau khi reset
     this.taiKhoanForm.get('maGV')?.updateValueAndValidity();
     this.taiKhoanForm.get('maSV')?.updateValueAndValidity();
-    // Đảm bảo validator tổng thể của form được chạy lại
     this.taiKhoanForm.updateValueAndValidity();
   }
 
@@ -292,12 +318,14 @@ export class QuanLyTaiKhoanComponent implements OnInit {
     this.vaiTroFilterSubject.next(vaiTro);
   }
 
-  getGiangVienTen(maGV: string): string {
+  getGiangVienTen(maGV: string | null | undefined): string {
+    if (!maGV) return 'N/A';
     const giangVien = this.giangVienList.find(gv => gv.maGV === maGV);
     return giangVien ? giangVien.hoTen : 'N/A';
   }
 
-  getSinhVienTen(maSV: string): string {
+  getSinhVienTen(maSV: string | null | undefined): string {
+    if (!maSV) return 'N/A';
     const sinhVien = this.sinhVienList.find(sv => sv.maSV === maSV);
     return sinhVien ? sinhVien.hoTen : 'N/A';
   }

@@ -1,0 +1,11 @@
+
+Tầm quan trọng của Cấu trúc (Architecture)
+- Models (Entities): Đại diện cho các bảng trong CSDL của bạn (BaoCaoTienDo, DeTai, SinhVien, GiangVien, TaiKhoan, v.v.). Đây là nơi định nghĩa cấu trúc dữ liệu.
+ DTOs (Data Transfer Objects): Các lớp nhẹ nhàng dùng để truyền dữ liệu giữa client và server, cũng như giữa các lớp của ứng dụng. Chúng giúp:
+Giấu đi chi tiết Models: Không cần phơi bày toàn bộ cấu trúc CSDL ra ngoài API.
+Tùy chỉnh dữ liệu: Chỉ gửi những trường cần thiết.
+Xác thực đầu vào: Thêm các [Required] hoặc [MaxLength] attributes.
+- Interfaces: Định nghĩa các hợp đồng (contracts) cho Repository và Service, giúp dễ dàng kiểm thử (mocking) và thay đổi triển khai mà không ảnh hưởng đến code phụ thuộc.
+-  Repositories: Lớp này tương tác trực tiếp với DbContext để thực hiện các thao tác CRUD (Create, Read, Update, Delete) trên CSDL. Logic nghiệp vụ không nằm ở đây.
+- Controllers: Nhận request từ client, gọi các Service để xử lý logic nghiệp vụ, và trả về response.
+Data (DbContext): Lớp đại diện cho CSDL, chứa các DbSet

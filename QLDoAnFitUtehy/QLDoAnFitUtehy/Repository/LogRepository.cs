@@ -4,7 +4,7 @@ using QLDoAnFITUTEHY.Data;
 using QLDoAnFITUTEHY.Models;
 using System.Linq.Expressions;
 
-namespace QLDoAnFITUTEHY.API.Repositories
+namespace QLDoAnFITUTEHY.Repository
 {
     public class LogRepository : ILogRepository
     {

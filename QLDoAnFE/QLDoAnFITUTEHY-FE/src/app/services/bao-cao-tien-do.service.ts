@@ -1,7 +1,8 @@
+// src/app/services/bao-cao-tien-do.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ApiService } from './api.service'; 
 import { BaoCaoTienDo } from '../models/BaoCaoTienDo';
+import { ApiService } from './api.service'; // Giả định bạn đã có ApiService chung
 
 @Injectable({
   providedIn: 'root'
@@ -10,61 +11,68 @@ export class BaoCaoTienDoService {
 
   constructor(private apiService: ApiService) { }
 
-  // Lấy tất cả Báo cáo Tiến độ (Admin có thể dùng)
+  // Lấy tất cả báo cáo tiến độ (dùng cho Admin)
   // Endpoint: GET /api/BaoCaoTienDo
-  getBaoCaoTienDos(): Observable<BaoCaoTienDo[]> {
+  getAllBaoCaoTienDo(): Observable<BaoCaoTienDo[]> {
     return this.apiService.get<BaoCaoTienDo[]>(`BaoCaoTienDo`);
   }
 
-  // Lấy Báo cáo Tiến độ theo ID
+  // Lấy báo cáo tiến độ theo ID
   // Endpoint: GET /api/BaoCaoTienDo/{id}
-  getBaoCaoTienDoById(id: string): Observable<BaoCaoTienDo> {
+  getBaoCaoTienDoById(id: number): Observable<BaoCaoTienDo> {
     return this.apiService.get<BaoCaoTienDo>(`BaoCaoTienDo/${id}`);
   }
 
-  // Thêm mới Báo cáo Tiến độ (Sinh viên nộp báo cáo)
+  // Thêm mới báo cáo tiến độ
   // Endpoint: POST /api/BaoCaoTienDo
   addBaoCaoTienDo(baoCao: BaoCaoTienDo): Observable<BaoCaoTienDo> {
-    // Lưu ý: Trường tepDinhKem trong 'baoCao' sẽ chứa URL do sinh viên nhập.
     return this.apiService.post<BaoCaoTienDo>(`BaoCaoTienDo`, baoCao);
   }
 
-  // Cập nhật Báo cáo Tiến độ (Sinh viên sửa nội dung báo cáo)
+  // Cập nhật báo cáo tiến độ
   // Endpoint: PUT /api/BaoCaoTienDo/{id}
-  updateBaoCaoTienDo(maBaoCao: string, baoCao: BaoCaoTienDo): Observable<any> {
-    return this.apiService.put<any>(`BaoCaoTienDo/${maBaoCao}`, baoCao);
+  updateBaoCaoTienDo(id: number, baoCao: BaoCaoTienDo): Observable<BaoCaoTienDo> {
+    return this.apiService.put<BaoCaoTienDo>(`BaoCaoTienDo/${id}`, baoCao);
   }
 
-  // Xóa Báo cáo Tiến độ (Admin/Sinh viên nếu được phép)
+  // Xóa báo cáo tiến độ
   // Endpoint: DELETE /api/BaoCaoTienDo/{id}
-  deleteBaoCaoTienDo(maBaoCao: string): Observable<any> {
-    return this.apiService.delete<any>(`BaoCaoTienDo/${maBaoCao}`);
+  deleteBaoCaoTienDo(id: number): Observable<any> {
+    return this.apiService.delete<any>(`BaoCaoTienDo/${id}`);
   }
 
-  // Duyệt và nhận xét Báo cáo Tiến độ (Giảng viên/Admin thực hiện)
-  // Endpoint: PUT /api/BaoCaoTienDo/review/{id}
-  // API này sẽ nhận vào các trường cần thiết để cập nhật nhận xét, điểm, trạng thái
-  reviewBaoCaoTienDo(maBaoCao: string, reviewData: { nhanXetCuaGV: string, diemSo: number, trangThai: string, ngayDuyet: Date }): Observable<any> {
-    return this.apiService.put<any>(`BaoCaoTienDo/review/${maBaoCao}`, reviewData);
+  // Lấy danh sách báo cáo tiến độ của một sinh viên cho một đề tài cụ thể
+  // Endpoint: GET /api/BaoCaoTienDo/sinhvien/{maSV}/detai/{maDeTai}
+  getBaoCaoBySinhVienAndDeTai(maSV: string, maDeTai: string): Observable<BaoCaoTienDo[]> {
+    return this.apiService.get<BaoCaoTienDo[]>(`BaoCaoTienDo/sinhvien/${maSV}/detai/${maDeTai}`);
   }
 
-  // ----- CÁC PHƯƠNG THỨC LIÊN QUAN ĐẾN FILE UPLOAD/DOWNLOAD (CHƯA TRIỂN KHAI BACKEND) -----
-  // Bạn sẽ cần triển khai các API này ở Backend nếu muốn có chức năng đính kèm file vật lý.
-  // Khi triển khai, nhớ bỏ comment và kiểm tra lại cú pháp (ví dụ: File, FormData, Observable).
+  // Lấy danh sách báo cáo tiến độ mà một giảng viên cần đánh giá
+  // Endpoint: GET /api/BaoCaoTienDo/giangvien/{maGV}
+  getBaoCaoByGiangVien(maGV: string): Observable<BaoCaoTienDo[]> {
+    return this.apiService.get<BaoCaoTienDo[]>(`BaoCaoTienDo/giangvien/${maGV}`);
+  }
 
-  // Phương thức để tải file vật lý từ server
-  // downloadFile(fileName: string): Observable<Blob> {
-  //   // Giả định API có endpoint cho việc tải file, ví dụ: /api/Files/download/{fileName}
-  //   // API của bạn cần trả về blob hoặc stream
-  //   return this.apiService.get<Blob>(`Files/download/${fileName}`, { responseType: 'blob' });
-  // }
+  // Giảng viên đánh giá báo cáo tiến độ
+  // Endpoint: PUT /api/BaoCaoTienDo/{id}/danhgia
+  danhGiaBaoCaoTienDo(id: number, danhGiaData: { nhanXetCuaGV: string, diemSo: number, trangThai: string }): Observable<any> {
+    return this.apiService.put<any>(`BaoCaoTienDo/${id}/danhgia`, danhGiaData);
+  }
 
-  // Phương thức để tải file vật lý lên server
-  // uploadFile(file: File): Observable<{ fileName: string }> {
-  //   const formData = new FormData();
-  //   formData.append('file', file); // 'file' là tên trường mà API backend mong đợi
-  //   // Giả định API có endpoint upload file, ví dụ: /api/Files/upload
-  //   // API này cần trả về tên file đã lưu trên server
-  //   return this.apiService.post<{ fileName: string }>(`Files/upload`, formData);
-  // }
+  /**
+   * Tải tệp lên server và trả về URL của tệp đã lưu trữ.
+   * @param file Đối tượng File được chọn từ input.
+   * @returns Observable<string> chứa URL của tệp sau khi tải lên thành công.
+   */
+  uploadFile(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file); // 'file' là tên key mà API backend của bạn mong đợi để nhận file
+
+    // Giả định API upload file của bạn là POST /api/Upload hoặc /api/BaoCaoTienDo/UploadFile
+    // Backend sẽ trả về URL của file đã được lưu trữ (ví dụ: 'https://yourdomain.com/uploads/filename.pdf')
+    // Nếu API của bạn nằm trong cùng một controller BaoCaoTienDo, bạn có thể dùng:
+    return this.apiService.post<string>(`BaoCaoTienDo/UploadFile`, formData);
+    // Hoặc nếu có một UploadController riêng:
+    // return this.apiService.post<string>(`Upload/File`, formData);
+  }
 }

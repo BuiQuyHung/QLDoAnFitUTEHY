@@ -1,0 +1,41 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_1d9e4095.txt",
+      "PackagePath": "staticwebassets\\uploads\\Cấu trúc API_1d9e4095.txt"
+    },
+    {
+      "Id": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_462c6bf3.txt",
+      "PackagePath": "staticwebassets\\uploads\\Cấu trúc API_462c6bf3.txt"
+    },
+    {
+      "Id": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_90ee0098.txt",
+      "PackagePath": "staticwebassets\\uploads\\Cấu trúc API_90ee0098.txt"
+    },
+    {
+      "Id": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_d1f3e194.txt",
+      "PackagePath": "staticwebassets\\uploads\\Cấu trúc API_d1f3e194.txt"
+    },
+    {
+      "Id": "D:\\FitUTEHY\\QLDoAnFitUtehy\\QLDoAnFitUtehy\\wwwroot\\uploads\\Cấu trúc API_d7c5bf36.txt",
+      "PackagePath": "staticwebassets\\uploads\\Cấu trúc API_d7c5bf36.txt"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.QLDoAnFitUtehy.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.QLDoAnFitUtehy.props",
+      "PackagePath": "build\\QLDoAnFitUtehy.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.QLDoAnFitUtehy.props",
+      "PackagePath": "buildMultiTargeting\\QLDoAnFitUtehy.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.QLDoAnFitUtehy.props",
+      "PackagePath": "buildTransitive\\QLDoAnFitUtehy.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

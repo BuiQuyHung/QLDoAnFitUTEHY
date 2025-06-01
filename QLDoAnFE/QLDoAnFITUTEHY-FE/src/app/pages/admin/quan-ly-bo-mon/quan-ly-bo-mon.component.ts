@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { BoMonService } from '../../../services/bo-mon.service';
 import { KhoaService } from '../../../services/khoa.service'; 
-import { BoMon } from '../../../models/BoMon'; // Đã sửa: bo-mon.model.ts
-import { Khoa } from '../../../models/Khoa'; // Đã sửa: khoa.model.ts
+import { BoMon } from '../../../models/BoMon'; 
+import { Khoa } from '../../../models/Khoa'; 
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject, combineLatest, of } from 'rxjs';
@@ -22,7 +22,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 })
 export class QuanLyBoMonComponent implements OnInit {
   boMonList: BoMon[] = [];
-  originalBoMonList: BoMon[] = []; // Danh sách Bộ Môn ban đầu từ API (sau khi đã lọc Khoa bởi backend)
+  originalBoMonList: BoMon[] = []; 
   khoaList: Khoa[] = [];
   boMonForm: FormGroup;
   selectedBoMon: BoMon | null = null;
@@ -32,7 +32,7 @@ export class QuanLyBoMonComponent implements OnInit {
 
   private searchTermSubject = new Subject<string>();
   private khoaFilterSubject = new Subject<string>();
-  private refreshTriggerSubject = new Subject<void>(); // Subject để kích hoạt làm mới
+  private refreshTriggerSubject = new Subject<void>(); 
 
   currentSearchTerm: string = '';
   currentKhoaFilter: string = '';
@@ -53,19 +53,15 @@ export class QuanLyBoMonComponent implements OnInit {
   ngOnInit(): void {
     this.loadKhoaList();
     
-    // Khởi tạo các Subject để combineLatest chạy lần đầu
     this.searchTermSubject.next('');
     this.khoaFilterSubject.next('');
 
     combineLatest([
-      // Sử dụng startWith để đảm bảo các giá trị ban đầu được emit ngay lập tức
       this.searchTermSubject.pipe(startWith(this.currentSearchTerm), debounceTime(300), distinctUntilChanged()),
       this.khoaFilterSubject.pipe(startWith(this.currentKhoaFilter), distinctUntilChanged()),
-      // refreshTriggerSubject cũng cần startWith để kích hoạt lần tải đầu tiên
       this.refreshTriggerSubject.pipe(startWith(undefined as void))
     ]).pipe(
       switchMap(([searchTerm, khoaFilter, refreshTrigger]) => {
-        // Cập nhật các giá trị hiện tại
         this.currentSearchTerm = searchTerm;
         this.currentKhoaFilter = khoaFilter;
         this.clearMessages(); // Xóa thông báo lỗi/thành công cũ

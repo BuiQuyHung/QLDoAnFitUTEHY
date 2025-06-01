@@ -1,6 +1,5 @@
-// src/app/services/de-tai.service.ts
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, forkJoin, of, switchMap, Observable } from 'rxjs'; 
 import { ApiService } from './api.service';
 import { DeTai } from '../models/DeTai';
 import { DotDoAn } from '../models/DotDoAn';
@@ -37,13 +36,23 @@ export class DeTaiService {
   // Phương thức MỚI: Lấy danh sách đề tài theo ID giảng viên hướng dẫn
   // Bạn cần có endpoint hỗ trợ ở backend: GET /api/DeTai/ByGiangVien/{maGiangVien}
   getDeTaisByGiangVienId(maGiangVien: string): Observable<DeTai[]> {
-    return this.apiService.get<DeTai[]>(`DeTai/ByGiangVien/${maGiangVien}`);
+    return this.apiService.get<DeTai[]>(`DeTai/giangvien/${maGiangVien}`);
   }
 
   // Phương thức MỚI: Lấy danh sách đề tài theo ID sinh viên
   // Bạn cần có endpoint hỗ trợ ở backend: GET /api/DeTai/BySinhVien/{maSinhVien}
-  getDeTaisBySinhVienId(maSinhVien: string): Observable<DeTai[]> {
-    return this.apiService.get<DeTai[]>(`DeTai/BySinhVien/${maSinhVien}`);
+ getDeTaisBySinhVienId(maSinhVien: string): Observable<DeTai | null> {
+    // Endpoint thực tế của bạn là /api/DeTai/sinhvien/{svId}
+    return this.apiService.get<DeTai>(`DeTai/sinhvien/${maSinhVien}`).pipe(
+      catchError(err => {
+        if (err.status === 404) { // Xử lý trường hợp không tìm thấy (nếu backend trả về 404)
+          console.warn(`Không tìm thấy đề tài cho sinh viên ${maSinhVien}.`);
+          return of(null); // Trả về null để xử lý ở component
+        }
+        // Ném lại các lỗi khác
+        throw err;
+      })
+    );
   }
 
   // (Optional) Các phương thức khác để gán SV/GV cho đề tài nếu cần

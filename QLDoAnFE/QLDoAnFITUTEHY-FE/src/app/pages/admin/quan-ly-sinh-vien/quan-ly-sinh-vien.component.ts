@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SinhVienService } from '../../../services/sinh-vien.service';
-import { LopService } from '../../../services/lop.service'; // Cần để lấy danh sách Lớp
+import { LopService } from '../../../services/lop.service'; 
 import { SinhVien } from '../../../models/SinhVien';
-import { Lop } from '../../../models/Lop'; // Import model Lop
+import { Lop } from '../../../models/Lop'; 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith, map } from 'rxjs/operators';
-import { format } from 'date-fns'; // Import date-fns để định dạng ngày
+import { format } from 'date-fns'; 
 
 @Component({
   selector: 'app-quan-ly-sinh-vien',

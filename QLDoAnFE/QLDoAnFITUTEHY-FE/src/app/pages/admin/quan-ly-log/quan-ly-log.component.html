@@ -1,0 +1,93 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Quản lý Log Hệ Thống</h1>
+    </div>
+
+    <div *ngIf="successMessage" class="alert alert-success">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="list-section">
+        <h2>Danh sách Log</h2>
+        <div class="search-and-filter-box">
+            <input type="text" placeholder="Tìm kiếm hành động, mô tả, mã log..." class="form-control search-input"
+                [(ngModel)]="searchTerm" (ngModelChange)="onSearchTermChange()">
+
+            <select class="form-control filter-select" [(ngModel)]="filterUsername"
+                (ngModelChange)="onFilterUsernameChange()">
+                <option value="">-- Lọc theo Tên đăng nhập --</option>
+                <option *ngFor="let user of uniqueUsernames" [value]="user">{{ user }}</option>
+            </select>
+
+            <select class="form-control filter-select" [(ngModel)]="filterTableName"
+                (ngModelChange)="onFilterTableNameChange()">
+                <option value="">-- Lọc theo Bảng thay đổi --</option>
+                <option *ngFor="let table of uniqueTableNames" [value]="table">{{ table }}</option>
+            </select>
+
+            <button type="button" class="btn btn-secondary" (click)="resetFilters()">Đặt lại bộ lọc</button>
+        </div>
+
+        <div *ngIf="paginatedLogList.length === 0 && !errorMessage" class="alert alert-info">
+            Không tìm thấy Log nào phù hợp.
+        </div>
+
+        <table class="data-table" *ngIf="paginatedLogList.length > 0">
+            <thead>
+                <tr>
+                    <th>Mã Log</th>
+                    <th>Tên đăng nhập</th>
+                    <th>Thời gian</th>
+                    <th>Hành động</th>
+                    <th>Bảng thay đổi</th>
+                    <th>Mô tả chi tiết</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let log of paginatedLogList">
+                    <td>{{ log.maLog }}</td>
+                    <td>{{ log.tenDangNhap }}</td>
+                    <td>{{ log.thoiGian | date:'short' }}</td>
+                    <td>{{ log.hanhDong }}</td>
+                    <td>{{ log.bangBiThayDoi }}</td>
+                    <td>{{ log.moTaChiTiet }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="pagination-controls" *ngIf="totalItems > 0">
+            <div class="items-per-page">
+                Hiển thị:
+                <select [(ngModel)]="itemsPerPage" (change)="onItemsPerPageChange($event)">
+                    <option [value]="5">5</option>
+                    <option [value]="10">10</option>
+                    <option [value]="20">20</option>
+                    <option [value]="50">50</option>
+                </select>
+                mục/trang
+            </div>
+
+            <div class="page-numbers">
+                <button class="btn btn-sm btn-secondary" (click)="goToPage(1)"
+                    [disabled]="currentPage === 1">Đầu</button>
+                <button class="btn btn-sm btn-secondary" (click)="goToPage(currentPage - 1)"
+                    [disabled]="currentPage === 1">Trước</button>
+
+                <ng-container *ngFor="let page of pages">
+                    <button class="btn btn-sm"
+                        [ngClass]="{'btn-primary': page === currentPage, 'btn-outline-primary': page !== currentPage}"
+                        (click)="goToPage(page)">
+                        {{ page }}
+                    </button>
+                </ng-container>
+
+                <button class="btn btn-sm btn-secondary" (click)="goToPage(currentPage + 1)"
+                    [disabled]="currentPage === totalPages || totalPages === 0">Sau</button>
+                <button class="btn btn-sm btn-secondary" (click)="goToPage(totalPages)"
+                    [disabled]="currentPage === totalPages || totalPages === 0">Cuối</button>
+            </div>
+            <div class="page-info">
+                Trang {{ currentPage }} trên {{ totalPages }} (Tổng {{ totalItems }} log)
+            </div>
+        </div>
+    </div>
+</div>
