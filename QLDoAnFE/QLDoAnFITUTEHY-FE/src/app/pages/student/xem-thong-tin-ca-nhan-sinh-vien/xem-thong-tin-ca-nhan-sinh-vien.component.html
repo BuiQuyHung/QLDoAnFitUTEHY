@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Thông tin cá nhân</h1>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div class="card" *ngIf="!isLoading && !errorMessage && sinhVienCuaToi as sinhVien">
+    <h2>Thông tin cá nhân</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <strong>Mã sinh viên:</strong>
+        <span>{{ sinhVien.maSV || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Họ và tên:</strong>
+        <span>{{ sinhVien.hoTen || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Email:</strong>
+        <span>{{ sinhVien.email || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Số điện thoại:</strong>
+        <span>{{ sinhVien.soDienThoai || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Ngày sinh:</strong>
+        <span>{{ sinhVien.ngaySinh != null ? (sinhVien.ngaySinh | date: 'dd/MM/yyyy') : 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && !sinhVienCuaToi" class="alert alert-info">
+    Không tìm thấy thông tin cá nhân.
+  </div>
+</div>

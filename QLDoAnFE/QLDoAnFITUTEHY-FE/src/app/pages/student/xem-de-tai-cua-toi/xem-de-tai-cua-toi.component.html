@@ -1,0 +1,149 @@
+<div class="container">
+  <div class="header-section">
+    <h1>Thông tin Đề tài của tôi</h1>
+  </div>
+
+  <div *ngIf="isLoading" class="loading-spinner">
+    <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div class="card" *ngIf="!isLoading && !errorMessage && deTaiCuaToi as deTai">
+    <h2>Thông tin chung</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <strong>Tên Đề tài:</strong>
+        <span>{{ deTai.tenDeTai || 'N/A' }}</span>
+      </div>
+      <div class="detail-item full-width-item">
+        <strong>Mô tả:</strong>
+        <span>{{ deTai.moTa || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Trạng thái đăng ký:</strong>
+        <span>{{ deTai.trangThaiDangKy || 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <strong>Giảng viên Hướng dẫn:</strong>
+        <span>{{ deTai.giangVien?.hoTen || 'N/A' }}</span>
+      </div>
+
+      <div class="detail-item">
+        <strong>Ngày bắt đầu đề tài:</strong>
+        <ng-container *ngIf="deTai.dotDoAn?.ngayBatDau as ngayBatDauDeTai; else noDate">
+          <span>{{ ngayBatDauDeTai | date: 'dd/MM/yyyy' }}</span>
+        </ng-container>
+        <ng-template #noDate>
+          <span>N/A</span>
+        </ng-template>
+      </div>
+      <div class="detail-item">
+        <strong>Ngày kết thúc đề tài:</strong>
+        <ng-container *ngIf="deTai.dotDoAn?.ngayKetThuc as ngayKetThucDeTai; else noDate">
+          <span>{{ ngayKetThucDeTai | date: 'dd/MM/yyyy' }}</span>
+        </ng-container>
+        <ng-template #noDate>
+          <span>N/A</span>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="!isLoading && !errorMessage && deTaiCuaToi?.dotDoAn as dotDoAn">
+    <h2>Thông tin Đợt Đồ án</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <strong>Mã Đợt Đồ án:</strong>
+        <span>{{ dotDoAn.maDotDoAn || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Tên Đợt Đồ án:</strong>
+        <span>{{ dotDoAn.tenDotDoAn || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Khóa học:</strong>
+        <span>{{ dotDoAn.khoaHoc || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Ngày bắt đầu đợt:</strong>
+        <span>{{ dotDoAn.ngayBatDau ? (dotDoAn.ngayBatDau | date: 'dd/MM/yyyy') : 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Ngày kết thúc đợt:</strong>
+        <span>{{ dotDoAn.ngayKetThuc ? (dotDoAn.ngayKetThuc | date: 'dd/MM/yyyy') : 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Số tuần thực hiện:</strong>
+        <span>{{ dotDoAn.soTuanThucHien || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Trạng thái đợt:</strong>
+        <span>{{ dotDoAn.trangThai || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="!isLoading && !errorMessage && deTaiCuaToi?.giangVien as giangVien">
+    <h2>Thông tin Giảng viên Hướng dẫn</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <strong>Mã Giảng viên:</strong>
+        <span>{{ giangVien.maGV || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Tên Giảng viên:</strong>
+        <span>{{ giangVien.hoTen || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Email:</strong>
+        <span>{{ giangVien.email || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Số điện thoại:</strong>
+        <span>{{ giangVien.soDienThoai || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" *ngIf="!isLoading && !errorMessage && sinhVienChiTiet">
+    <h2>Thông tin Sinh viên và Đơn vị</h2>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <strong>Mã sinh viên:</strong>
+        <span>{{ sinhVienChiTiet.maSV || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Họ tên sinh viên:</strong>
+        <span>{{ sinhVienChiTiet.hoTen || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Lớp:</strong>
+        <span>{{ lopChiTiet?.tenLop || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Chuyên ngành:</strong>
+        <span>{{ chuyenNganhChiTiet?.tenChuyenNganh || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Ngành:</strong>
+        <span>{{ nganhChiTiet?.tenNganh || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Bộ môn:</strong>
+        <span>{{ boMonChiTiet?.tenBoMon || 'N/A' }}</span>
+      </div>
+      <div class="detail-item">
+        <strong>Khoa:</strong>
+        <span>{{ khoaChiTiet?.tenKhoa || 'N/A' }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && !errorMessage && !hasDeTai" class="alert alert-info">
+    Bạn chưa có đề tài nào được phân công hoặc đăng ký.
+  </div>
+</div>

@@ -21,6 +21,9 @@ import { QuanLyLogComponent } from './pages/admin/quan-ly-log/quan-ly-log.compon
 
 import { DashboardComponent as StudentDashboardComponent } from './pages/student/dashboard/dashboard.component';
 import { NopBaoCaoComponent } from './pages/student/nop-bao-cao/nop-bao-cao.component'; 
+import { XemDeTaiCuaToiComponent } from './pages/student/xem-de-tai-cua-toi/xem-de-tai-cua-toi.component';
+import { XemThongTinCaNhanSinhVienComponent } from './pages/student/xem-thong-tin-ca-nhan-sinh-vien/xem-thong-tin-ca-nhan-sinh-vien.component';
+import { ThongTinDeTaiSinhVienComponent } from './pages/student/thong-tin-de-tai-sinh-vien/thong-tin-de-tai-sinh-vien.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
@@ -57,6 +60,9 @@ export const routes: Routes = [
     children: [
       { path: 'dashboard', component: StudentDashboardComponent },
       { path: 'nop-bao-cao', component: NopBaoCaoComponent }, 
+      { path: 'xem-de-tai-cua-toi', component: XemDeTaiCuaToiComponent },
+      { path: 'thong-tin-ca-nhan', component: XemThongTinCaNhanSinhVienComponent },
+      { path: 'thong-tin-de-tai', component: ThongTinDeTaiSinhVienComponent },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

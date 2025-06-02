@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Thông tin Chi tiết Đề tài</h1>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-spinner">
+        <i class="fas fa-spinner fa-spin"></i> Đang tải dữ liệu...
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <div class="card" *ngIf="!isLoading && !errorMessage && deTaiData as deTai">
+        <h2>Thông tin Đề tài</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Mã Đề tài:</strong>
+                <span>{{ deTai.maDeTai || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Tên Đề tài:</strong>
+                <span>{{ deTai.tenDeTai || 'N/A' }}</span>
+            </div>
+            <div class="detail-item full-width-item">
+                <strong>Mô tả:</strong>
+                <span>{{ deTai.moTa || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Trạng thái đăng ký:</strong>
+                <span>{{ deTai.trangThaiDangKy || 'N/A' }}</span>
+            </div>
+        </div>
+
+        <h2>Thông tin Giảng viên Hướng dẫn</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Mã Giảng viên:</strong>
+                <span>{{ deTai.maGV || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Tên Giảng viên:</strong>
+                <span>{{ deTai.hoTenGV || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Email:</strong>
+                <span>N/A</span>
+            </div>
+            <div class="detail-item">
+                <strong>Số điện thoại:</strong>
+                <span>N/A</span>
+            </div>
+        </div>
+
+        <h2>Thông tin Đợt Đồ án</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Mã Đợt Đồ án:</strong>
+                <span>{{ deTai.maDotDoAn || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Tên Đợt Đồ án:</strong>
+                <span>{{ deTai.tenDotDoAn || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Ngày bắt đầu đợt:</strong>
+                <span>N/A</span>
+            </div>
+            <div class="detail-item">
+                <strong>Ngày kết thúc đợt:</strong>
+                <span>N/A</span>
+            </div>
+        </div>
+
+        <h2>Thông tin Sinh viên Đăng ký</h2>
+        <div class="detail-grid">
+            <div class="detail-item">
+                <strong>Mã Sinh viên:</strong>
+                <span>{{ deTai.maSV || 'N/A' }}</span>
+            </div>
+            <div class="detail-item">
+                <strong>Họ tên Sinh viên:</strong>
+                <span>{{ deTai.hoTenSV || 'N/A' }}</span>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && !errorMessage && !deTaiData" class="alert alert-info">
+        Không có thông tin đề tài nào được tìm thấy.
+    </div>
+</div>

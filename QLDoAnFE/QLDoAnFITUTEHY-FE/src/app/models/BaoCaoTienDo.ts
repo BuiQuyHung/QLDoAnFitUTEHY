@@ -1,4 +1,3 @@
-// src/app/models/BaoCaoTienDo.ts
 import { DeTai } from './DeTai';
 import { GiangVien } from './GiangVien';
 import { SinhVien } from './SinhVien';

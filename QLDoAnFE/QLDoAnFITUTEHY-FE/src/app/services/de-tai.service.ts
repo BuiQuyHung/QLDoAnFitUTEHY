@@ -5,6 +5,7 @@ import { DeTai } from '../models/DeTai';
 import { DotDoAn } from '../models/DotDoAn';
 import { GiangVien } from '../models/GiangVien';
 import { SinhVien } from '../models/SinhVien';
+import { DeTaiSinhVienResponse } from '../models/DeTaiSinhVienResponse';
 
 @Injectable({
   providedIn: 'root'
@@ -39,17 +40,14 @@ export class DeTaiService {
     return this.apiService.get<DeTai[]>(`DeTai/giangvien/${maGiangVien}`);
   }
 
-  // Phương thức MỚI: Lấy danh sách đề tài theo ID sinh viên
-  // Bạn cần có endpoint hỗ trợ ở backend: GET /api/DeTai/BySinhVien/{maSinhVien}
- getDeTaisBySinhVienId(maSinhVien: string): Observable<DeTai | null> {
-    // Endpoint thực tế của bạn là /api/DeTai/sinhvien/{svId}
-    return this.apiService.get<DeTai>(`DeTai/sinhvien/${maSinhVien}`).pipe(
+ getDeTaisBySinhVienId(maSinhVien: string): Observable<DeTaiSinhVienResponse | null> {
+    return this.apiService.get<DeTaiSinhVienResponse>(`DeTai/sinhvien/${maSinhVien}`).pipe(
       catchError(err => {
-        if (err.status === 404) { // Xử lý trường hợp không tìm thấy (nếu backend trả về 404)
-          console.warn(`Không tìm thấy đề tài cho sinh viên ${maSinhVien}.`);
-          return of(null); // Trả về null để xử lý ở component
+        if (err.status === 404) {
+          console.warn(`Không tìm thấy đề tài cho sinh viên ${maSinhVien}.`, err);
+          return of(null);
         }
-        // Ném lại các lỗi khác
+        // Ném lại các lỗi khác nếu không phải 404
         throw err;
       })
     );

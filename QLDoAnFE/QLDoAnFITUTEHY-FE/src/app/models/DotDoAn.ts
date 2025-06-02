@@ -6,11 +6,13 @@ export interface DotDoAn {
   maDotDoAn: string;
   tenDotDoAn: string;
   khoaHoc: string;
-  ngayBatDau: Date; // Hoặc string nếu bạn muốn xử lý ngày dạng string
-  ngayKetThuc?: Date; // Tùy chọn, nếu có
+  // ĐÃ SỬA: Thêm '?' để đánh dấu là tùy chọn và '| string | null' để chấp nhận cả string và null
+  ngayBatDau?: Date | string | null;
+  // ĐÃ SỬA: Thêm '| string | null' để chấp nhận cả string và null
+  ngayKetThuc?: Date | string | null;
   soTuanThucHien: number;
   trangThai?: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'CANCELLED';
-  
+
   // Navigation properties cho mối quan hệ nhiều-nhiều
   dsLop?: Lop[]; // Danh sách các lớp tham gia (chỉ dùng khi GET)
   dsGiangVien?: GiangVien[]; // Danh sách các giảng viên (chỉ dùng khi GET)
@@ -22,7 +24,7 @@ export interface DotDoAnForManipulation {
   tenDotDoAn: string;
   khoaHoc: string;
   ngayBatDau: string; // Gửi dạng string (YYYY-MM-DD)
-  ngayKetThuc?: String;
+  ngayKetThuc?: string; // Đã sửa kiểu thành string
   soTuanThucHien: number;
   lopIds: string[];      // Chỉ gửi mảng MaLop
   giangVienIds: string[]; // Chỉ gửi mảng MaGV

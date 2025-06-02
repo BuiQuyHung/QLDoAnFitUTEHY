@@ -1,0 +1,112 @@
+/* src/app/pages/student/xem-de-tai-cua-toi/xem-de-tai-cua-toich.component.css */
+
+.container {
+  max-width: 900px;
+  margin: 5px auto;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Tăng khoảng cách giữa các card */
+  min-height: calc(100vh - 10px);
+}
+
+.header-section {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.header-section h1 {
+  font-size: 1.8em;
+  color: #343a40;
+}
+
+.card {
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.card h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.4em;
+  color: #007bff;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 5px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+  gap: 10px 20px; /* Khoảng cách giữa các hàng và cột */
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 5px;
+}
+
+.detail-item strong {
+  font-size: 0.9em;
+  color: #6c757d;
+  margin-bottom: 3px;
+}
+
+.detail-item span {
+  font-size: 1em;
+  color: #343a40;
+  word-wrap: break-word; /* Đảm bảo nội dung dài không tràn ra ngoài */
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 20px;
+  font-size: 1.1em;
+  color: #007bff;
+}
+
+.loading-spinner i {
+  margin-right: 8px;
+  font-size: 1.5em;
+}
+
+.alert {
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  color: #0c5460;
+  border-color: #bee5eb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .container {
+    padding: 8px;
+    gap: 10px;
+  }
+  .card {
+    padding: 12px;
+  }
+  .detail-grid {
+    grid-template-columns: 1fr; /* Stack items on small screens */
+    gap: 10px;
+  }
+}
