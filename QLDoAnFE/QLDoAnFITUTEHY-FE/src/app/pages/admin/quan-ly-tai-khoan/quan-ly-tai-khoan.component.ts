@@ -1,4 +1,3 @@
-// src/app/pages/admin/quan-ly-tai-khoan/quan-ly-tai-khoan.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, ValidationErrors } from '@angular/forms';
@@ -55,8 +54,8 @@ export class QuanLyTaiKhoanComponent implements OnInit {
       tenDangNhap: ['', Validators.required],
       matKhau: ['', Validators.required],
       vaiTro: ['', Validators.required],
-      maGV: [null], // Mặc định là null
-      maSV: [null]  // Mặc định là null
+      maGV: [null], 
+      maSV: [null]  
     });
 
     this.taiKhoanForm.setValidators(this.validateMaGVMaSV());
@@ -73,7 +72,7 @@ export class QuanLyTaiKhoanComponent implements OnInit {
         maSVControl?.setValidators(Validators.required);
         maGVControl?.clearValidators();
         maGVControl?.setValue(null);
-      } else { // QTV hoặc các vai trò khác
+      } else { 
         maGVControl?.clearValidators();
         maSVControl?.clearValidators();
         maGVControl?.setValue(null);
@@ -121,7 +120,6 @@ export class QuanLyTaiKhoanComponent implements OnInit {
       const maGV = form.get('maGV')?.value;
       const maSV = form.get('maSV')?.value;
 
-      // Chuyển đổi chuỗi rỗng thành null để kiểm tra
       const maGVValidated = (maGV === '' ? null : maGV);
       const maSVValidated = (maSV === '' ? null : maSV);
 
@@ -132,21 +130,16 @@ export class QuanLyTaiKhoanComponent implements OnInit {
       if (vaiTro === 'SV' && (maSVValidated === null)) {
         return { 'maSVRequired': true };
       }
-      // Kiểm tra nếu vai trò là QTV nhưng lại có liên kết
       if (vaiTro === 'QTV' && (maGVValidated !== null || maSVValidated !== null)) {
         return { 'adminHasAssociation': true };
       }
-      // Kiểm tra nếu vai trò không phải GV/SV nhưng lại có liên kết
       if (vaiTro !== 'GV' && vaiTro !== 'SV' && (maGVValidated !== null || maSVValidated !== null)) {
         return { 'invalidAssociation': true };
       }
 
-      // Đảm bảo chỉ một trong hai trường có giá trị khi vai trò là GV hoặc SV
-      // Ví dụ: nếu vai trò là GV mà maSV lại có giá trị
       if (vaiTro === 'GV' && maSVValidated !== null) {
           return {'invalidAssociationForRole': true};
       }
-      // Ví dụ: nếu vai trò là SV mà maGV lại có giá trị
       if (vaiTro === 'SV' && maGVValidated !== null) {
           return {'invalidAssociationForRole': true};
       }
@@ -188,20 +181,18 @@ export class QuanLyTaiKhoanComponent implements OnInit {
     this.selectedTaiKhoan = taiKhoan;
     this.taiKhoanForm.patchValue({
       tenDangNhap: taiKhoan.tenDangNhap,
-      matKhau: taiKhoan.matKhau, // Mật khẩu thường không nên hiển thị ra như này
+      matKhau: taiKhoan.matKhau, 
       vaiTro: taiKhoan.vaiTro,
-      maGV: taiKhoan.maGV || null, // Gán null nếu là undefined/rỗng
-      maSV: taiKhoan.maSV || null  // Gán null nếu là undefined/rỗng
+      maGV: taiKhoan.maGV || null, 
+      maSV: taiKhoan.maSV || null  
     });
     this.taiKhoanForm.get('tenDangNhap')?.disable();
     this.clearMessages();
   }
 
   onSubmit(): void {
-    // 1. Kích hoạt lại trường tenDangNhap để lấy giá trị từ form nếu nó đang bị disable
     this.taiKhoanForm.get('tenDangNhap')?.enable();
-    const formData = this.taiKhoanForm.getRawValue(); // Lấy tất cả giá trị, bao gồm cả trường bị disable
-    // 2. Tắt lại trường tenDangNhap sau khi lấy giá trị (chỉ áp dụng nếu selectedTaiKhoan tồn tại)
+    const formData = this.taiKhoanForm.getRawValue(); 
     if (this.selectedTaiKhoan) {
         this.taiKhoanForm.get('tenDangNhap')?.disable();
     }
@@ -210,34 +201,26 @@ export class QuanLyTaiKhoanComponent implements OnInit {
     if (this.taiKhoanForm.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ và đúng thông tin.';
       this.taiKhoanForm.markAllAsTouched();
-      console.log('Form invalid:', this.taiKhoanForm.errors); // Debugging
+      console.log('Form invalid:', this.taiKhoanForm.errors); 
       console.log('Errors by control:', this.taiKhoanForm.controls['maGV'].errors, this.taiKhoanForm.controls['maSV'].errors, this.taiKhoanForm.controls['vaiTro'].errors);
       return;
     }
 
-    // --- LOGIC XỬ LÝ MA_GV/MA_SV THÀNH NULL HOẶC GIÁ TRỊ CỤ THỂ ---
-    // Tạo một đối tượng TaiKhoanToSend riêng để đảm bảo dữ liệu đúng định dạng
     const taiKhoanToSend: TaiKhoan = {
       tenDangNhap: formData.tenDangNhap,
       matKhau: formData.matKhau,
       vaiTro: formData.vaiTro,
-      maGV: null, // Mặc định là null
-      maSV: null  // Mặc định là null
+      maGV: null, 
+      maSV: null  
     };
 
-    // Áp dụng giá trị dựa trên vai trò
     if (formData.vaiTro === 'GV') {
-      // Nếu là GV, lấy maGV từ form. Nếu nó là chuỗi rỗng, gán null.
       taiKhoanToSend.maGV = formData.maGV ? formData.maGV : null;
-      // Đảm bảo maSV là null
       taiKhoanToSend.maSV = null;
     } else if (formData.vaiTro === 'SV') {
-      // Nếu là SV, lấy maSV từ form. Nếu nó là chuỗi rỗng, gán null.
       taiKhoanToSend.maSV = formData.maSV ? formData.maSV : null;
-      // Đảm bảo maGV là null
       taiKhoanToSend.maGV = null;
-    } else { // Vai trò là QTV (hoặc bất kỳ vai trò nào khác không liên quan đến GV/SV)
-      // Đảm bảo cả maGV và maSV đều là null
+    } else { 
       taiKhoanToSend.maGV = null;
       taiKhoanToSend.maSV = null;
     }
@@ -245,8 +228,6 @@ export class QuanLyTaiKhoanComponent implements OnInit {
     this.clearMessages();
 
     if (this.selectedTaiKhoan) {
-      // Cập nhật tài khoản hiện có
-      // Dùng taiKhoanToSend đã được xử lý
       this.taiKhoanService.updateTaiKhoan(this.selectedTaiKhoan.tenDangNhap, taiKhoanToSend).subscribe({
         next: (_) => {
           this.successMessage = 'Cập nhật tài khoản thành công!';
@@ -259,8 +240,6 @@ export class QuanLyTaiKhoanComponent implements OnInit {
         }
       });
     } else {
-      // Thêm mới tài khoản
-      // Dùng taiKhoanToSend đã được xử lý
       this.taiKhoanService.addTaiKhoan(taiKhoanToSend).subscribe({
         next: (_) => {
           this.successMessage = 'Thêm mới tài khoản thành công!';

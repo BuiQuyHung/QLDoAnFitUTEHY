@@ -1,11 +1,10 @@
-// src/app/pages/admin/quan-ly-nganh/quan-ly-nganh.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NganhService } from '../../../services/nganh.service';
-import { BoMonService } from '../../../services/bo-mon.service'; // Cần để lấy danh sách Bộ Môn
+import { BoMonService } from '../../../services/bo-mon.service'; 
 import { Nganh } from '../../../models/Nganh';
-import { BoMon } from '../../../models/BoMon'; // Import model BoMon
+import { BoMon } from '../../../models/BoMon'; 
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject, combineLatest, of, throwError } from 'rxjs';
@@ -24,7 +23,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyNganhComponent implements OnInit {
   nganhList: Nganh[] = [];
   originalNganhList: Nganh[] = [];
-  boMonList: BoMon[] = []; // Danh sách Bộ Môn cho dropdown
+  boMonList: BoMon[] = []; 
   nganhForm: FormGroup;
   selectedNganh: Nganh | null = null;
 
@@ -32,7 +31,7 @@ export class QuanLyNganhComponent implements OnInit {
   successMessage: string = '';
 
   private searchTermSubject = new Subject<string>();
-  private boMonFilterSubject = new Subject<string>(); // Lọc theo Bộ Môn
+  private boMonFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -40,18 +39,18 @@ export class QuanLyNganhComponent implements OnInit {
 
   constructor(
     private nganhService: NganhService,
-    private boMonService: BoMonService, // Inject BoMonService
+    private boMonService: BoMonService, 
     private fb: FormBuilder
   ) {
     this.nganhForm = this.fb.group({
       maNganh: ['', Validators.required],
       tenNganh: ['', Validators.required],
-      maBoMon: ['', Validators.required] // Trường khóa ngoại
+      maBoMon: ['', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadBoMonList(); // Tải danh sách Bộ Môn cho dropdown
+    this.loadBoMonList(); 
 
     this.searchTermSubject.next('');
     this.boMonFilterSubject.next('');
@@ -67,7 +66,6 @@ export class QuanLyNganhComponent implements OnInit {
         this.clearMessages();
 
         if (boMonFilter) {
-          // Nếu có lọc theo Bộ Môn
           return this.nganhService.getNganhByBoMonId(boMonFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải ngành theo bộ môn:', error);
@@ -76,7 +74,6 @@ export class QuanLyNganhComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Bộ Môn, tải tất cả hoặc tìm kiếm theo term
           return this.nganhService.searchNganh(searchTerm).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách ngành:', error);
@@ -88,13 +85,12 @@ export class QuanLyNganhComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalNganhList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách Bộ Môn cho dropdown lọc và form
   loadBoMonList(): void {
-    this.boMonService.searchBoMon().subscribe({ // Sử dụng searchBoMon để lấy tất cả
+    this.boMonService.searchBoMon().subscribe({ 
       next: (data) => {
         this.boMonList = data;
       },
@@ -105,7 +101,6 @@ export class QuanLyNganhComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalNganhList]; 
 
@@ -125,7 +120,7 @@ export class QuanLyNganhComponent implements OnInit {
       tenNganh: nganh.tenNganh,
       maBoMon: nganh.maBoMon
     });
-    this.nganhForm.get('maNganh')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.nganhForm.get('maNganh')?.disable(); 
     this.clearMessages();
   }
 
@@ -186,7 +181,7 @@ export class QuanLyNganhComponent implements OnInit {
     this.selectedNganh = null;
     this.nganhForm.get('maNganh')?.enable(); 
     this.clearMessages();
-    this.nganhForm.get('maBoMon')?.setValue(''); // Đảm bảo dropdown bộ môn được reset
+    this.nganhForm.get('maBoMon')?.setValue(''); 
   }
 
   refreshNganhList(): void {

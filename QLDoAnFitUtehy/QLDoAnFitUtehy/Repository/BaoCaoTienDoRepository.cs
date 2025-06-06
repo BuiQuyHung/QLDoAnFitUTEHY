@@ -1,11 +1,10 @@
-﻿// Repositories/BaoCaoTienDoRepository.cs
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using QLDoAnFITUTEHY.Data; // Đảm bảo include namespace của DbContext
-using QLDoAnFITUTEHY.Models; // Đảm bảo include namespace của Model
-using QLDoAnFITUTEHY.Interfaces; // Đảm bảo include namespace của Interface
+using QLDoAnFITUTEHY.Data; 
+using QLDoAnFITUTEHY.Models; 
+using QLDoAnFITUTEHY.Interfaces; 
 
 namespace QLDoAnFITUTEHY.Repository
 {
@@ -21,9 +20,9 @@ namespace QLDoAnFITUTEHY.Repository
         public async Task<IEnumerable<BaoCaoTienDo>> GetAllBaoCaoTienDosAsync()
         {
             return await _context.BaoCaoTienDos
-                                 .Include(b => b.DeTai)      // Tải thông tin đề tài
-                                 .Include(b => b.SinhVien)   // Tải thông tin sinh viên
-                                 .Include(b => b.GiangVien)  // Tải thông tin giảng viên
+                                 .Include(b => b.DeTai)      
+                                 .Include(b => b.SinhVien) 
+                                 .Include(b => b.GiangVien)  
                                  .ToListAsync();
         }
 
@@ -70,7 +69,6 @@ namespace QLDoAnFITUTEHY.Repository
 
         public async Task<IEnumerable<BaoCaoTienDo>> GetBaoCaoByGiangVienAsync(string maGV)
         {
-            // Lấy các báo cáo của những đề tài mà giảng viên này đang hướng dẫn
             return await _context.BaoCaoTienDos
                                  .Include(b => b.DeTai)
                                  .Include(b => b.SinhVien)

@@ -1,9 +1,9 @@
 <div class="app-container">
   <ng-container *ngIf="authService.isLoggedIn()">
     <nav class="main-nav">
-      <a routerLink="/admin/dashboard" *ngIf="authService.hasRole('QTV')">Admin Dashboard</a>
-      <a routerLink="/student/dashboard" *ngIf="authService.hasRole('SV')">Student Dashboard</a>
-      <a routerLink="/lecturer/dashboard" *ngIf="authService.hasRole('GV')">Lecturer Dashboard</a>
+      <a routerLink="/admin/dashboard" *ngIf="authService.hasRole('QTV')">Quản trị viên</a>
+      <a routerLink="/student/dashboard" *ngIf="authService.hasRole('SV')">Sinh viên</a>
+      <a routerLink="/lecturer/dashboard" *ngIf="authService.hasRole('GV')">Giảng viên</a>
       <button (click)="authService.logout()">Đăng xuất</button>
     </nav>
     <main class="content-area">

@@ -1,7 +1,6 @@
-﻿// Interfaces/IBaoCaoTienDoRepository.cs
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using QLDoAnFITUTEHY.Models; // Sử dụng Model đã nằm trong namespace
+using QLDoAnFITUTEHY.Models; 
 
 namespace QLDoAnFITUTEHY.Interfaces
 {

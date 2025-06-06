@@ -1,0 +1,83 @@
+<div class="main-container">
+    <div class="header-section">
+        <h1>Thông tin cá nhân Giảng viên</h1>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-overlay">
+        <div class="spinner"></div>
+        <p>Đang tải thông tin...</p>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
+
+    <div class="profile-content" *ngIf="giangVien && !isLoading">
+        <div class="profile-header-card card">
+            <div class="profile-avatar">
+                <img [src]="'assets/images/avatar.png'" alt="Ảnh đại diện" class="avatar-image">
+            </div>
+            <div class="profile-details">
+                <h2>{{ giangVien.hoTen }}</h2>
+                <p class="role-text">{{ giangVien.hocVi }} - Giảng viên</p>
+                <p class="email-text">{{ giangVien.email }}</p>
+            </div>
+        </div>
+
+        <div class="info-cards-grid">
+            <div class="info-card card">
+                <h3><i class="fas fa-address-card info-icon"></i> Thông tin cơ bản</h3>
+                <div class="info-item">
+                    <strong>Mã Giảng viên:</strong>
+                    <span>{{ giangVien.maGV }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Chuyên ngành:</strong>
+                    <span>{{ giangVien.chuyenNganh }}</span>
+                </div>
+                <div class="info-item">
+                    <strong>Số điện thoại:</strong>
+                    <span>{{ giangVien.soDienThoai }}</span>
+                </div>
+            </div>
+
+            <div class="info-card card">
+                <h3><i class="fas fa-building info-icon"></i> Tổ chức & Vị trí</h3>
+                <div class="info-item">
+                    <strong>Bộ môn:</strong>
+                    <span>Khoa học máy tính</span>
+                </div>
+                <div class="info-item">
+                    <strong>Khoa:</strong>
+                    <span>Công nghệ thông tin</span>
+                </div>
+                <div class="info-item">
+                    <strong>Trường:</strong>
+                    <span>Đại học Sư phạm Kỹ thuật Hưng Yên</span>
+                </div>
+                <div class="info-item">
+                    <strong>Trạng thái:</strong>
+                    <span>Đang công tác</span>
+                </div>
+            </div>
+
+            <div class="info-card card">
+                <h3><i class="fas fa-tasks info-icon"></i> Các hoạt động chính</h3>
+                <div class="info-item">
+                    <strong>Đề tài đang hướng dẫn:</strong>
+                    <span>05</span>
+                </div>
+                <div class="info-item">
+                    <strong>Số công trình đã công bố:</strong>
+                    <span>0</span>
+                </div>
+                <div class="info-item">
+                    <strong>Chủ nhiệm đề tài cấp trường:</strong>
+                    <span>0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!giangVien && !isLoading && !errorMessage" class="alert alert-info">
+        Không tìm thấy thông tin giảng viên hoặc chưa đăng nhập.
+    </div>
+</div>

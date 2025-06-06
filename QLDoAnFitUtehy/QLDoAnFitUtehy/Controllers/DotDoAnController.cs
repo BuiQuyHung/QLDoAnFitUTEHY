@@ -16,8 +16,8 @@ namespace QLDoAnFITUTEHY.Controllers
     public class DotDoAnController : ControllerBase
     {
         private readonly IDotDoAnRepository _dotDoAnRepository;
-        private readonly ILopRepository _lopRepository; // Cần thiết để kiểm tra Lop tồn tại
-        private readonly IGiangVienRepository _giangVienRepository; // Cần thiết để kiểm tra GiangVien tồn tại
+        private readonly ILopRepository _lopRepository; 
+        private readonly IGiangVienRepository _giangVienRepository; 
 
         public DotDoAnController(IDotDoAnRepository dotDoAnRepository, ILopRepository lopRepository, IGiangVienRepository giangVienRepository)
         {
@@ -26,8 +26,6 @@ namespace QLDoAnFITUTEHY.Controllers
             _giangVienRepository = giangVienRepository;
         }
 
-        // GET: api/DotDoAn
-        // Lấy tất cả đợt đồ án
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DotDoAnDTO>>> GetAllDotDoAn()
         {
@@ -39,10 +37,8 @@ namespace QLDoAnFITUTEHY.Controllers
                 TenDotDoAn = dda.TenDotDoAn,
                 KhoaHoc = dda.KhoaHoc,
                 NgayBatDau = dda.NgayBatDau,
-                // Tính toán NgayKetThuc nếu có NgayBatDau và SoTuanThucHien
                 NgayKetThuc = dda.NgayBatDau?.AddDays((double)(dda.SoTuanThucHien * 7 ?? 0)),
                 SoTuanThucHien = dda.SoTuanThucHien,
-                // Mapping danh sách các lớp và giảng viên từ các bảng trung gian
                 DsLop = dda.DotDoAn_Lops.Select(dal => new LopDto
                 {
                     MaLop = dal.Lop.MaLop,
@@ -51,15 +47,13 @@ namespace QLDoAnFITUTEHY.Controllers
                 DsGiangVien = dda.DotDoAn_GiangViens.Select(dagv => new GiangVienDto
                 {
                     MaGV = dagv.GiangVien.MaGV,
-                    HoTen = dagv.GiangVien.HoTen // Đảm bảo thuộc tính này tồn tại trong GiangVien model
+                    HoTen = dagv.GiangVien.HoTen 
                 }).ToList()
             }).ToList();
 
             return Ok(dotDoAnDTOs);
         }
 
-        // GET: api/DotDoAn/{id}
-        // Lấy một đợt đồ án theo ID
         [HttpGet("{id}")]
         public async Task<ActionResult<DotDoAnDTO>> GetDotDoAn(string id)
         {
@@ -76,7 +70,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 TenDotDoAn = dotDoAn.TenDotDoAn,
                 KhoaHoc = dotDoAn.KhoaHoc,
                 NgayBatDau = dotDoAn.NgayBatDau,
-                // Tính toán NgayKetThuc
                 NgayKetThuc = dotDoAn.NgayBatDau?.AddDays((double)(dotDoAn.SoTuanThucHien * 7 ?? 0)),
                 SoTuanThucHien = dotDoAn.SoTuanThucHien,
                 DsLop = dotDoAn.DotDoAn_Lops.Select(dal => new LopDto
@@ -94,8 +87,6 @@ namespace QLDoAnFITUTEHY.Controllers
             return Ok(dotDoAnDTO);
         }
 
-        // GET: api/DotDoAn/lop/{lopId}
-        // Lấy các đợt đồ án theo LopId
         [HttpGet("lop/{lopId}")]
         public async Task<ActionResult<IEnumerable<DotDoAnDTO>>> GetDotDoAnsByLop(string lopId)
         {
@@ -129,8 +120,6 @@ namespace QLDoAnFITUTEHY.Controllers
             return Ok(dotDoAnDTOs);
         }
 
-        // GET: api/DotDoAn/giangvien/{gvId}
-        // Lấy các đợt đồ án theo GiangVienId
         [HttpGet("giangvien/{gvId}")]
         public async Task<ActionResult<IEnumerable<DotDoAnDTO>>> GetDotDoAnsByGiangVien(string gvId)
         {
@@ -164,23 +153,19 @@ namespace QLDoAnFITUTEHY.Controllers
             return Ok(dotDoAnDTOs);
         }
 
-        // POST: api/DotDoAn
-        // Tạo mới một đợt đồ án
         [HttpPost]
         public async Task<ActionResult<DotDoAnDTO>> CreateDotDoAn(DotDoAnForCreationDTO dotDoAnForCreation)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); // Trả về lỗi validation từ DTO
+                return BadRequest(ModelState); 
             }
 
-            // Kiểm tra trùng mã đợt đồ án
             if (await _dotDoAnRepository.DotDoAnExistsAsync(dotDoAnForCreation.MaDotDoAn))
             {
                 return Conflict("Mã đợt đồ án đã tồn tại.");
             }
 
-            // Kiểm tra sự tồn tại của các mã lớp được gửi lên
             if (dotDoAnForCreation.LopIds != null && dotDoAnForCreation.LopIds.Any())
             {
                 foreach (var lopId in dotDoAnForCreation.LopIds)
@@ -193,10 +178,9 @@ namespace QLDoAnFITUTEHY.Controllers
             }
             else
             {
-                return BadRequest("Phải có ít nhất một lớp cho đợt đồ án."); // Yêu cầu từ [Required] trong DTO
+                return BadRequest("Phải có ít nhất một lớp cho đợt đồ án."); 
             }
 
-            // Kiểm tra sự tồn tại của các mã giảng viên được gửi lên (nếu có)
             if (dotDoAnForCreation.GiangVienIds != null && dotDoAnForCreation.GiangVienIds.Any())
             {
                 foreach (var gvId in dotDoAnForCreation.GiangVienIds)
@@ -208,19 +192,16 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Tạo đối tượng DotDoAn từ DTO
             var dotDoAnEntity = new DotDoAn
             {
                 MaDotDoAn = dotDoAnForCreation.MaDotDoAn,
                 TenDotDoAn = dotDoAnForCreation.TenDotDoAn,
                 KhoaHoc = dotDoAnForCreation.KhoaHoc,
                 NgayBatDau = dotDoAnForCreation.NgayBatDau,
-                // NgayKetThuc sẽ được tính toán hoặc để null nếu không cần lưu trực tiếp
                 NgayKetThuc = dotDoAnForCreation.NgayBatDau?.AddDays((double)(dotDoAnForCreation.SoTuanThucHien * 7 ?? 0)),
                 SoTuanThucHien = dotDoAnForCreation.SoTuanThucHien
             };
 
-            // Tạo các mối quan hệ với Lop
             if (dotDoAnForCreation.LopIds != null)
             {
                 foreach (var lopId in dotDoAnForCreation.LopIds)
@@ -229,7 +210,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Tạo các mối quan hệ với GiangVien
             if (dotDoAnForCreation.GiangVienIds != null)
             {
                 foreach (var gvId in dotDoAnForCreation.GiangVienIds)
@@ -238,14 +218,12 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Thêm đợt đồ án vào repository
-            _dotDoAnRepository.AddDotDoAn(dotDoAnEntity); // Đổi từ CreateDotDoAn thành AddDotDoAn
+            _dotDoAnRepository.AddDotDoAn(dotDoAnEntity); 
             if (!await _dotDoAnRepository.SaveChangesAsync())
             {
                 return StatusCode(500, "Lỗi khi lưu đợt đồ án.");
             }
 
-            // Lấy lại đợt đồ án vừa tạo để trả về DTO đầy đủ thông tin
             var createdDotDoAn = await _dotDoAnRepository.GetDotDoAnByIdAsync(dotDoAnEntity.MaDotDoAn);
             var createdDotDoAnDTO = new DotDoAnDTO
             {
@@ -270,12 +248,10 @@ namespace QLDoAnFITUTEHY.Controllers
             return CreatedAtAction(nameof(GetDotDoAn), new { id = createdDotDoAnDTO.MaDotDoAn }, createdDotDoAnDTO);
         }
 
-        // PUT: api/DotDoAn/{id}
-        // Cập nhật một đợt đồ án
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateDotDoAn(string id, DotDoAnForUpdateDTO dotDoAnForUpdate)
         {
-            if (id != dotDoAnForUpdate.MaDotDoAn) // Đảm bảo ID trong URL khớp với ID trong body
+            if (id != dotDoAnForUpdate.MaDotDoAn) 
             {
                 return BadRequest("Mã đợt đồ án trong URL không khớp với mã đợt đồ án trong nội dung.");
             }
@@ -291,7 +267,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 return NotFound($"Không tìm thấy đợt đồ án có mã: {id}");
             }
 
-            // Kiểm tra sự tồn tại của các mã lớp được gửi lên
             if (dotDoAnForUpdate.LopIds != null && dotDoAnForUpdate.LopIds.Any())
             {
                 foreach (var lopId in dotDoAnForUpdate.LopIds)
@@ -307,7 +282,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 return BadRequest("Phải có ít nhất một lớp cho đợt đồ án.");
             }
 
-            // Kiểm tra sự tồn tại của các mã giảng viên được gửi lên (nếu có)
             if (dotDoAnForUpdate.GiangVienIds != null && dotDoAnForUpdate.GiangVienIds.Any())
             {
                 foreach (var gvId in dotDoAnForUpdate.GiangVienIds)
@@ -319,16 +293,13 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Cập nhật các thuộc tính cơ bản của DotDoAn
             dotDoAnFromRepo.TenDotDoAn = dotDoAnForUpdate.TenDotDoAn;
             dotDoAnFromRepo.KhoaHoc = dotDoAnForUpdate.KhoaHoc;
             dotDoAnFromRepo.NgayBatDau = dotDoAnForUpdate.NgayBatDau;
             dotDoAnFromRepo.NgayKetThuc = dotDoAnForUpdate.NgayBatDau?.AddDays((double)(dotDoAnForUpdate.SoTuanThucHien * 7 ?? 0));
             dotDoAnFromRepo.SoTuanThucHien = dotDoAnForUpdate.SoTuanThucHien;
 
-            // Xử lý cập nhật các mối quan hệ Lop
-            // Xóa các mối quan hệ Lop cũ không còn tồn tại trong LopIds mới
-            var currentLops = dotDoAnFromRepo.DotDoAn_Lops.ToList(); // ToList để tránh lỗi khi sửa đổi collection
+            var currentLops = dotDoAnFromRepo.DotDoAn_Lops.ToList(); 
             foreach (var existingLop in currentLops)
             {
                 if (!dotDoAnForUpdate.LopIds.Contains(existingLop.MaLop))
@@ -336,7 +307,7 @@ namespace QLDoAnFITUTEHY.Controllers
                     dotDoAnFromRepo.DotDoAn_Lops.Remove(existingLop);
                 }
             }
-            // Thêm các mối quan hệ Lop mới
+
             foreach (var newLopId in dotDoAnForUpdate.LopIds)
             {
                 if (!dotDoAnFromRepo.DotDoAn_Lops.Any(dal => dal.MaLop == newLopId))
@@ -345,7 +316,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Xử lý cập nhật các mối quan hệ GiangVien (tương tự Lop)
             var currentGiangViens = dotDoAnFromRepo.DotDoAn_GiangViens.ToList();
             foreach (var existingGiangVien in currentGiangViens)
             {
@@ -362,7 +332,6 @@ namespace QLDoAnFITUTEHY.Controllers
                 }
             }
 
-            // Cập nhật entity chính
             _dotDoAnRepository.UpdateDotDoAn(dotDoAnFromRepo);
             if (!await _dotDoAnRepository.SaveChangesAsync())
             {
@@ -372,8 +341,6 @@ namespace QLDoAnFITUTEHY.Controllers
             return NoContent();
         }
 
-        // DELETE: api/DotDoAn/{id}
-        // Xóa một đợt đồ án
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDotDoAn(string id)
         {
@@ -382,14 +349,11 @@ namespace QLDoAnFITUTEHY.Controllers
             {
                 return NotFound($"Không tìm thấy đợt đồ án có mã: {id}");
             }
-
-            // Logic xóa các mối quan hệ trung gian đã được xử lý trong DotDoAnRepository.DeleteDotDoAn()
             _dotDoAnRepository.DeleteDotDoAn(dotDoAnToDelete);
             if (!await _dotDoAnRepository.SaveChangesAsync())
             {
                 return StatusCode(500, "Lỗi khi xóa đợt đồ án.");
             }
-
             return NoContent();
         }
     }

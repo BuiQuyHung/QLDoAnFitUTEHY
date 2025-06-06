@@ -1,4 +1,3 @@
-// src/app/pages/admin/quan-ly-de-tai/quan-ly-de-tai.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,9 +6,9 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith, m
 import { HttpErrorResponse } from '@angular/common/http';
 
 import { DeTaiService } from '../../../services/de-tai.service';
-import { GiangVienService } from '../../../services/giang-vien.service'; // Cần để lấy danh sách GV
-import { DotDoAnService } from '../../../services/dot-do-an.service';   // Cần để lấy danh sách Đợt ĐA
-import { SinhVienService } from '../../../services/sinh-vien.service';   // Cần để lấy danh sách SV (nếu cho phép gán)
+import { GiangVienService } from '../../../services/giang-vien.service';
+import { DotDoAnService } from '../../../services/dot-do-an.service';   
+import { SinhVienService } from '../../../services/sinh-vien.service';   
 
 import { DeTai } from '../../../models/DeTai';
 import { GiangVien } from '../../../models/GiangVien';
@@ -50,7 +49,6 @@ export class QuanLyDeTaiComponent implements OnInit {
   currentDotDoAnFilter: string = '';
   currentStatusFilter: string = '';
 
-  // Các trạng thái đăng ký đề tài có thể có
   trangThaiOptions: string[] = ['Tất cả', 'Chờ duyệt', 'Đã duyệt', 'Đã hủy', 'Đã hoàn thành'];
 
 
@@ -65,20 +63,20 @@ export class QuanLyDeTaiComponent implements OnInit {
       maDeTai: ['', Validators.required],
       tenDeTai: ['', Validators.required],
       moTa: [''],
-      maGV: ['', Validators.required], // Giảng viên hướng dẫn
-      maDotDoAn: ['', Validators.required], // Đợt Đồ án
-      maSV: [''], // Sinh viên thực hiện (có thể null)
-      trangThaiDangKy: ['Chờ duyệt', Validators.required] // Trạng thái mặc định
+      maGV: ['', Validators.required], 
+      maDotDoAn: ['', Validators.required], 
+      maSV: [''], 
+      trangThaiDangKy: ['Chờ duyệt', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadDropdownData(); // Tải danh sách cho các dropdown
+    this.loadDropdownData(); 
 
     this.searchTermSubject.next('');
     this.gvFilterSubject.next('');
     this.dotDoAnFilterSubject.next('');
-    this.statusFilterSubject.next(''); // Đảm bảo có giá trị khởi tạo
+    this.statusFilterSubject.next(''); 
 
     combineLatest([
       this.searchTermSubject.pipe(startWith(this.currentSearchTerm), debounceTime(300), distinctUntilChanged()),
@@ -101,7 +99,7 @@ export class QuanLyDeTaiComponent implements OnInit {
         } else if (dotDoAnFilter) {
           apiCall = this.deTaiService.getDeTaisByDotDoAnId(dotDoAnFilter);
         } else {
-          apiCall = this.deTaiService.getDeTais(); // Lấy tất cả nếu không có lọc đặc biệt
+          apiCall = this.deTaiService.getDeTais(); 
         }
 
         return apiCall.pipe(
@@ -114,7 +112,7 @@ export class QuanLyDeTaiComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalDeTaiList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm và trạng thái
+      this.applyClientSideFilters(); 
     });
   }
 
@@ -133,7 +131,6 @@ export class QuanLyDeTaiComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm và trạng thái trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalDeTaiList];
 
@@ -159,15 +156,15 @@ export class QuanLyDeTaiComponent implements OnInit {
       moTa: deTai.moTa,
       maGV: deTai.maGV,
       maDotDoAn: deTai.maDotDoAn,
-      maSV: deTai.maSV || '', // Đảm bảo gán giá trị rỗng nếu null
+      maSV: deTai.maSV || '', 
       trangThaiDangKy: deTai.trangThaiDangKy
     });
-    this.deTaiForm.get('maDeTai')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.deTaiForm.get('maDeTai')?.disable(); 
     this.clearMessages();
   }
 
   onSubmit(): void {
-    const formData = this.deTaiForm.getRawValue(); // Lấy cả giá trị của control bị disable
+    const formData = this.deTaiForm.getRawValue(); 
 
     if (this.deTaiForm.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ và đúng thông tin.';
@@ -175,7 +172,6 @@ export class QuanLyDeTaiComponent implements OnInit {
       return;
     }
 
-    // Xử lý giá trị maSV rỗng thành null nếu API yêu cầu
     if (formData.maSV === '') {
       formData.maSV = null;
     }
@@ -228,7 +224,7 @@ export class QuanLyDeTaiComponent implements OnInit {
     this.selectedDeTai = null;
     this.deTaiForm.get('maDeTai')?.enable();
     this.clearMessages();
-    this.deTaiForm.get('trangThaiDangKy')?.setValue('Chờ duyệt'); // Đặt lại trạng thái mặc định
+    this.deTaiForm.get('trangThaiDangKy')?.setValue('Chờ duyệt'); 
     this.deTaiForm.get('maGV')?.setValue('');
     this.deTaiForm.get('maDotDoAn')?.setValue('');
     this.deTaiForm.get('maSV')?.setValue('');
@@ -246,7 +242,6 @@ export class QuanLyDeTaiComponent implements OnInit {
   onGvFilterChange(event: Event): void {
     const gvId = (event.target as HTMLSelectElement).value;
     this.gvFilterSubject.next(gvId);
-    // Khi thay đổi bộ lọc GV, các bộ lọc khác nên được reset hoặc xem xét lại
     this.dotDoAnFilterSubject.next('');
     this.statusFilterSubject.next('Tất cả');
   }
@@ -254,7 +249,6 @@ export class QuanLyDeTaiComponent implements OnInit {
   onDotDoAnFilterChange(event: Event): void {
     const dotDoAnId = (event.target as HTMLSelectElement).value;
     this.dotDoAnFilterSubject.next(dotDoAnId);
-    // Khi thay đổi bộ lọc Đợt Đồ án, các bộ lọc khác nên được reset hoặc xem xét lại
     this.gvFilterSubject.next('');
     this.statusFilterSubject.next('Tất cả');
   }
@@ -262,10 +256,8 @@ export class QuanLyDeTaiComponent implements OnInit {
   onStatusFilterChange(event: Event): void {
     const status = (event.target as HTMLSelectElement).value;
     this.statusFilterSubject.next(status);
-    // Đảm bảo không reset các bộ lọc khác khi chỉ thay đổi trạng thái
   }
 
-  // Helpers để lấy tên từ ID
   getGiangVienTen(maGV?: string): string {
     const gv = this.giangVienList.find(g => g.maGV === maGV);
     return gv ? gv.hoTen : 'N/A';

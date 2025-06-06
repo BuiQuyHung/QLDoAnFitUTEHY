@@ -46,7 +46,7 @@
 .btn-primary:hover {
   background-color: #0056b3;
 }
-.btn-outline-primary { /* Thêm style cho nút trang hiện tại không được chọn */
+.btn-outline-primary { 
     background-color: transparent;
     color: #007bff;
     border: 1px solid #007bff;
@@ -101,7 +101,7 @@
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    align-items: center; /* Căn giữa theo chiều dọc */
+    align-items: center; 
 }
 
 .search-and-filter-box .search-input,
@@ -120,7 +120,7 @@
   border-collapse: collapse;
   margin-top: 5px;
   font-size: 0.8em;
-  flex-grow: 1; /* Để bảng chiếm hết không gian còn lại */
+  flex-grow: 1; 
 }
 
 .data-table th, .data-table td {
@@ -146,13 +146,13 @@
   margin-top: 15px;
   padding-top: 10px;
   border-top: 1px solid #eee;
-  flex-wrap: wrap; /* Cho phép các phần tử xuống dòng trên màn hình nhỏ */
-  gap: 10px; /* Khoảng cách giữa các nhóm */
+  flex-wrap: wrap; 
+  gap: 10px; 
 }
 
 .items-per-page, .page-info {
   font-size: 0.8em;
-  white-space: nowrap; /* Ngăn không cho text bị xuống dòng */
+  white-space: nowrap; 
 }
 
 .items-per-page select {
@@ -170,5 +170,5 @@
 }
 
 .page-numbers .btn {
-  min-width: 30px; /* Đảm bảo nút có kích thước đều */
+  min-width: 30px; 
 }

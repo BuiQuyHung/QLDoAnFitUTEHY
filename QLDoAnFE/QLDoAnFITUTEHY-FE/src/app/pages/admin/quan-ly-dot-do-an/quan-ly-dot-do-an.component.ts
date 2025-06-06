@@ -1,4 +1,3 @@
-// src/app/pages/admin/quan-ly-dot-do-an/quan-ly-dot-do-an.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormArray, FormControl } from '@angular/forms';
@@ -124,7 +123,6 @@ export class QuanLyDotDoAnComponent implements OnInit, OnDestroy {
       .subscribe(() => {
         this.dotDoAnList = this.dotDoAnList.map(dda => ({
           ...dda,
-          // Convert ngayKetThuc to string before passing to calculateTrangThai
           trangThai: this.calculateTrangThai(dda.ngayKetThuc ? new Date(dda.ngayKetThuc).toISOString().split('T')[0] : undefined) as 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'CANCELLED' | undefined
         }));
       });
@@ -167,7 +165,6 @@ export class QuanLyDotDoAnComponent implements OnInit, OnDestroy {
           map(data => {
             return data.map(dda => ({
               ...dda,
-              // Convert ngayKetThuc to string before passing to calculateTrangThai
               trangThai: this.calculateTrangThai(dda.ngayKetThuc ? new Date(dda.ngayKetThuc).toISOString().split('T')[0] : undefined) as 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'CANCELLED' | undefined
             })).filter(dda =>
                 searchTerm ? (dda.tenDotDoAn.toLowerCase().includes(searchTerm.toLowerCase()) ||

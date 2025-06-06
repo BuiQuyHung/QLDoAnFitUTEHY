@@ -64,12 +64,9 @@ export class QuanLyBoMonComponent implements OnInit {
       switchMap(([searchTerm, khoaFilter, refreshTrigger]) => {
         this.currentSearchTerm = searchTerm;
         this.currentKhoaFilter = khoaFilter;
-        this.clearMessages(); // Xóa thông báo lỗi/thành công cũ
+        this.clearMessages(); 
 
-        // Logic tải dữ liệu:
         if (khoaFilter) {
-          // Nếu có lọc theo Khoa, API sẽ trả về danh sách đã lọc theo Khoa
-          // Giả định API này KHÔNG hỗ trợ tìm kiếm theo 'term'
           return this.boMonService.getBoMonByKhoaId(khoaFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải bộ môn theo khoa:', error);
@@ -78,8 +75,6 @@ export class QuanLyBoMonComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Khoa, API sẽ trả về tất cả Bộ Môn (có thể kèm tìm kiếm theo term)
-          // Đã sửa: Gọi searchBoMon() thay vì getAllBoMon()
           return this.boMonService.searchBoMon(searchTerm).pipe( 
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách bộ môn:', error);
@@ -91,16 +86,11 @@ export class QuanLyBoMonComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalBoMonList = data;
-      // Áp dụng bộ lọc tìm kiếm (nếu có) trên client,
-      // ĐẶC BIỆT NẾU API getBoMonByKhoaId KHÔNG hỗ trợ tìm kiếm theo term.
-      // Nếu searchBoMon đã làm việc tìm kiếm trên server, applyClientSideFilters sẽ không cần thiết khi không có khoaFilter.
-      // Để an toàn, chúng ta vẫn gọi nó để đảm bảo logic lọc luôn được áp dụng nhất quán.
       this.applyClientSideFilters(); 
     });
   }
 
   loadKhoaList(): void {
-    // Đã sửa: Gọi searchKhoa() không có tham số để lấy tất cả Khoa
     this.khoaService.searchKhoa().subscribe({ 
       next: (data) => {
         this.khoaList = data;
@@ -112,28 +102,21 @@ export class QuanLyBoMonComponent implements OnInit {
     });
   }
 
-  // Phương thức applyClientSideFilters đã được thêm và tối ưu
   applyClientSideFilters(): void {
-    let filteredList = [...this.originalBoMonList]; // Bắt đầu với bản sao của danh sách từ API
-
-    // Áp dụng bộ lọc tìm kiếm trên client (theo tên Bộ Môn hoặc mã Bộ Môn)
-    // Dòng này chỉ cần nếu API của bạn không xử lý tìm kiếm theo 'term' khi có 'khoaFilter'
-    // hoặc nếu bạn muốn thêm một lớp lọc client-side cho sự tiện lợi.
-    if (this.currentSearchTerm && !this.currentKhoaFilter) { // Chỉ lọc client-side nếu không có bộ lọc khoa
+    let filteredList = [...this.originalBoMonList]; 
+    if (this.currentSearchTerm && !this.currentKhoaFilter) { 
        filteredList = filteredList.filter(boMon =>
          boMon.tenBoMon.toLowerCase().includes(this.currentSearchTerm.toLowerCase()) ||
          boMon.maBoMon.toLowerCase().includes(this.currentSearchTerm.toLowerCase())
        );
     } else if (this.currentSearchTerm && this.currentKhoaFilter) {
-        // Nếu có cả bộ lọc khoa VÀ search term, và API theo khoa không hỗ trợ tìm kiếm
-        // thì vẫn cần lọc client-side.
         filteredList = filteredList.filter(boMon =>
             (boMon.tenBoMon.toLowerCase().includes(this.currentSearchTerm.toLowerCase()) ||
             boMon.maBoMon.toLowerCase().includes(this.currentSearchTerm.toLowerCase()))
         );
     }
 
-    this.boMonList = filteredList; // Cập nhật danh sách hiển thị
+    this.boMonList = filteredList; 
   }
 
   onSelectBoMon(boMon: BoMon): void {
@@ -144,29 +127,26 @@ export class QuanLyBoMonComponent implements OnInit {
       moTa: boMon.moTa,
       maKhoa: boMon.maKhoa
     });
-    this.boMonForm.get('maBoMon')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.boMonForm.get('maBoMon')?.disable();
     this.clearMessages();
   }
 
   onSubmit(): void {
-    // getRawValue() để lấy cả giá trị của trường bị disable (maBoMon khi chỉnh sửa)
     const formData = this.boMonForm.getRawValue(); 
 
     if (this.boMonForm.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ và đúng thông tin.';
-      this.boMonForm.markAllAsTouched(); // Hiển thị lỗi validation cho tất cả các trường
+      this.boMonForm.markAllAsTouched(); 
       return;
     }
 
     if (this.selectedBoMon) {
-      // Truyền maBoMon của selectedBoMon (đối tượng gốc) để đảm bảo đúng ID
       this.boMonService.updateBoMon(this.selectedBoMon.maBoMon, formData).subscribe({
         next: (_) => {
           this.successMessage = 'Cập nhật bộ môn thành công!';
           this.resetForm();
-          this.refreshBoMonList(); // Làm mới danh sách sau khi cập nhật
+          this.refreshBoMonList(); 
         },
-        // Đã sửa: Sửa kiểu lỗi thành Error và truy cập err.message
         error: (err: Error) => { 
           this.errorMessage = 'Lỗi khi cập nhật bộ môn: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi cập nhật bộ môn:', err);
@@ -177,9 +157,8 @@ export class QuanLyBoMonComponent implements OnInit {
         next: (_) => {
           this.successMessage = 'Thêm mới bộ môn thành công!';
           this.resetForm();
-          this.refreshBoMonList(); // Làm mới danh sách sau khi thêm mới
+          this.refreshBoMonList(); 
         },
-        // Đã sửa: Sửa kiểu lỗi thành Error và truy cập err.message
         error: (err: Error) => { 
           this.errorMessage = 'Lỗi khi thêm mới bộ môn: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi thêm mới bộ môn:', err);
@@ -193,10 +172,9 @@ export class QuanLyBoMonComponent implements OnInit {
       this.boMonService.deleteBoMon(maBoMon).subscribe({
         next: (_) => {
           this.successMessage = `Bộ Môn '${maBoMon}' đã được xóa thành công!`;
-          this.refreshBoMonList(); // Làm mới danh sách sau khi xóa
-          this.resetForm(); // Đảm bảo form được reset nếu Bộ Môn đang được chọn bị xóa
+          this.refreshBoMonList(); 
+          this.resetForm(); 
         },
-        // Đã sửa: Sửa kiểu lỗi thành Error và truy cập err.message
         error: (err: Error) => { 
           this.errorMessage = 'Lỗi khi xóa bộ môn: ' + (err.message || 'Lỗi không xác định.');
           console.error('Lỗi xóa bộ môn:', err);
@@ -208,12 +186,11 @@ export class QuanLyBoMonComponent implements OnInit {
   resetForm(): void {
     this.boMonForm.reset();
     this.selectedBoMon = null;
-    this.boMonForm.get('maBoMon')?.enable(); // Mở lại trường Mã Bộ Môn cho thêm mới
+    this.boMonForm.get('maBoMon')?.enable(); 
     this.clearMessages();
-    this.boMonForm.get('maKhoa')?.setValue(''); // Đảm bảo dropdown khoa được reset
+    this.boMonForm.get('maKhoa')?.setValue(''); 
   }
 
-  // Hàm refreshBoMonList đã được chỉnh sửa để kích hoạt refreshTriggerSubject
   refreshBoMonList(): void {
     this.refreshTriggerSubject.next();
   }

@@ -1,0 +1,72 @@
+<div class="container">
+    <div class="header-section">
+        <h1>Thông tin Hướng dẫn Đồ án</h1>
+        <p>Giảng viên: {{ lecturerName }}</p>
+    </div>
+
+    <div *ngIf="isLoading" class="loading-message">
+        Đang tải dữ liệu...
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+    </div>
+
+    <div *ngIf="!isLoading && groupedThesisData.length > 0" class="data-section">
+        <div *ngFor="let dotGroup of groupedThesisData" class="dot-do-an-group card">
+            <h2 (click)="toggleDotDoAn(dotGroup.dotDoAn.maDotDoAn)" class="collapsible-header">
+                Đợt Đồ án: {{ dotGroup.dotDoAn.tenDotDoAn }} ({{ dotGroup.dotDoAn.maDotDoAn }})
+                <i class="fas" [class.fa-chevron-down]="selectedDotDoAnId !== dotGroup.dotDoAn.maDotDoAn"
+                    [class.fa-chevron-up]="selectedDotDoAnId === dotGroup.dotDoAn.maDotDoAn"></i>
+            </h2>
+            <p *ngIf="!dotGroup.dotDoAn">Không tìm thấy thông tin đợt đồ án.</p>
+
+            <div [hidden]="selectedDotDoAnId !== dotGroup.dotDoAn.maDotDoAn" class="collapsible-content">
+                <div *ngFor="let lopGroup of dotGroup.lopGroups" class="lop-group">
+                    <h3 (click)="toggleLop(lopGroup.lop.maLop)" class="collapsible-header">
+                        Lớp: {{ lopGroup.lop.tenLop }} ({{ lopGroup.lop.maLop }})
+                        <i class="fas" [class.fa-chevron-down]="selectedLopId !== lopGroup.lop.maLop"
+                            [class.fa-chevron-up]="selectedLopId === lopGroup.lop.maLop"></i>
+                    </h3>
+                    <p *ngIf="!lopGroup.lop">Không tìm thấy thông tin lớp.</p>
+
+                    <div [hidden]="selectedLopId !== lopGroup.lop.maLop" class="collapsible-content">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã SV</th>
+                                    <th>Tên SV</th>
+                                    <th>Mã Đề tài</th>
+                                    <th>Tên Đề tài</th>
+                                    <th>Ngày Phân công</th>
+                                    <th>Hành động</th> </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let detail of lopGroup.deTaiSinhVien">
+                                    <td>{{ detail.sinhVien.maSV }}</td>
+                                    <td>{{ detail.sinhVien.hoTen }}</td>
+                                    <td>{{ detail.deTai.maDeTai }}</td>
+                                    <td>{{ detail.deTai.tenDeTai }}</td>
+                                    <td>{{ detail.ngayPhanCong | date:'dd/MM/yyyy' }}</td>
+                                    <td>
+                                        <button class="btn btn-primary btn-sm"
+                                            (click)="goToProgressReports(detail.sinhVien.maSV, detail.deTai.maDeTai)">
+                                            <i class="fas fa-chart-line"></i> Xem Tiến độ
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div *ngIf="lopGroup.deTaiSinhVien.length === 0" class="no-data-message">
+                            Không có sinh viên nào được phân công trong lớp này.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!isLoading && groupedThesisData.length === 0 && !errorMessage" class="alert alert-info">
+        Không có thông tin hướng dẫn đề tài nào được tìm thấy cho giảng viên này.
+    </div>
+</div>

@@ -1,18 +1,17 @@
-// src/app/pages/student/thong-tin-de-tai-sinh-vien/thong-tin-de-tai-sinh-vien.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Cần CommonModule cho *ngIf
+import { CommonModule } from '@angular/common'; 
 import { HttpErrorResponse } from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 
-import { AuthService } from '../../../services/auth.service'; // Đảm bảo đường dẫn đúng
-import { DeTaiService } from '../../../services/de-tai.service'; // Đảm bảo đường dẫn đúng
-import { DeTaiSinhVienResponse } from '../../../models/DeTaiSinhVienResponse'; // Đảm bảo đường dẫn đúng
+import { AuthService } from '../../../services/auth.service'; 
+import { DeTaiService } from '../../../services/de-tai.service'; 
+import { DeTaiSinhVienResponse } from '../../../models/DeTaiSinhVienResponse'; 
 
 @Component({
   selector: 'app-thong-tin-de-tai-sinh-vien',
-  standalone: true, // Component độc lập
-  imports: [CommonModule], // Import CommonModule nếu dùng các directive như *ngIf
+  standalone: true, 
+  imports: [CommonModule], 
   templateUrl: './thong-tin-de-tai-sinh-vien.component.html',
   styleUrls: ['./thong-tin-de-tai-sinh-vien.component.css']
 })
@@ -28,7 +27,6 @@ export class ThongTinDeTaiSinhVienComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Lấy mã sinh viên từ AuthService của bạn
     this.currentMaSV = this.authService.getUserMaSV();
     if (!this.currentMaSV) {
       this.errorMessage = 'Không tìm thấy mã sinh viên. Vui lòng đăng nhập lại.';
@@ -41,9 +39,9 @@ export class ThongTinDeTaiSinhVienComponent implements OnInit {
   loadDeTaiData(): void {
     this.isLoading = true;
     this.errorMessage = '';
-    this.deTaiData = null; // Đặt lại dữ liệu khi tải mới
+    this.deTaiData = null; 
 
-    this.deTaiService.getDeTaisBySinhVienId(this.currentMaSV!).pipe( // Gọi phương thức đã chỉnh sửa
+    this.deTaiService.getDeTaisBySinhVienId(this.currentMaSV!).pipe( 
       catchError((err: HttpErrorResponse) => {
         console.error('Lỗi khi tải thông tin đề tài sinh viên:', err);
         if (err.status === 404) {

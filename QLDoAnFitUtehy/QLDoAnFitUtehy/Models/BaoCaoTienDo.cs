@@ -1,5 +1,4 @@
-﻿// Models/BaoCaoTienDo.cs
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -16,25 +15,25 @@ namespace QLDoAnFITUTEHY.Models
         [StringLength(10)]
         public string MaDeTai { get; set; }
         [ForeignKey("MaDeTai")]
-        public DeTai DeTai { get; set; } // Navigation property
+        public DeTai DeTai { get; set; } 
 
         [Required]
         [StringLength(10)]
         public string MaSV { get; set; }
         [ForeignKey("MaSV")]
-        public SinhVien SinhVien { get; set; } // Navigation property
+        public SinhVien SinhVien { get; set; } 
 
-        public DateTime NgayNop { get; set; } = DateTime.Now; // Mặc định là thời gian hiện tại
+        public DateTime NgayNop { get; set; } = DateTime.Now; 
 
         [Required]
         public int TuanBaoCao { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string LoaiBaoCao { get; set; } // Ví dụ: "Giữa kỳ", "Hàng tuần"
+        public string LoaiBaoCao { get; set; } 
 
         [StringLength(255)]
-        public string? TepDinhKem { get; set; } // URL hoặc đường dẫn file
+        public string? TepDinhKem { get; set; } 
 
         [StringLength(500)]
         public string? GhiChuCuaSV { get; set; }
@@ -42,13 +41,13 @@ namespace QLDoAnFITUTEHY.Models
         [StringLength(10)]
         public string? MaGV { get; set; }
         [ForeignKey("MaGV")]
-        public GiangVien GiangVien { get; set; } // Navigation property
+        public GiangVien GiangVien { get; set; } 
 
-        public DateTime? NgayNhanXet { get; set; } // Có thể null
-        public string? NhanXetCuaGV { get; set; } // Có thể null
-        public double? DiemSo { get; set; } // Có thể null
+        public DateTime? NgayNhanXet { get; set; } 
+        public string? NhanXetCuaGV { get; set; } 
+        public double? DiemSo { get; set; } 
 
         [StringLength(50)]
-        public string TrangThai { get; set; } = "Chờ chấm"; // Mặc định
+        public string TrangThai { get; set; } = "Chờ chấm"; 
     }
 }

@@ -7,13 +7,13 @@ export interface DeTai {
   tenDeTai: string;
   moTa?: string;
   maGV?: string; 
+  hoTenGV?: string; 
   giangVien?: GiangVien; 
-
   maDotDoAn?: string; 
+  tenDotDoAn?: string; 
   dotDoAn?: DotDoAn;   
-
   maSV?: string; 
+  hoTenSV?: string;
   sinhVien?: SinhVien; 
-
   trangThaiDangKy: string; 
 }

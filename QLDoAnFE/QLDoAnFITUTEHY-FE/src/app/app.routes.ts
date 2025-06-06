@@ -25,6 +25,10 @@ import { XemDeTaiCuaToiComponent } from './pages/student/xem-de-tai-cua-toi/xem-
 import { XemThongTinCaNhanSinhVienComponent } from './pages/student/xem-thong-tin-ca-nhan-sinh-vien/xem-thong-tin-ca-nhan-sinh-vien.component';
 import { ThongTinDeTaiSinhVienComponent } from './pages/student/thong-tin-de-tai-sinh-vien/thong-tin-de-tai-sinh-vien.component';
 
+import { DashboardComponent as LecturerDashboardComponent } from './pages/lecturer/dashboard/dashboard.component'; 
+import { XemDeTaiHuongDanGiangVienComponent } from './pages/lecturer/xem-de-tai-huong-dan/xem-de-tai-huong-dan.component'; 
+import { XemThongTinCaNhanGiangVienComponent } from './pages/lecturer/xem-thong-tin-ca-nhan-giang-vien/xem-thong-tin-ca-nhan-giang-vien.component';
+
 export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
 
@@ -68,11 +72,23 @@ export const routes: Routes = [
   },
 
   {
-    path: 'lecturer', 
+    path: 'lecturer',
     canActivate: [authGuard],
-    data: { role: 'GV' },
+    data: { role: 'GV' }, 
     children: [
-     
+      { path: 'dashboard', component: LecturerDashboardComponent },
+      { path: 'xem-de-tai-huong-dan', component: XemDeTaiHuongDanGiangVienComponent },
+      { path: 'thong-tin-ca-nhan', component: XemThongTinCaNhanGiangVienComponent },
+      {
+        path: 'quan-ly-bao-cao-tien-do',
+        component: QuanLyBaoCaoTienDoComponent,
+        data: { role: ['GV', 'QTV'] }
+      },
+      {
+        path: 'bao-cao-tien-do/sinh-vien/:maSV/de-tai/:maDeTai',
+        component: NopBaoCaoComponent,
+        data: { mode: 'lecturerView' }
+      },
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' }
     ]
   },

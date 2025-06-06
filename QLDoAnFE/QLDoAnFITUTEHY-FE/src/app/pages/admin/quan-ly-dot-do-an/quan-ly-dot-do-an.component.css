@@ -1,7 +1,3 @@
-/* src/app/pages/admin/quan-ly-dot-do-an/quan-ly-dot-do-an.component.css */
-/* Sao chép toàn bộ nội dung từ src/app/pages/admin/quan-ly-bo-mon/quan-ly-bo-mon.component.css hoặc quan-ly-nganh.component.css vào đây */
-/* Đảm bảo các lớp CSS như .container, .form-section, .list-section, .data-table, .btn, .alert, .form-row, .flex-item, .search-and-filter-box đều được định nghĩa */
-
 .container {
   max-width: 900px;
   margin: 5px auto;

@@ -23,7 +23,7 @@ import { format } from 'date-fns';
 export class QuanLySinhVienComponent implements OnInit {
   sinhVienList: SinhVien[] = [];
   originalSinhVienList: SinhVien[] = [];
-  lopList: Lop[] = []; // Danh sách Lớp cho dropdown
+  lopList: Lop[] = []; 
   sinhVienForm: FormGroup;
   selectedSinhVien: SinhVien | null = null;
 
@@ -31,7 +31,7 @@ export class QuanLySinhVienComponent implements OnInit {
   successMessage: string = '';
 
   private searchTermSubject = new Subject<string>();
-  private lopFilterSubject = new Subject<string>(); // Lọc theo Lớp
+  private lopFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -39,7 +39,7 @@ export class QuanLySinhVienComponent implements OnInit {
 
   constructor(
     private sinhVienService: SinhVienService,
-    private lopService: LopService, // Inject LopService
+    private lopService: LopService, 
     private fb: FormBuilder
   ) {
     this.sinhVienForm = this.fb.group({
@@ -47,13 +47,13 @@ export class QuanLySinhVienComponent implements OnInit {
       hoTen: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       soDienThoai: [''],
-      ngaySinh: [''], // Kiểu string cho input type="date"
-      maLop: ['', Validators.required] // Trường khóa ngoại
+      ngaySinh: [''], 
+      maLop: ['', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadLopList(); // Tải danh sách Lớp cho dropdown
+    this.loadLopList(); 
 
     this.searchTermSubject.next('');
     this.lopFilterSubject.next('');
@@ -69,7 +69,6 @@ export class QuanLySinhVienComponent implements OnInit {
         this.clearMessages();
 
         if (lopFilter) {
-          // Nếu có lọc theo Lớp
           return this.sinhVienService.getSinhVienByLopId(lopFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải sinh viên theo lớp:', error);
@@ -78,7 +77,6 @@ export class QuanLySinhVienComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Lớp, tải tất cả hoặc tìm kiếm theo term
           return this.sinhVienService.searchSinhVien(searchTerm).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách sinh viên:', error);
@@ -90,13 +88,12 @@ export class QuanLySinhVienComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalSinhVienList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách Lớp cho dropdown lọc và form
   loadLopList(): void {
-    this.lopService.searchLop().subscribe({ // Sử dụng searchLop để lấy tất cả
+    this.lopService.searchLop().subscribe({ 
       next: (data) => {
         this.lopList = data;
       },
@@ -107,7 +104,6 @@ export class QuanLySinhVienComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalSinhVienList]; 
 
@@ -123,7 +119,6 @@ export class QuanLySinhVienComponent implements OnInit {
 
   onSelectSinhVien(sinhVien: SinhVien): void {
     this.selectedSinhVien = sinhVien;
-    // Định dạng ngày sinh nếu có để hiển thị đúng trong input type="date"
     const ngaySinhFormatted = sinhVien.ngaySinh ? format(new Date(sinhVien.ngaySinh), 'yyyy-MM-dd') : '';
 
     this.sinhVienForm.patchValue({
@@ -134,7 +129,7 @@ export class QuanLySinhVienComponent implements OnInit {
       ngaySinh: ngaySinhFormatted,
       maLop: sinhVien.maLop
     });
-    this.sinhVienForm.get('maSV')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.sinhVienForm.get('maSV')?.disable(); 
     this.clearMessages();
   }
 
@@ -143,7 +138,6 @@ export class QuanLySinhVienComponent implements OnInit {
 
     if (this.sinhVienForm.invalid) {
       this.errorMessage = 'Vui lòng điền đầy đủ và đúng thông tin.';
-      // Hiển thị lỗi cụ thể hơn nếu có thể
       if (this.sinhVienForm.get('email')?.errors?.['email']) {
         this.errorMessage = 'Email không hợp lệ.';
       }
@@ -151,7 +145,6 @@ export class QuanLySinhVienComponent implements OnInit {
       return;
     }
 
-    // Chuyển đổi ngày sinh về Date object nếu cần gửi lên API
     const sinhVienToSend: SinhVien = {
         ...formData,
         ngaySinh: formData.ngaySinh ? new Date(formData.ngaySinh) : undefined
@@ -205,7 +198,7 @@ export class QuanLySinhVienComponent implements OnInit {
     this.selectedSinhVien = null;
     this.sinhVienForm.get('maSV')?.enable(); 
     this.clearMessages();
-    this.sinhVienForm.get('maLop')?.setValue(''); // Đảm bảo dropdown lớp được reset
+    this.sinhVienForm.get('maLop')?.setValue(''); 
   }
 
   refreshSinhVienList(): void {

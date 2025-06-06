@@ -1,11 +1,10 @@
-// src/app/pages/admin/quan-ly-lop/quan-ly-lop.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LopService } from '../../../services/lop.service';
-import { ChuyenNganhService } from '../../../services/chuyen-nganh.service'; // Cần để lấy danh sách Chuyên Ngành
+import { ChuyenNganhService } from '../../../services/chuyen-nganh.service'; 
 import { Lop } from '../../../models/Lop';
-import { ChuyenNganh } from '../../../models/ChuyenNganh'; // Import model ChuyenNganh
+import { ChuyenNganh } from '../../../models/ChuyenNganh'; 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } from 'rxjs/operators';
@@ -23,7 +22,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyLopComponent implements OnInit {
   lopList: Lop[] = [];
   originalLopList: Lop[] = [];
-  chuyenNganhList: ChuyenNganh[] = []; // Danh sách Chuyên Ngành cho dropdown
+  chuyenNganhList: ChuyenNganh[] = []; 
   lopForm: FormGroup;
   selectedLop: Lop | null = null;
 
@@ -31,7 +30,7 @@ export class QuanLyLopComponent implements OnInit {
   successMessage: string = '';
 
   private searchTermSubject = new Subject<string>();
-  private chuyenNganhFilterSubject = new Subject<string>(); // Lọc theo Chuyên Ngành
+  private chuyenNganhFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -39,18 +38,18 @@ export class QuanLyLopComponent implements OnInit {
 
   constructor(
     private lopService: LopService,
-    private chuyenNganhService: ChuyenNganhService, // Inject ChuyenNganhService
+    private chuyenNganhService: ChuyenNganhService, 
     private fb: FormBuilder
   ) {
     this.lopForm = this.fb.group({
       maLop: ['', Validators.required],
       tenLop: ['', Validators.required],
-      maChuyenNganh: ['', Validators.required] // Trường khóa ngoại
+      maChuyenNganh: ['', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadChuyenNganhList(); // Tải danh sách Chuyên Ngành cho dropdown
+    this.loadChuyenNganhList(); 
 
     this.searchTermSubject.next('');
     this.chuyenNganhFilterSubject.next('');
@@ -66,7 +65,6 @@ export class QuanLyLopComponent implements OnInit {
         this.clearMessages();
 
         if (chuyenNganhFilter) {
-          // Nếu có lọc theo Chuyên Ngành
           return this.lopService.getLopByChuyenNganhId(chuyenNganhFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải lớp theo chuyên ngành:', error);
@@ -75,7 +73,6 @@ export class QuanLyLopComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Chuyên Ngành, tải tất cả hoặc tìm kiếm theo term
           return this.lopService.searchLop(searchTerm).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách lớp:', error);
@@ -87,13 +84,12 @@ export class QuanLyLopComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalLopList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách Chuyên Ngành cho dropdown lọc và form
   loadChuyenNganhList(): void {
-    this.chuyenNganhService.searchChuyenNganh().subscribe({ // Sử dụng searchChuyenNganh để lấy tất cả
+    this.chuyenNganhService.searchChuyenNganh().subscribe({ 
       next: (data) => {
         this.chuyenNganhList = data;
       },
@@ -104,7 +100,6 @@ export class QuanLyLopComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalLopList]; 
 
@@ -124,7 +119,7 @@ export class QuanLyLopComponent implements OnInit {
       tenLop: lop.tenLop,
       maChuyenNganh: lop.maChuyenNganh
     });
-    this.lopForm.get('maLop')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.lopForm.get('maLop')?.disable(); 
     this.clearMessages();
   }
 
@@ -185,7 +180,7 @@ export class QuanLyLopComponent implements OnInit {
     this.selectedLop = null;
     this.lopForm.get('maLop')?.enable(); 
     this.clearMessages();
-    this.lopForm.get('maChuyenNganh')?.setValue(''); // Đảm bảo dropdown chuyên ngành được reset
+    this.lopForm.get('maChuyenNganh')?.setValue(''); 
   }
 
   refreshLopList(): void {

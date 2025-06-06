@@ -2,13 +2,11 @@
 USE QLDoAnFITUTEHY;
 GO
 
--- Bảng Khoa
 CREATE TABLE Khoa (
     MaKhoa VARCHAR(10) PRIMARY KEY,
     TenKhoa NVARCHAR(100) NOT NULL
 );
 
--- Bảng BoMon
 CREATE TABLE BoMon (
     MaBoMon VARCHAR(10) PRIMARY KEY,
     TenBoMon NVARCHAR(100) NOT NULL,
@@ -16,7 +14,6 @@ CREATE TABLE BoMon (
     FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
 );
 
--- Bảng Nganh
 CREATE TABLE Nganh (
     MaNganh VARCHAR(10) PRIMARY KEY,
     TenNganh NVARCHAR(100) NOT NULL,
@@ -24,7 +21,6 @@ CREATE TABLE Nganh (
     FOREIGN KEY (MaBoMon) REFERENCES BoMon(MaBoMon)
 );
 
--- Bảng ChuyenNganh
 CREATE TABLE ChuyenNganh (
     MaChuyenNganh VARCHAR(10) PRIMARY KEY,
     TenChuyenNganh NVARCHAR(100) NOT NULL,
@@ -32,7 +28,6 @@ CREATE TABLE ChuyenNganh (
     FOREIGN KEY (MaNganh) REFERENCES Nganh(MaNganh)
 );
 
--- Bảng Lop
 CREATE TABLE Lop (
     MaLop VARCHAR(10) PRIMARY KEY,
     TenLop NVARCHAR(100) NOT NULL,
@@ -40,7 +35,6 @@ CREATE TABLE Lop (
     FOREIGN KEY (MaChuyenNganh) REFERENCES ChuyenNganh(MaChuyenNganh)
 );
 
--- Bảng SinhVien
 CREATE TABLE SinhVien (
     MaSV VARCHAR(10) PRIMARY KEY,
     HoTen NVARCHAR(100) NOT NULL,
@@ -51,7 +45,6 @@ CREATE TABLE SinhVien (
     FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
 );
 
--- Bảng GiangVien
 CREATE TABLE GiangVien (
     MaGV VARCHAR(10) PRIMARY KEY,
     HoTen NVARCHAR(100) NOT NULL,
@@ -61,7 +54,6 @@ CREATE TABLE GiangVien (
     SoDienThoai VARCHAR(20)
 );
 
--- Bảng DotDoAn
 CREATE TABLE DotDoAn (
     MaDotDoAn VARCHAR(10) PRIMARY KEY,
     TenDotDoAn NVARCHAR(200) NOT NULL,
@@ -75,7 +67,6 @@ CREATE TABLE DotDoAn (
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
 
--- Bảng liên kết Đợt đồ án - Lớp
 CREATE TABLE DotDoAn_Lop (
     MaDotDoAn VARCHAR(10),
     MaLop VARCHAR(10),
@@ -84,7 +75,6 @@ CREATE TABLE DotDoAn_Lop (
     FOREIGN KEY (MaLop) REFERENCES Lop(MaLop)
 );
 
--- Bảng liên kết Đợt đồ án - Giảng viên
 CREATE TABLE DotDoAn_GiangVien (
     MaDotDoAn VARCHAR(10),
     MaGV VARCHAR(10),
@@ -93,7 +83,6 @@ CREATE TABLE DotDoAn_GiangVien (
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
 
--- Bảng DeTai
 CREATE TABLE DeTai (
     MaDeTai VARCHAR(10) PRIMARY KEY,
     TenDeTai NVARCHAR(200) NOT NULL,
@@ -107,7 +96,6 @@ CREATE TABLE DeTai (
     FOREIGN KEY (MaSV) REFERENCES SinhVien(MaSV)
 );
 
--- Bảng PhanCong
 CREATE TABLE PhanCong (
     MaDeTai VARCHAR(10),
     MaSV VARCHAR(10),
@@ -119,7 +107,6 @@ CREATE TABLE PhanCong (
     FOREIGN KEY (MaDotDoAn) REFERENCES DotDoAn(MaDotDoAn)
 );
 
--- Bảng BaoCaoTienDo
 CREATE TABLE BaoCaoTienDo (
     MaBaoCao INT PRIMARY KEY IDENTITY,
     MaDeTai VARCHAR(10),
@@ -131,7 +118,7 @@ CREATE TABLE BaoCaoTienDo (
     GhiChuCuaSV NVARCHAR(500),
     MaGV VARCHAR(10),
     NgayNhanXet DATETIME,
-    NhanXetCuaGV TEXT,
+    NhanXetCuaGV NVARCHAR(MAX),
     DiemSo FLOAT,
     TrangThai NVARCHAR(50),
     FOREIGN KEY (MaDeTai) REFERENCES DeTai(MaDeTai),
@@ -139,7 +126,6 @@ CREATE TABLE BaoCaoTienDo (
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
 
--- Bảng HoiDong
 CREATE TABLE HoiDong (
     MaHoiDong VARCHAR(10) PRIMARY KEY,
     TenHoiDong NVARCHAR(100) NOT NULL,
@@ -148,7 +134,6 @@ CREATE TABLE HoiDong (
     FOREIGN KEY (MaDotDoAn) REFERENCES DotDoAn(MaDotDoAn)
 );
 
--- Bảng ThanhVienHoiDong
 CREATE TABLE ThanhVienHoiDong (
     MaHoiDong VARCHAR(10),
     MaGV VARCHAR(10),
@@ -157,7 +142,7 @@ CREATE TABLE ThanhVienHoiDong (
     FOREIGN KEY (MaHoiDong) REFERENCES HoiDong(MaHoiDong),
     FOREIGN KEY (MaGV) REFERENCES GiangVien(MaGV)
 );
--- Bảng TaiKhoan
+
 CREATE TABLE TaiKhoan (
     TenDangNhap VARCHAR(50) PRIMARY KEY,
     MatKhau VARCHAR(100) NOT NULL,
@@ -171,7 +156,6 @@ CREATE TABLE TaiKhoan (
     FOREIGN KEY (MaSV) REFERENCES SinhVien(MaSV)
 );
 
--- Bảng Log
 CREATE TABLE Log (
     MaLog INT PRIMARY KEY IDENTITY,
     TenDangNhap VARCHAR(50),
@@ -372,12 +356,12 @@ VALUES
 ('em.nguyen', N'Xem', N'PhanCong', N'Xem danh sách phân công'),
 ('pham.vu', N'Cập nhật', N'DeTai', N'Cập nhật trạng thái đề tài DT005 thành Đã duyệt'),
 ('g.dang', N'Đăng xuất', N'TaiKhoan', NULL);
-----------------------------------------------------------------------------
+
 INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK1');
 INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK2');
 INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK3');
 INSERT INTO DotDoAn_Lop (MaDotDoAn, MaLop) VALUES ('DDA2025A', 'SEK4');
-----------------------------------------------------------------------------
+
 INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV001');
 INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV002');
 INSERT INTO DotDoAn_GiangVien (MaDotDoAn, MaGV) VALUES ('DDA2025A', 'GV003');

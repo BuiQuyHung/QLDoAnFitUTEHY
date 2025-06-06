@@ -1,11 +1,10 @@
-// src/app/pages/admin/quan-ly-chuyen-nganh/quan-ly-chuyen-nganh.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ChuyenNganhService } from '../../../services/chuyen-nganh.service';
-import { NganhService } from '../../../services/nganh.service'; // Cần để lấy danh sách Ngành
+import { NganhService } from '../../../services/nganh.service'; 
 import { ChuyenNganh } from '../../../models/ChuyenNganh';
-import { Nganh } from '../../../models/Nganh'; // Import model Nganh
+import { Nganh } from '../../../models/Nganh'; 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } from 'rxjs/operators';
@@ -23,7 +22,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyChuyenNganhComponent implements OnInit {
   chuyenNganhList: ChuyenNganh[] = [];
   originalChuyenNganhList: ChuyenNganh[] = [];
-  nganhList: Nganh[] = []; // Danh sách Ngành cho dropdown
+  nganhList: Nganh[] = []; 
   chuyenNganhForm: FormGroup;
   selectedChuyenNganh: ChuyenNganh | null = null;
 
@@ -31,7 +30,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
   successMessage: string = '';
 
   private searchTermSubject = new Subject<string>();
-  private nganhFilterSubject = new Subject<string>(); // Lọc theo Ngành
+  private nganhFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -39,18 +38,18 @@ export class QuanLyChuyenNganhComponent implements OnInit {
 
   constructor(
     private chuyenNganhService: ChuyenNganhService,
-    private nganhService: NganhService, // Inject NganhService
+    private nganhService: NganhService, 
     private fb: FormBuilder
   ) {
     this.chuyenNganhForm = this.fb.group({
       maChuyenNganh: ['', Validators.required],
       tenChuyenNganh: ['', Validators.required],
-      maNganh: ['', Validators.required] // Trường khóa ngoại
+      maNganh: ['', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadNganhList(); // Tải danh sách Ngành cho dropdown
+    this.loadNganhList(); 
 
     this.searchTermSubject.next('');
     this.nganhFilterSubject.next('');
@@ -66,7 +65,6 @@ export class QuanLyChuyenNganhComponent implements OnInit {
         this.clearMessages();
 
         if (nganhFilter) {
-          // Nếu có lọc theo Ngành
           return this.chuyenNganhService.getChuyenNganhByNganhId(nganhFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải chuyên ngành theo ngành:', error);
@@ -75,7 +73,6 @@ export class QuanLyChuyenNganhComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Ngành, tải tất cả hoặc tìm kiếm theo term
           return this.chuyenNganhService.searchChuyenNganh(searchTerm).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách chuyên ngành:', error);
@@ -87,13 +84,12 @@ export class QuanLyChuyenNganhComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalChuyenNganhList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách Ngành cho dropdown lọc và form
   loadNganhList(): void {
-    this.nganhService.searchNganh().subscribe({ // Sử dụng searchNganh để lấy tất cả
+    this.nganhService.searchNganh().subscribe({ 
       next: (data) => {
         this.nganhList = data;
       },
@@ -104,7 +100,6 @@ export class QuanLyChuyenNganhComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalChuyenNganhList]; 
 
@@ -124,7 +119,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
       tenChuyenNganh: chuyenNganh.tenChuyenNganh,
       maNganh: chuyenNganh.maNganh
     });
-    this.chuyenNganhForm.get('maChuyenNganh')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.chuyenNganhForm.get('maChuyenNganh')?.disable(); 
     this.clearMessages();
   }
 
@@ -144,7 +139,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
           this.resetForm();
           this.refreshChuyenNganhList(); 
         },
-        error: (err: HttpErrorResponse) => { // Sử dụng HttpErrorResponse
+        error: (err: HttpErrorResponse) => { 
           this.errorMessage = 'Lỗi khi cập nhật chuyên ngành: ' + (err.error?.message || err.message || 'Lỗi không xác định.');
           console.error('Lỗi cập nhật chuyên ngành:', err);
         }
@@ -156,7 +151,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
           this.resetForm();
           this.refreshChuyenNganhList(); 
         },
-        error: (err: HttpErrorResponse) => { // Sử dụng HttpErrorResponse
+        error: (err: HttpErrorResponse) => { 
           this.errorMessage = 'Lỗi khi thêm mới chuyên ngành: ' + (err.error?.message || err.message || 'Lỗi không xác định.');
           console.error('Lỗi thêm mới chuyên ngành:', err);
         }
@@ -172,7 +167,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
           this.refreshChuyenNganhList(); 
           this.resetForm(); 
         },
-        error: (err: HttpErrorResponse) => { // Sử dụng HttpErrorResponse
+        error: (err: HttpErrorResponse) => { 
           this.errorMessage = 'Lỗi khi xóa chuyên ngành: ' + (err.error?.message || err.message || 'Lỗi không xác định.');
           console.error('Lỗi xóa chuyên ngành:', err);
         }
@@ -185,7 +180,7 @@ export class QuanLyChuyenNganhComponent implements OnInit {
     this.selectedChuyenNganh = null;
     this.chuyenNganhForm.get('maChuyenNganh')?.enable(); 
     this.clearMessages();
-    this.chuyenNganhForm.get('maNganh')?.setValue(''); // Đảm bảo dropdown ngành được reset
+    this.chuyenNganhForm.get('maNganh')?.setValue(''); 
   }
 
   refreshChuyenNganhList(): void {

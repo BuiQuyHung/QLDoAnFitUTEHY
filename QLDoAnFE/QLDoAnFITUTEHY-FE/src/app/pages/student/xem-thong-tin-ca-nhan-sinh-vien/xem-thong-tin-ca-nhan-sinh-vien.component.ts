@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SinhVienService } from '../../../services/sinh-vien.service';
 import { AuthService } from '../../../services/auth.service';
-import { SinhVien } from '../../../models/SinhVien'; // Đảm bảo đường dẫn này đúng
-import { UserInfo } from '../../../models/auth.model'; // <-- RẤT QUAN TRỌNG: Đảm bảo đường dẫn này đúng tới file auth.model.ts của bạn!
+import { SinhVien } from '../../../models/SinhVien'; 
+import { UserInfo } from '../../../models/auth.model';
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,7 +15,6 @@ import { Subject } from 'rxjs';
   imports: [
     CommonModule,
     FormsModule,
-    // FontAwesomeModule // Bỏ comment nếu dùng
   ],
   providers: [DatePipe],
   templateUrl: './xem-thong-tin-ca-nhan-sinh-vien.component.html',
@@ -38,11 +37,7 @@ export class XemThongTinCaNhanSinhVienComponent implements OnInit, OnDestroy {
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        // ĐÃ SỬA: Kiểu của 'user' chỉ là 'UserInfo', không còn '| null' nữa,
-        // vì BehaviorSubject luôn phát ra một đối tượng UserInfo (có thể với các thuộc tính null)
         next: (user: UserInfo) => { 
-          // Kiểm tra nếu 'user.maSV' tồn tại và không phải là null
-          // (vì theo AuthService của bạn, maSV có thể là null)
           if (user && user.maSV) { 
             this.currentUserId = user.maSV;
             this.getThongTinSinhVien(user.maSV);

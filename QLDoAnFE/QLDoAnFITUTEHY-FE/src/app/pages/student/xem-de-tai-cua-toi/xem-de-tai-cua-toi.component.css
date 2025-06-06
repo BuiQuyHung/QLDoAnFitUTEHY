@@ -1,5 +1,3 @@
-/* src/app/pages/student/xem-de-tai-cua-toi/xem-de-tai-cua-toich.component.css */
-
 .container {
   max-width: 900px;
   margin: 5px auto;
@@ -9,7 +7,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Tăng khoảng cách giữa các card */
+  gap: 15px; 
   min-height: calc(100vh - 10px);
 }
 
@@ -42,8 +40,8 @@
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
-  gap: 10px 20px; /* Khoảng cách giữa các hàng và cột */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 10px 20px; 
 }
 
 .detail-item {
@@ -61,7 +59,7 @@
 .detail-item span {
   font-size: 1em;
   color: #343a40;
-  word-wrap: break-word; /* Đảm bảo nội dung dài không tràn ra ngoài */
+  word-wrap: break-word; 
 }
 
 .loading-spinner {
@@ -96,7 +94,6 @@
   border-color: #bee5eb;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .container {
     padding: 8px;
@@ -106,7 +103,7 @@
     padding: 12px;
   }
   .detail-grid {
-    grid-template-columns: 1fr; /* Stack items on small screens */
+    grid-template-columns: 1fr; 
     gap: 10px;
   }
 }

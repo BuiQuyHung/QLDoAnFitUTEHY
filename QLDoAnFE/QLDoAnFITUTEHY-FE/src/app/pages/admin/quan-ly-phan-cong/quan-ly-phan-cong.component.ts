@@ -1,16 +1,15 @@
-// src/app/pages/admin/quan-ly-phan-cong/quan-ly-phan-cong.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PhanCongService } from '../../../services/phan-cong.service';
-import { DeTaiService } from '../../../services/de-tai.service'; // Cần để lấy danh sách Đề tài
-import { SinhVienService } from '../../../services/sinh-vien.service'; // Cần để lấy danh sách Sinh viên
-import { DotDoAnService } from '../../../services/dot-do-an.service'; // Cần để lấy danh sách Đợt Đồ án
+import { DeTaiService } from '../../../services/de-tai.service'; 
+import { SinhVienService } from '../../../services/sinh-vien.service'; 
+import { DotDoAnService } from '../../../services/dot-do-an.service'; 
 
 import { PhanCong } from '../../../models/PhanCong';
-import { DeTai } from '../../../models/DeTai'; // Import model DeTai
-import { SinhVien } from '../../../models/SinhVien'; // Import model SinhVien
-import { DotDoAn } from '../../../models/DotDoAn'; // Import model DotDoAn
+import { DeTai } from '../../../models/DeTai'; 
+import { SinhVien } from '../../../models/SinhVien'; 
+import { DotDoAn } from '../../../models/DotDoAn'; 
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of, throwError } from 'rxjs';
@@ -29,9 +28,9 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyPhanCongComponent implements OnInit {
   phanCongList: PhanCong[] = [];
   originalPhanCongList: PhanCong[] = [];
-  deTaiList: DeTai[] = []; // Danh sách Đề tài cho dropdown
-  sinhVienList: SinhVien[] = []; // Danh sách Sinh viên cho dropdown
-  dotDoAnList: DotDoAn[] = []; // Danh sách Đợt Đồ án cho dropdown
+  deTaiList: DeTai[] = []; 
+  sinhVienList: SinhVien[] = []; 
+  dotDoAnList: DotDoAn[] = []; 
 
   phanCongForm: FormGroup;
   selectedPhanCong: PhanCong | null = null;
@@ -39,10 +38,10 @@ export class QuanLyPhanCongComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
-  private searchTermSubject = new Subject<string>(); // Cho tìm kiếm client-side
-  private deTaiFilterSubject = new Subject<string>(); // Lọc theo Đề tài
-  private svFilterSubject = new Subject<string>(); // Lọc theo Sinh viên
-  private dotDoAnFilterSubject = new Subject<string>(); // Lọc theo Đợt Đồ án
+  private searchTermSubject = new Subject<string>(); 
+  private deTaiFilterSubject = new Subject<string>(); 
+  private svFilterSubject = new Subject<string>(); 
+  private dotDoAnFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -60,13 +59,13 @@ export class QuanLyPhanCongComponent implements OnInit {
     this.phanCongForm = this.fb.group({
       maDeTai: ['', Validators.required],
       maSV: ['', Validators.required],
-      ngayPhanCong: [''], // Không bắt buộc, có thể được điền tự động từ backend
+      ngayPhanCong: [''], 
       maDotDoAn: ['', Validators.required]
     });
   }
 
   ngOnInit(): void {
-    this.loadDropdownData(); // Tải dữ liệu cho các dropdown
+    this.loadDropdownData(); 
 
     this.searchTermSubject.next('');
     this.deTaiFilterSubject.next('');
@@ -123,11 +122,10 @@ export class QuanLyPhanCongComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalPhanCongList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách cho các dropdown
   loadDropdownData(): void {
     this.deTaiService.getDeTais().subscribe({
       next: (data) => this.deTaiList = data,
@@ -143,7 +141,6 @@ export class QuanLyPhanCongComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalPhanCongList];
 
@@ -166,8 +163,8 @@ export class QuanLyPhanCongComponent implements OnInit {
       ngayPhanCong: phanCong.ngayPhanCong ? new Date(phanCong.ngayPhanCong).toISOString().substring(0, 10) : '',
       maDotDoAn: phanCong.maDotDoAn
     });
-    this.phanCongForm.get('maDeTai')?.disable(); // Tắt trường mã khi chỉnh sửa
-    this.phanCongForm.get('maSV')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.phanCongForm.get('maDeTai')?.disable(); 
+    this.phanCongForm.get('maSV')?.disable(); 
     this.clearMessages();
   }
 
@@ -246,21 +243,21 @@ export class QuanLyPhanCongComponent implements OnInit {
   onDeTaiFilterChange(event: Event): void {
     const deTaiId = (event.target as HTMLSelectElement).value;
     this.deTaiFilterSubject.next(deTaiId);
-    this.svFilterSubject.next(''); // Reset other filters
+    this.svFilterSubject.next(''); 
     this.dotDoAnFilterSubject.next('');
   }
 
   onSvFilterChange(event: Event): void {
     const svId = (event.target as HTMLSelectElement).value;
     this.svFilterSubject.next(svId);
-    this.deTaiFilterSubject.next(''); // Reset other filters
+    this.deTaiFilterSubject.next(''); 
     this.dotDoAnFilterSubject.next('');
   }
 
   onDotDoAnFilterChange(event: Event): void {
     const dotDoAnId = (event.target as HTMLSelectElement).value;
     this.dotDoAnFilterSubject.next(dotDoAnId);
-    this.deTaiFilterSubject.next(''); // Reset other filters
+    this.deTaiFilterSubject.next('');
     this.svFilterSubject.next('');
   }
 

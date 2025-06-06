@@ -1,5 +1,4 @@
-﻿// DTOs/BaoCaoTienDoDto.cs
-using System;
+﻿using System;
 
 namespace QLDoAnFITUTEHY.DTOs
 {

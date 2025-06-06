@@ -1,31 +1,25 @@
-// src/app/models/dot-do-an.model.ts
-import { Lop } from './Lop'; // Đảm bảo đường dẫn này đúng
-import { GiangVien } from './GiangVien'; // Đảm bảo đường dẫn này đúng
+import { Lop } from './Lop'; 
+import { GiangVien } from './GiangVien'; 
 
 export interface DotDoAn {
   maDotDoAn: string;
   tenDotDoAn: string;
   khoaHoc: string;
-  // ĐÃ SỬA: Thêm '?' để đánh dấu là tùy chọn và '| string | null' để chấp nhận cả string và null
   ngayBatDau?: Date | string | null;
-  // ĐÃ SỬA: Thêm '| string | null' để chấp nhận cả string và null
   ngayKetThuc?: Date | string | null;
   soTuanThucHien: number;
   trangThai?: 'ACTIVE' | 'INACTIVE' | 'COMPLETED' | 'CANCELLED';
-
-  // Navigation properties cho mối quan hệ nhiều-nhiều
-  dsLop?: Lop[]; // Danh sách các lớp tham gia (chỉ dùng khi GET)
-  dsGiangVien?: GiangVien[]; // Danh sách các giảng viên (chỉ dùng khi GET)
+  dsLop?: Lop[]; 
+  dsGiangVien?: GiangVien[]; 
 }
 
-// DTO cho việc tạo mới/cập nhật (sẽ gửi lên backend)
 export interface DotDoAnForManipulation {
   maDotDoAn: string;
   tenDotDoAn: string;
   khoaHoc: string;
-  ngayBatDau: string; // Gửi dạng string (YYYY-MM-DD)
-  ngayKetThuc?: string; // Đã sửa kiểu thành string
+  ngayBatDau: string; 
+  ngayKetThuc?: string; 
   soTuanThucHien: number;
-  lopIds: string[];      // Chỉ gửi mảng MaLop
-  giangVienIds: string[]; // Chỉ gửi mảng MaGV
+  lopIds: string[];      
+  giangVienIds: string[]; 
 }

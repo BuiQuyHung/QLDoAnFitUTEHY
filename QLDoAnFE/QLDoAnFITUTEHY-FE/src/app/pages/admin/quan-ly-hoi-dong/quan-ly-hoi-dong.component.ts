@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { HoiDongService } from '../../../services/hoi-dong.service'; // Đảm bảo đường dẫn đúng
-import { DotDoAnService } from '../../../services/dot-do-an.service'; // Cần để lấy danh sách Đợt Đồ án
-import { HoiDong } from '../../../models/HoiDong'; // Đảm bảo đường dẫn đúng
-import { DotDoAn } from '../../../models/DotDoAn'; // Import model DotDoAn, đảm bảo casing đúng
+import { HoiDongService } from '../../../services/hoi-dong.service'; 
+import { DotDoAnService } from '../../../services/dot-do-an.service'; 
+import { HoiDong } from '../../../models/HoiDong'; 
+import { DotDoAn } from '../../../models/DotDoAn'; 
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of, throwError } from 'rxjs';
@@ -23,7 +23,7 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyHoiDongComponent implements OnInit {
   hoiDongList: HoiDong[] = [];
   originalHoiDongList: HoiDong[] = [];
-  dotDoAnList: DotDoAn[] = []; // Danh sách Đợt Đồ án cho dropdown
+  dotDoAnList: DotDoAn[] = []; 
 
   hoiDongForm: FormGroup;
   selectedHoiDong: HoiDong | null = null;
@@ -32,7 +32,7 @@ export class QuanLyHoiDongComponent implements OnInit {
   successMessage: string = '';
 
   private searchTermSubject = new Subject<string>();
-  private dotDoAnFilterSubject = new Subject<string>(); // Lọc theo Đợt Đồ án
+  private dotDoAnFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
@@ -40,19 +40,19 @@ export class QuanLyHoiDongComponent implements OnInit {
 
   constructor(
     private hoiDongService: HoiDongService,
-    private dotDoAnService: DotDoAnService, // Inject DotDoAnService
+    private dotDoAnService: DotDoAnService, 
     private fb: FormBuilder
   ) {
     this.hoiDongForm = this.fb.group({
       maHoiDong: ['', Validators.required],
       tenHoiDong: ['', Validators.required],
-      ngayBaoVe: [''], // Ngày bảo vệ có thể không bắt buộc
-      maDotDoAn: ['', Validators.required] // Trường khóa ngoại
+      ngayBaoVe: [''], 
+      maDotDoAn: ['', Validators.required] 
     });
   }
 
   ngOnInit(): void {
-    this.loadDotDoAnList(); // Tải danh sách Đợt Đồ án cho dropdown
+    this.loadDotDoAnList(); 
 
     this.searchTermSubject.next('');
     this.dotDoAnFilterSubject.next('');
@@ -68,7 +68,6 @@ export class QuanLyHoiDongComponent implements OnInit {
         this.clearMessages();
 
         if (dotDoAnFilter) {
-          // Nếu có lọc theo Đợt Đồ án
           return this.hoiDongService.getHoiDongByDotDoAnId(dotDoAnFilter).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải hội đồng theo đợt đồ án:', error);
@@ -77,7 +76,6 @@ export class QuanLyHoiDongComponent implements OnInit {
             })
           );
         } else {
-          // Nếu không có lọc theo Đợt Đồ án, tải tất cả hoặc tìm kiếm theo term
           return this.hoiDongService.searchHoiDong(searchTerm).pipe(
             catchError((error: HttpErrorResponse) => {
               console.error('Lỗi khi tải danh sách hội đồng:', error);
@@ -89,13 +87,12 @@ export class QuanLyHoiDongComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalHoiDongList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách Đợt Đồ án cho dropdown lọc và form
   loadDotDoAnList(): void {
-    this.dotDoAnService.getAllDotDoAn().subscribe({ // Sử dụng getAllDotDoAn để lấy tất cả
+    this.dotDoAnService.getAllDotDoAn().subscribe({ 
       next: (data) => {
         this.dotDoAnList = data;
       },
@@ -106,7 +103,6 @@ export class QuanLyHoiDongComponent implements OnInit {
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalHoiDongList];
 
@@ -124,11 +120,10 @@ export class QuanLyHoiDongComponent implements OnInit {
     this.hoiDongForm.patchValue({
       maHoiDong: hoiDong.maHoiDong,
       tenHoiDong: hoiDong.tenHoiDong,
-      // Chuyển đổi Date sang định dạng 'yyyy-MM-dd' cho input type="date"
       ngayBaoVe: hoiDong.ngayBaoVe ? new Date(hoiDong.ngayBaoVe).toISOString().substring(0, 10) : '',
       maDotDoAn: hoiDong.maDotDoAn
     });
-    this.hoiDongForm.get('maHoiDong')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.hoiDongForm.get('maHoiDong')?.disable(); 
     this.clearMessages();
   }
 
@@ -141,7 +136,6 @@ export class QuanLyHoiDongComponent implements OnInit {
       return;
     }
 
-    // Chuyển đổi ngày bảo vệ từ string sang Date nếu có
     if (formData.ngayBaoVe) {
       formData.ngayBaoVe = new Date(formData.ngayBaoVe);
     }
@@ -194,7 +188,7 @@ export class QuanLyHoiDongComponent implements OnInit {
     this.selectedHoiDong = null;
     this.hoiDongForm.get('maHoiDong')?.enable();
     this.clearMessages();
-    this.hoiDongForm.get('maDotDoAn')?.setValue(''); // Đảm bảo dropdown đợt đồ án được reset
+    this.hoiDongForm.get('maDotDoAn')?.setValue(''); 
   }
 
   refreshHoiDongList(): void {

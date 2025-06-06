@@ -1,77 +1,74 @@
 .container {
   max-width: 900px;
-  margin: 5px auto; /* GIẢM MẠNH: Giảm margin trên dưới của toàn bộ container */
+  margin: 5px auto; 
   padding: 10px;
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
-  gap: 8px; /* Giảm khoảng cách giữa các phần chính trong container */
-  min-height: calc(100vh - 10px); /* Điều chỉnh chiều cao tối thiểu để vừa với margin mới */
+  gap: 8px; 
+  min-height: calc(100vh - 10px); 
 }
 
 .header-section {
   text-align: center;
-  margin-top: 0; /* ĐẢM BẢO: Không có margin trên tiêu đề */
-  margin-bottom: 5px; /* GIẢM: Khoảng cách dưới tiêu đề */
+  margin-top: 0; 
+  margin-bottom: 5px; 
 }
 
-/* Đảm bảo không có margin-top mặc định cho các h2 bên trong các section khác */
 .form-section h2,
 .list-section h2 {
     margin-top: 0;
-    margin-bottom: 10px; /* Hoặc 8px nếu muốn cực kỳ sát */
-    font-size: 1.2em; /* Có thể điều chỉnh nếu muốn tiêu đề section nhỏ hơn */
+    margin-bottom: 10px; 
+    font-size: 1.2em; 
 }
 
-
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .container {
     padding: 5px;
-    gap: 6px; /* Giảm khoảng cách giữa các phần trên màn hình nhỏ */
+    gap: 6px; 
   }
 
   .header-section {
-    margin-bottom: 3px; /* Giảm margin dưới tiêu đề trên màn hình nhỏ */
+    margin-bottom: 3px; 
   }
 }
 
 .form-section {
   background-color: #ffffff;
-  padding: 10px; /* Giảm padding */
+  padding: 10px; 
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .form-row {
   display: flex;
-  gap: 10px; /* Giảm khoảng cách giữa các cột */
-  margin-bottom: 10px; /* Giảm khoảng cách dưới form-row */
+  gap: 10px; 
+  margin-bottom: 10px; 
   flex-wrap: wrap;
 }
 
 .form-group.flex-item {
   flex: 1;
-  min-width: 150px; /* Có thể giảm min-width nếu muốn co nhỏ hơn nữa */
+  min-width: 150px; 
   margin-bottom: 0;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 2px; /* Giảm margin */
+  margin-bottom: 2px; 
   font-weight: bold;
-  font-size: 0.8em; /* Nhỏ hơn nữa */
+  font-size: 0.8em; 
 }
 
 .form-control {
   width: 100%;
-  padding: 5px 7px; /* Giảm padding input */
+  padding: 5px 7px; 
   border: 1px solid #ced4da;
   border-radius: 4px;
   box-sizing: border-box;
-  font-size: 0.8em; /* Nhỏ hơn nữa */
+  font-size: 0.8em; 
 }
 
 .form-control.is-invalid {
@@ -80,23 +77,23 @@
 
 .invalid-feedback {
   color: #dc3545;
-  font-size: 0.7em; /* Nhỏ hơn nữa */
-  margin-top: 2px; /* Giảm margin */
+  font-size: 0.7em; 
+  margin-top: 2px;
 }
 
 .form-actions {
   text-align: right;
-  margin-top: 10px; /* Giảm margin */
+  margin-top: 10px; 
 }
 
 .btn {
-  padding: 6px 10px; /* Giảm padding nút */
+  padding: 6px 10px; 
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 0.8em; /* Nhỏ hơn nữa */
+  font-size: 0.8em; 
   transition: background-color 0.2s;
-  margin-left: 5px; /* Giảm margin */
+  margin-left: 5px; 
 }
 
 .btn-primary {
@@ -118,17 +115,16 @@
 }
 
 .btn-info {
-  background-color: #007bff; /* Màu xanh dương tiêu chuẩn của Bootstrap primary */
-  color: white; /* Chữ trắng */
+  background-color: #007bff; 
+  color: white; 
 }
 
 .btn-info:hover {
-  background-color: #0056b3; /* Màu xanh dương đậm hơn khi hover */
+  background-color: #0056b3; 
 }
 
-/* Nút Xóa (btn-danger) - Giữ nguyên màu đỏ */
 .btn-danger {
-  background-color: #dc3545; /* Màu đỏ tiêu chuẩn */
+  background-color: #dc3545; 
   color: white;
 }
 
@@ -137,10 +133,10 @@
 }
 
 .alert {
-  padding: 6px; /* Giảm padding alert */
+  padding: 6px; 
   border-radius: 4px;
-  margin-bottom: 8px; /* Giảm margin */
-  font-size: 0.8em; /* Nhỏ hơn nữa */
+  margin-bottom: 8px;
+  font-size: 0.8em; 
   text-align: center;
 }
 
@@ -164,44 +160,43 @@
 
 .list-section {
   background-color: #ffffff;
-  padding: 10px; /* Giảm padding */
+  padding: 10px; 
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  flex-grow: 1; /* Rất quan trọng: cho phép phần danh sách chiếm hết không gian còn lại */
-  display: flex; /* Dùng flexbox để quản lý nội dung bên trong */
+  flex-grow: 1; 
+  display: flex; 
   flex-direction: column;
 }
 
 .list-section h2 {
-    margin-top: 0; /* Loại bỏ margin-top mặc định của h2 */
-    margin-bottom: 10px; /* Khoảng cách dưới tiêu đề */
+    margin-top: 0; 
+    margin-bottom: 10px; 
 }
 
-/* Đã thêm cho BoMon: style cho search input và filter select */
 .search-and-filter-box {
-    margin-bottom: 10px; /* Giảm margin */
-    display: flex; /* Sử dụng flexbox để các thành phần nằm ngang */
-    gap: 10px; /* Khoảng cách giữa ô tìm kiếm và dropdown */
-    flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+    margin-bottom: 10px; 
+    display: flex; 
+    gap: 10px; 
+    flex-wrap: wrap; 
 }
 
 .search-and-filter-box .search-input,
 .search-and-filter-box .filter-select {
-    flex: 1; /* Cho phép mỗi thành phần chiếm không gian có sẵn */
-    min-width: 180px; /* Đảm bảo không quá nhỏ */
+    flex: 1; 
+    min-width: 180px; 
 }
 
 
 .data-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 5px; /* Giảm margin */
-  font-size: 0.8em; /* Nhỏ hơn nữa cho bảng */
+  margin-top: 5px; 
+  font-size: 0.8em;
 }
 
 .data-table th, .data-table td {
   border: 1px solid #dee2e6;
-  padding: 5px; /* Giảm padding ô bảng */
+  padding: 5px; 
   text-align: left;
 }
 
@@ -215,6 +210,6 @@
 }
 
 .data-table .actions {
-  text-align: center; /* Căn giữa các nút hành động */
-  white-space: nowrap; /* Ngăn các nút xuống dòng */
+  text-align: center; 
+  white-space: nowrap; 
 }

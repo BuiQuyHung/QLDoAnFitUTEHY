@@ -1,14 +1,13 @@
-// src/app/pages/admin/quan-ly-thanh-vien-hoi-dong/quan-ly-thanh-vien-hoi-dong.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ThanhVienHoiDongService } from '../../../services/thanh-vien-hoi-dong.service';
-import { HoiDongService } from '../../../services/hoi-dong.service'; // Cần để lấy danh sách Hội Đồng
-import { GiangVienService } from '../../../services/giang-vien.service'; // Cần để lấy danh sách Giảng viên
+import { HoiDongService } from '../../../services/hoi-dong.service'; 
+import { GiangVienService } from '../../../services/giang-vien.service'; 
 
 import { ThanhVienHoiDong } from '../../../models/ThanhVienHoiDong';
-import { HoiDong } from '../../../models/HoiDong'; // Import model HoiDong
-import { GiangVien } from '../../../models/GiangVien'; // Import model GiangVien, đảm bảo casing đúng
+import { HoiDong } from '../../../models/HoiDong'; 
+import { GiangVien } from '../../../models/GiangVien'; 
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Subject, combineLatest, of, throwError, Observable } from 'rxjs';
@@ -27,25 +26,24 @@ import { debounceTime, distinctUntilChanged, switchMap, catchError, startWith } 
 export class QuanLyThanhVienHoiDongComponent implements OnInit {
   thanhVienHoiDongList: ThanhVienHoiDong[] = [];
   originalThanhVienHoiDongList: ThanhVienHoiDong[] = [];
-  hoiDongList: HoiDong[] = []; // Danh sách Hội Đồng cho dropdown
-  giangVienList: GiangVien[] = []; // Danh sách Giảng viên cho dropdown
+  hoiDongList: HoiDong[] = []; 
+  giangVienList: GiangVien[] = []; 
 
   thanhVienHoiDongForm: FormGroup;
-  selectedThanhVienHoiDong: ThanhVienHoiDong | null = null; // Để lưu đối tượng đang chỉnh sửa
+  selectedThanhVienHoiDong: ThanhVienHoiDong | null = null; 
 
   errorMessage: string = '';
   successMessage: string = '';
 
-  private searchTermSubject = new Subject<string>(); // Cho tìm kiếm client-side
-  private hoiDongFilterSubject = new Subject<string>(); // Lọc theo Hội Đồng
-  private gvFilterSubject = new Subject<string>(); // Lọc theo Giảng viên
+  private searchTermSubject = new Subject<string>(); 
+  private hoiDongFilterSubject = new Subject<string>();
+  private gvFilterSubject = new Subject<string>(); 
   private refreshTriggerSubject = new Subject<void>();
 
   currentSearchTerm: string = '';
   currentHoiDongFilter: string = '';
   currentGvFilter: string = '';
 
-  // Các vai trò có thể có
   vaiTroOptions: string[] = ['Chủ tịch', 'Thư ký', 'Phản biện', 'Ủy viên'];
 
   constructor(
@@ -62,7 +60,7 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loadDropdownData(); // Tải dữ liệu cho các dropdown
+    this.loadDropdownData(); 
 
     this.searchTermSubject.next('');
     this.hoiDongFilterSubject.next('');
@@ -108,23 +106,21 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
       })
     ).subscribe(data => {
       this.originalThanhVienHoiDongList = data;
-      this.applyClientSideFilters(); // Áp dụng lọc tìm kiếm (nếu có)
+      this.applyClientSideFilters(); 
     });
   }
 
-  // Tải danh sách cho các dropdown
   loadDropdownData(): void {
-    this.hoiDongService.searchHoiDong().subscribe({ // Giả định có searchHoiDong()
+    this.hoiDongService.searchHoiDong().subscribe({ 
       next: (data) => this.hoiDongList = data,
       error: (err: HttpErrorResponse) => console.error('Lỗi khi tải danh sách hội đồng:', err)
     });
-    this.giangVienService.searchGiangVien().subscribe({ // Giả định có searchGiangVien()
+    this.giangVienService.searchGiangVien().subscribe({
       next: (data) => this.giangVienList = data,
       error: (err: HttpErrorResponse) => console.error('Lỗi khi tải danh sách giảng viên:', err)
     });
   }
 
-  // Áp dụng bộ lọc tìm kiếm trên client-side
   applyClientSideFilters(): void {
     let filteredList = [...this.originalThanhVienHoiDongList];
 
@@ -145,8 +141,8 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
       maGV: thanhVien.maGV,
       vaiTro: thanhVien.vaiTro
     });
-    this.thanhVienHoiDongForm.get('maHoiDong')?.disable(); // Tắt trường mã khi chỉnh sửa
-    this.thanhVienHoiDongForm.get('maGV')?.disable(); // Tắt trường mã khi chỉnh sửa
+    this.thanhVienHoiDongForm.get('maHoiDong')?.disable(); 
+    this.thanhVienHoiDongForm.get('maGV')?.disable(); 
     this.clearMessages();
   }
 
@@ -160,11 +156,10 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
     }
 
     if (this.selectedThanhVienHoiDong) {
-      // Cập nhật: chỉ có thể sửa vai trò
       this.thanhVienHoiDongService.updateThanhVienHoiDong(
         this.selectedThanhVienHoiDong.maHoiDong,
         this.selectedThanhVienHoiDong.maGV,
-        formData // formData sẽ chứa vaiTro mới
+        formData 
       ).subscribe({
         next: (_) => {
           this.successMessage = 'Cập nhật thành viên hội đồng thành công!';
@@ -177,7 +172,6 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
         }
       });
     } else {
-      // Thêm mới
       this.thanhVienHoiDongService.addThanhVienHoiDong(formData).subscribe({
         next: (_) => {
           this.successMessage = 'Thêm mới thành viên hội đồng thành công!';
@@ -214,9 +208,9 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
     this.thanhVienHoiDongForm.get('maHoiDong')?.enable();
     this.thanhVienHoiDongForm.get('maGV')?.enable();
     this.clearMessages();
-    this.thanhVienHoiDongForm.get('maHoiDong')?.setValue(''); // Đảm bảo dropdown được reset
-    this.thanhVienHoiDongForm.get('maGV')?.setValue(''); // Đảm bảo dropdown được reset
-    this.thanhVienHoiDongForm.get('vaiTro')?.setValue(''); // Đảm bảo dropdown được reset
+    this.thanhVienHoiDongForm.get('maHoiDong')?.setValue(''); 
+    this.thanhVienHoiDongForm.get('maGV')?.setValue(''); 
+    this.thanhVienHoiDongForm.get('vaiTro')?.setValue(''); 
   }
 
   refreshThanhVienHoiDongList(): void {
@@ -231,13 +225,13 @@ export class QuanLyThanhVienHoiDongComponent implements OnInit {
   onHoiDongFilterChange(event: Event): void {
     const hoiDongId = (event.target as HTMLSelectElement).value;
     this.hoiDongFilterSubject.next(hoiDongId);
-    this.gvFilterSubject.next(''); // Reset other filters
+    this.gvFilterSubject.next(''); 
   }
 
   onGvFilterChange(event: Event): void {
     const gvId = (event.target as HTMLSelectElement).value;
     this.gvFilterSubject.next(gvId);
-    this.hoiDongFilterSubject.next(''); // Reset other filters
+    this.hoiDongFilterSubject.next(''); 
   }
 
   getHoiDongTen(maHoiDong: string): string {

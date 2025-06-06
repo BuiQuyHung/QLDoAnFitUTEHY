@@ -28,7 +28,6 @@ namespace QLDoAnFITUTEHY.API.Controllers
         }
 
         [AllowAnonymous]
-        // GET: api/TaiKhoan
         [HttpGet]
         //[Authorize(Roles = "Admin")] 
         public async Task<ActionResult<IEnumerable<TaiKhoanDto>>> GetTaiKhoans()
@@ -143,11 +142,6 @@ namespace QLDoAnFITUTEHY.API.Controllers
             {
                 return NotFound($"Không tìm thấy tài khoản với tên đăng nhập: {username}");
             }
-
-            //if (User.Identity?.Name != username && !User.IsInRole("Admin"))
-            //{
-            //    return Forbid();
-            //}
 
             var oldVaiTro = taiKhoan.VaiTro; 
 
