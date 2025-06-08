@@ -1,8 +1,7 @@
-// src/app/services/thanh-vien-hoi-dong.service.ts
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ThanhVienHoiDong } from '../models/ThanhVienHoiDong'; // Đảm bảo đường dẫn đúng
-import { ApiService } from './api.service'; // Đảm bảo đường dẫn đúng
+import { ThanhVienHoiDong } from '../models/ThanhVienHoiDong'; 
+import { ApiService } from './api.service'; 
 
 @Injectable({
   providedIn: 'root'

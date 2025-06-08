@@ -83,12 +83,12 @@
 }
 
 .btn-info {
-  background-color: #17a2b8;
+  background-color: #007bff;
   color: white;
 }
 
 .btn-info:hover {
-  background-color: #138496;
+  background-color: #0056b3;
   transform: translateY(-1px);
 }
 

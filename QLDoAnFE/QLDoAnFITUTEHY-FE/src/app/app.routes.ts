@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginPageComponent } from './auth/login/login.component';
 import { authGuard } from './auth.guard';
-
 import { DashboardComponent as AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { QuanLyKhoaComponent } from './pages/admin/quan-ly-khoa/quan-ly-khoa.component';
 import { QuanLyBoMonComponent } from './pages/admin/quan-ly-bo-mon/quan-ly-bo-mon.component';
@@ -46,7 +45,7 @@ export const routes: Routes = [
       { path: 'quan-ly-sinh-vien', component: QuanLySinhVienComponent },
       { path: 'quan-ly-giang-vien', component: QuanLyGiangVienComponent },
       { path: 'quan-ly-dot-do-an', component: QuanLyDotDoAnComponent },
-      { path: 'quan-ly-de-tai', component: QuanLyDeTaiComponent },
+      { path: 'quan-ly-de-tai', component: QuanLyDeTaiComponent,  data: { role: ['QTV', 'GV'] }  },
       { path: 'quan-ly-bao-cao-tien-do', component: QuanLyBaoCaoTienDoComponent }, 
       { path: 'quan-ly-hoi-dong', component: QuanLyHoiDongComponent }, 
       { path: 'quan-ly-phan-cong', component: QuanLyPhanCongComponent }, 
@@ -83,6 +82,16 @@ export const routes: Routes = [
         path: 'quan-ly-bao-cao-tien-do',
         component: QuanLyBaoCaoTienDoComponent,
         data: { role: ['GV', 'QTV'] }
+      },
+      { 
+        path: 'quan-ly-de-tai', 
+        component: QuanLyDeTaiComponent, 
+        data: { role: ['QTV', 'GV'] } 
+      },
+      { 
+        path: 'quan-ly-phan-cong', 
+        component: QuanLyPhanCongComponent, 
+        data: { role: ['QTV', 'GV'] } 
       },
       {
         path: 'bao-cao-tien-do/sinh-vien/:maSV/de-tai/:maDeTai',
