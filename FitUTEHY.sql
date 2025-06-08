@@ -169,7 +169,8 @@ CREATE TABLE Log (
 INSERT INTO Khoa (MaKhoa, TenKhoa)
 VALUES
 ('CNTT01', N'Công nghệ thông tin'),
-('KT01', N'Kinh tế');
+('KT01', N'Kinh tế'),
+('CKDL01', N'Cơ khí động lực');
 
 INSERT INTO BoMon (MaBoMon, TenBoMon, MaKhoa)
 VALUES
